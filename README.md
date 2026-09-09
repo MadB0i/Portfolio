@@ -7,7 +7,7 @@ Personal portfolio for Rupjyoti Talukdar ([@MadB0i](https://github.com/MadB0i)) 
 ## What's on it
 
 - **Preloader** — a 0→100 verification count with curtain-wipe reveal into the hero. Shows once per session, skippable, and respects `prefers-reduced-motion`.
-- **Hero** — masked-line title reveal, rotating role line, live-typing terminal card, and count-up stats over an interactive dot-grid canvas.
+- **Hero** — masked-line title reveal, rotating role line, hero cat badge, and count-up stats.
 - **Flagship projects** — expandable spotlight cards for Kavach, RepoProof, Pehredar, C.U.R.E, TokenGuard, and Mission Khaki, with 3D tilt, status pills, and stack chips.
 - **Plus** — skills bento grid, journey timeline, marquee strip, contact section with copy-email, and a floating glass nav.
 - **Motion** — Lenis smooth scroll, GSAP scroll reveals, custom cursor, and magnetic buttons. Everything degrades gracefully under reduced motion and on touch.
@@ -23,9 +23,7 @@ index.html                  — page structure and sections
 src/main.js                 — all interaction (preloader, cursor, reveals, tilt)
 src/style.css               — Tailwind theme tokens + custom effects
 src/data/site.js            — all copy/content (edit text here, layout untouched)
-src/anim/particles.js       — ambient dot-grid canvas
 legacy/                     — the previous plain HTML/CSS/JS version (v1)
-serve.py                    — local server helper (serves dist/ when built)
 .github/workflows/deploy.yml — auto-deploy to GitHub Pages on push to main
 ```
 
