@@ -2,8 +2,9 @@ import './style.css';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { ROLES, STATS, MARQUEE, FLAGSHIP, SECONDARY, SKILLS, TIMELINE } from './data/site.js';
+import { ROLES, STATS, MARQUEE, FLAGSHIP, SECONDARY, SKILLS, TIMELINE, THREAT_FEED } from './data/site.js';
 import { initParticles } from './anim/particles.js';
+import { initRadar } from './anim/radar.js';
 import { initCat } from './anim/cat.js';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -41,6 +42,15 @@ function renderMarquee() {
   track.innerHTML = chunk + chunk; // seamless -50% loop
 }
 
+function renderFeed() {
+  const track = document.getElementById('feed-track');
+  if (!track) return;
+  const chunk = THREAT_FEED.map(
+    (m) => `<span class="feed-item">${m}</span>`,
+  ).join('');
+  track.innerHTML = chunk + chunk;
+}
+
 function renderSkills() {
   const grid = document.getElementById('skills-grid');
   SKILLS.forEach((s) => {
@@ -64,6 +74,7 @@ function renderProjects() {
   const grid = document.getElementById('projects-grid');
   FLAGSHIP.forEach((p, i) => {
     const card = document.createElement('article');
+    card.id = `proj-${i}`;
     card.className = `glass rounded-2xl p-6 sm:p-7 spot-card tilt flex flex-col ${p.featured ? 'md:col-span-2' : ''}`;
     card.setAttribute('data-reveal', '');
     card.innerHTML = `
@@ -71,7 +82,7 @@ function renderProjects() {
         <img src="${p.img}" alt="${p.alt}" loading="lazy" onerror="this.closest('[data-media]')?.remove()" />
       </div>
       <div class="flex items-start justify-between gap-4 mb-5 mt-5">
-        <span class="font-mono text-xs text-fog">/${String(i + 1).padStart(2, '0')}</span>
+        <span class="font-mono text-xs text-fog">FILE ${String(i + 1).padStart(2, '0')}</span>
         <span class="status-pill" data-status="${p.statusKey}">${p.status}</span>
       </div>
       <h3 class="font-display font-medium text-2xl mb-2">${p.name}</h3>
@@ -134,6 +145,7 @@ function renderTimeline() {
     item.setAttribute('data-reveal', '');
     item.innerHTML = `
       <span class="t-dot" aria-hidden="true"></span>
+      <p class="kill-phase mb-1.5">◈ ${t.phase}</p>
       <p class="font-mono text-xs text-ember mb-1.5">${t.period}</p>
       <h3 class="font-display font-medium text-xl">${t.title}</h3>
       <p class="font-mono text-xs text-ice mt-1 mb-2.5">${t.org}</p>
@@ -214,6 +226,7 @@ function typeTerminal() {
 
 renderStats();
 renderMarquee();
+renderFeed();
 renderSkills();
 renderProjects();
 renderShipped();
@@ -269,7 +282,7 @@ function heroIntro() {
     .add(typeTerminal, '-=0.9');
 }
 
-const BOOT_WORDS = ['identity', 'repositories', 'languages', 'projects', 'toolchain', 'status ✓'];
+const BOOT_WORDS = ['perimeter scan', 'intrusion detected', 'tracing source', 'threat isolated', 'threat neutralized ✓'];
 
 function runPreloader() {
   const pre = document.getElementById('preloader');
@@ -297,7 +310,9 @@ function runPreloader() {
   const wordTimer = setInterval(() => {
     wi = (wi + 1) % BOOT_WORDS.length;
     word.textContent = BOOT_WORDS[wi];
-  }, 260);
+    // Red while hostile, amber once neutralized.
+    word.style.color = wi === BOOT_WORDS.length - 1 ? '#f0b85a' : '#ff5d6e';
+  }, 300);
 
   document.getElementById('boot-skip').addEventListener('click', () => {
     clearInterval(wordTimer);
@@ -612,10 +627,63 @@ document.getElementById('copy-email').addEventListener('click', async () => {
   }, 1800);
 });
 
-/* ---------- go ---------- */
+/* ---------- text scramble (secure-channel line) ---------- */
+function initScramble() {
+  const els = document.querySelectorAll('[data-scramble]');
+  if (!els.length || REDUCED) return;
+  const GLYPHS = '!<>-_\\/[]{}=+*^?#';
+  els.forEach((el) => {
+    const original = el.textContent;
+    let raf = 0;
+    function play() {
+      const start = performance.now();
+      const dur = 700;
+      cancelAnimationFrame(raf);
+      (function tick(now) {
+        const t = Math.min(((now ?? start) - start) / dur, 1);
+        const reveal = Math.floor(t * original.length);
+        let out = '';
+        for (let i = 0; i < original.length; i++) {
+          out += i < reveal || original[i] === ' '
+            ? original[i]
+            : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        }
+        el.textContent = out;
+        if (t < 1) raf = requestAnimationFrame(tick);
+        else el.textContent = original;
+      })(start);
+    }
+    ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true, onEnter: play });
+  });
+}
+
+/* ---------- radar ops ---------- */
+const BLIP_POS = [[22, 32], [46, 62], [66, 34], [38, 78], [72, 66], [56, 20]];
+
+function initOpsRadar() {
+  initRadar(
+    document.getElementById('radar-canvas'),
+    document.getElementById('radar-blips'),
+    FLAGSHIP.map((p, i) => ({ name: p.name, x: BLIP_POS[i][0], y: BLIP_POS[i][1], index: i })),
+    (c) => {
+      scrollToTarget(`#proj-${c.index}`);
+      const card = document.getElementById(`proj-${c.index}`);
+      if (card) {
+        setTimeout(() => {
+          card.classList.remove('card-flash');
+          void card.offsetWidth;
+          card.classList.add('card-flash');
+          setTimeout(() => card.classList.remove('card-flash'), 1600);
+        }, 900);
+      }
+    },
+  );
+}
 runPreloader();
 initScrollFX();
+initOpsRadar();
 initPointerFX();
 initTilt();
 initRotator();
 initCat(document.getElementById('cat-mount'));
+initScramble();

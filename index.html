@@ -38,6 +38,9 @@
   <!-- Film grain -->
   <div class="grain" aria-hidden="true"></div>
 
+  <!-- CRT scanlines -->
+  <div class="scanlines" aria-hidden="true"></div>
+
   <!-- ================= Preloader ================= -->
   <div id="preloader" aria-hidden="true">
     <div class="w-full max-w-xl px-8">
@@ -46,13 +49,13 @@
         <button id="boot-skip" class="border hairline rounded-full px-4 py-1.5 hover:border-ember hover:text-cream transition-colors cursor-pointer">skip</button>
       </div>
       <div class="font-mono text-sm text-fog mb-4 h-6">
-        <span class="text-ember">▸</span> <span id="boot-word">identity</span><span class="term-caret"></span>
+        <span class="text-ember">▸</span> <span id="boot-word">perimeter scan</span><span class="term-caret"></span>
       </div>
       <div class="font-display font-bold leading-none text-[clamp(4rem,14vw,7.5rem)] text-cream tabular-nums">
         <span id="boot-count">0</span><span class="text-ember">%</span>
       </div>
       <div class="mt-8 h-px w-full bg-white/10 overflow-hidden">
-        <div id="boot-bar" class="h-full w-full origin-left scale-x-0 bg-gradient-to-r from-ember-soft to-ember"></div>
+        <div id="boot-bar" class="h-full w-full origin-left scale-x-0 bg-gradient-to-r from-[#ff5d6e] to-ember"></div>
       </div>
       <div class="mt-4 font-mono text-[0.7rem] text-fog/70">verifying artifacts · rust · python · node</div>
     </div>
@@ -137,6 +140,16 @@
 
         <!-- Terminal card -->
         <div class="lg:col-span-5" data-hero="term">
+          <div class="glass rounded-2xl overflow-hidden mb-4" id="radar-panel">
+            <div class="flex items-center justify-between px-5 py-3 border-b hairline">
+              <span class="font-mono text-[0.7rem] text-ember tracking-[0.18em]">◉ LIVE SCAN — SECTOR 7</span>
+              <span class="font-mono text-[0.65rem] text-fog">6 contacts</span>
+            </div>
+            <div class="radar-box h-48 sm:h-56" id="radar-box">
+              <canvas id="radar-canvas" aria-hidden="true"></canvas>
+              <div id="radar-blips"></div>
+            </div>
+          </div>
           <div class="glass rounded-2xl overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] tilt spot-card" id="term-card">
             <div class="flex items-center gap-2 px-5 py-3.5 border-b hairline">
               <span class="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
@@ -159,8 +172,16 @@
       </a>
     </header>
 
+    <!-- ================= Threat feed ================= -->
+    <div class="border-y hairline bg-[#04070d]/85 py-3.5 px-6 flex items-center gap-5 overflow-hidden" aria-hidden="true">
+      <span class="feed-label">LIVE FEED</span>
+      <div class="marquee flex-1">
+        <div class="marquee-track feed-track" id="feed-track"></div>
+      </div>
+    </div>
+
     <!-- ================= Marquee ================= -->
-    <div class="marquee border-y hairline py-5 bg-panel/40" aria-hidden="true">
+    <div class="marquee border-b hairline py-5 bg-panel/40" aria-hidden="true">
       <div class="marquee-track" id="marquee-track"></div>
     </div>
 
@@ -257,7 +278,7 @@
       <div class="w-[min(1060px,100%)] mx-auto px-6 grid lg:grid-cols-12 gap-12">
         <div class="lg:col-span-4">
           <div class="lg:sticky lg:top-32">
-            <p class="section-eyebrow mb-4" data-reveal>04 · journey</p>
+            <p class="section-eyebrow mb-4" data-reveal>04 · kill chain</p>
             <h2 class="font-display font-bold tracking-tight text-[clamp(1.9rem,4.5vw,2.9rem)] leading-tight" data-reveal>How I got here.</h2>
           </div>
         </div>
@@ -270,7 +291,8 @@
     <!-- ================= Contact ================= -->
     <section id="contact" class="py-28 sm:py-36 border-t hairline relative overflow-hidden">
       <div class="w-[min(1060px,100%)] mx-auto px-6 text-center">
-        <p class="section-eyebrow mb-5" data-reveal>05 · contact</p>
+        <p class="section-eyebrow mb-5" data-reveal>05 · secure channel</p>
+        <p class="font-mono text-xs tracking-[0.2em] text-ember mb-5" data-scramble data-reveal>ENCRYPTED · AES-256 · ZERO LOGS</p>
         <h2 class="font-display font-bold tracking-tight leading-[1.05] text-[clamp(2.4rem,7vw,4.6rem)]" data-reveal>
           Have an idea?<br /><span class="grad-ember">Let's secure it.</span>
         </h2>

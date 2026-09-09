@@ -177,6 +177,7 @@ export const SKILLS = [
 export const TIMELINE = [
   {
     period: 'Now',
+    phase: 'CONTROL',
     title: 'Independent Developer',
     org: 'Apps & security tooling — solo',
     desc: 'Designing, building and shipping products end to end — Android apps like Mission Khaki (live on the Play Store) and open-source security tooling. Every release is tested, documented, and entirely mine.',
@@ -184,18 +185,21 @@ export const TIMELINE = [
   },
   {
     period: '2026',
+    phase: 'BREAKOUT',
     title: 'Took the solo leap',
     org: 'Resigned → independent',
     desc: 'Walked away from a stable private-sector developer role to build independently — trading a salary for ownership, speed, and the freedom to ship what I believe in.',
   },
   {
     period: '2025',
+    phase: 'INFILTRATE',
     title: 'Software Developer',
     org: 'Private company · India',
     desc: 'A year of professional industry experience — shipping production software in a team, and learning how real products get built, reviewed, tested, and maintained.',
   },
   {
     period: '2024',
+    phase: 'RECON',
     title: 'MCA Graduate',
     org: 'Master of Computer Applications',
     desc: 'Completed my MCA with a focus on systems and software engineering — the foundation everything since is built on.',
@@ -207,3 +211,16 @@ export const CONTACT = {
   github: 'https://github.com/MadB0i',
   githubLabel: 'github.com/MadB0i',
 };
+
+export const THREAT_FEED = [
+  'blocked prompt-injection payload #4821',
+  'quarantined autorun.inf from USB-03',
+  'token budget enforced · proj-llm-ops',
+  'rootcloak signature detected · device-07',
+  'audit log sealed · sha256 verified',
+  'policy deny · agent attempted shell exec',
+  'play protect pass · mission khaki v2.4',
+  'npm audit clean · repoproof deps',
+  'sandboxed 14 trackers · pehredar sweep',
+  'cat: hissed at suspicious usb ♥',
+];
