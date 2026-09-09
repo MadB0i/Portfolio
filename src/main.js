@@ -48,10 +48,14 @@ function renderSkills() {
     card.className = `glass rounded-2xl p-6 sm:p-7 spot-card tilt ${s.wide ? 'sm:col-span-2 lg:col-span-1' : ''}`;
     card.setAttribute('data-reveal', '');
     card.innerHTML = `
-      <p class="font-mono text-xs text-ember/90 mb-5">${s.index}</p>
+      <div class="flex items-start justify-between mb-5">
+        <span class="skill-icon">${s.icon}</span>
+        <span class="font-mono text-xs text-ember/90">${s.index}</span>
+      </div>
       <h3 class="font-display font-medium text-xl mb-2">${s.title}</h3>
       <p class="text-sm text-fog mb-5">${s.desc}</p>
-      <div class="flex flex-wrap gap-2">${s.tags.map((t) => `<span class="chip">${t}</span>`).join('')}</div>`;
+      <div class="flex flex-wrap gap-2 mb-5">${s.tags.map((t) => `<span class="chip">${t}</span>`).join('')}</div>
+      <p class="skill-proof">▸ ${s.proof}</p>`;
     grid.appendChild(card);
   });
 }

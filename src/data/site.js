@@ -142,12 +142,16 @@ export const SKILLS = [
     index: '01',
     title: 'Languages',
     desc: 'The tools I reach for daily.',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-5 4 5 4M16 8l5 4-5 4M13 4l-2 16"/></svg>',
+    proof: 'rust in prod · python daily · ts + kotlin for apps',
     tags: ['Rust', 'Python', 'TypeScript', 'Kotlin', 'SQL', 'Bash'],
   },
   {
     index: '02',
     title: 'Systems & Security',
     desc: 'Prove that something is what it claims to be.',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6z"/><path d="m9.3 12 2 2 3.6-4.2"/></svg>',
+    proof: 'kavach · pehredar · c.u.r.e ship this mindset',
     tags: ['Zero-trust runtimes', 'Malware forensics', 'Android hardening', 'Policy engines', 'Audit logging'],
     wide: true,
   },
@@ -155,42 +159,46 @@ export const SKILLS = [
     index: '03',
     title: 'AI Infrastructure',
     desc: 'Making LLMs cheaper and safer to run.',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>',
+    proof: 'tokenguard + ustad run on this stack',
     tags: ['LLM proxying', 'Token budgeting', 'LoRA / QLoRA', 'Ollama', 'Prompt-injection evals'],
   },
   {
     index: '04',
     title: 'Ship & Distribute',
     desc: 'From repo to real users.',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/></svg>',
+    proof: 'npm + play store — end to end, solo',
     tags: ['npm', 'Play Store', 'Electron', 'GitHub Actions', 'Axum'],
   },
 ];
 
-/* Timeline is a sensible default — update dates/roles to match your resume. */
+/* Real story: MCA (2024) → private-sector developer (2025) → independent (2026). */
 export const TIMELINE = [
   {
     period: 'Now',
     title: 'Independent Developer',
-    org: 'Security & systems tooling',
-    desc: 'Building zero-trust runtimes (Kavach), LLM cost infrastructure (TokenGuard) and open-source security tools — solo, end to end.',
+    org: 'Apps & security tooling — solo',
+    desc: 'Designing, building and shipping products end to end — Android apps like Mission Khaki (live on the Play Store) and open-source security tooling. Every release is tested, documented, and entirely mine.',
     current: true,
   },
   {
+    period: '2026',
+    title: 'Took the solo leap',
+    org: 'Resigned → independent',
+    desc: 'Walked away from a stable private-sector developer role to build independently — trading a salary for ownership, speed, and the freedom to ship what I believe in.',
+  },
+  {
     period: '2025',
-    title: 'Shipped to real users',
-    org: 'RepoProof · Mission Khaki',
-    desc: 'Published RepoProof on npm (MIT) and took Mission Khaki live on the Play Store with thousands of tri-lingual questions.',
+    title: 'Software Developer',
+    org: 'Private company · India',
+    desc: 'A year of professional industry experience — shipping production software in a team, and learning how real products get built, reviewed, tested, and maintained.',
   },
   {
     period: '2024',
-    title: 'Freelance compliance testing',
-    org: 'Device security — Pehredar',
-    desc: 'Root/jailbreak and spyware-compliance testing for clients, plus personal device safety checks, powered by my own scanner.',
-  },
-  {
-    period: '2023',
-    title: 'MCA Graduate → open source',
-    org: 'Assam, India',
-    desc: 'Finished my MCA and started building systems tooling in the open — small factories, print shops, and security experiments.',
+    title: 'MCA Graduate',
+    org: 'Master of Computer Applications',
+    desc: 'Completed my MCA with a focus on systems and software engineering — the foundation everything since is built on.',
   },
 ];
 

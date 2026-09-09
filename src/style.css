@@ -355,6 +355,31 @@ body {
   transform: rotate(45deg);
 }
 
+/* ---------- skills ---------- */
+.skill-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: var(--color-ember);
+  background: rgba(232, 163, 61, 0.08);
+  border: 1px solid rgba(232, 163, 61, 0.28);
+  box-shadow: 0 0 24px -6px rgba(232, 163, 61, 0.35);
+}
+.skill-icon svg {
+  width: 22px;
+  height: 22px;
+}
+.skill-proof {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-ember-soft);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 14px;
+  opacity: 0.9;
+}
+
 /* ---------- timeline ---------- */
 .timeline {
   position: relative;
