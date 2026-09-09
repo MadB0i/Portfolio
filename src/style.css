@@ -902,6 +902,8 @@ body {
 #modal-body {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 #modal-body::-webkit-scrollbar {
   width: 8px;
