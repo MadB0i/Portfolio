@@ -75,7 +75,9 @@ function renderProjects() {
   FLAGSHIP.forEach((p, i) => {
     const card = document.createElement('article');
     card.id = `proj-${i}`;
-    card.className = `glass rounded-2xl p-6 sm:p-7 spot-card tilt flex flex-col ${p.featured ? 'md:col-span-2' : ''}`;
+    card.className = 'glass dossier rounded-2xl p-6 sm:p-7 spot-card tilt flex flex-col';
+    card.style.top = `calc(92px + ${i * 16}px)`;
+    card.style.zIndex = String(i + 1);
     card.setAttribute('data-reveal', '');
     card.innerHTML = `
       <div class="p-media ${p.featured ? 'h-52 sm:h-64' : 'h-44'}" data-media>
@@ -369,8 +371,7 @@ function initScrollFX() {
     );
   });
 
-  gsap.utils.toArray('[data-reveal-group]').forEach((group) => {
-    if (REDUCED) return;
+  gsap.utils.toArray('[data-reveal-group]').forEach((group) => {    if (REDUCED) return;
     gsap.fromTo(
       group.children,
       { opacity: 0, y: 26 },
@@ -381,6 +382,22 @@ function initScrollFX() {
         stagger: 0.1,
         ease: 'power3.out',
         scrollTrigger: { trigger: group, start: 'top 86%', once: true },
+      },
+    );
+  });
+
+  // Masked-line rises (manifesto) — Honey kinetic feel
+  gsap.utils.toArray('.mask-line').forEach((line, i) => {
+    if (REDUCED) return;
+    gsap.fromTo(
+      line,
+      { yPercent: 115 },
+      {
+        yPercent: 0,
+        duration: 0.9,
+        ease: 'power4.out',
+        delay: (i % 4) * 0.08,
+        scrollTrigger: { trigger: line, start: 'top 90%', once: true },
       },
     );
   });
@@ -456,6 +473,30 @@ function initScrollFX() {
     const s = document.getElementById(id);
     if (s) io.observe(s);
   });
+
+  // Chapter rail — same sections plus hero
+  const railDots = document.querySelectorAll('[data-rail]');
+  const railMap = {};
+  railDots.forEach((d) => {
+    railMap[d.dataset.rail] = d;
+  });
+  if (railDots.length && 'IntersectionObserver' in window) {
+    const rio = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) {
+            railDots.forEach((d) => d.classList.remove('active'));
+            railMap[en.target.id]?.classList.add('active');
+          }
+        });
+      },
+      { rootMargin: '-40% 0px -55% 0px' },
+    );
+    ['top', 'about', 'skills', 'work', 'journey', 'contact'].forEach((id) => {
+      const s = document.getElementById(id);
+      if (s) rio.observe(s);
+    });
+  }
 }
 
 /* ============================================================

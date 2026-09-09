@@ -86,6 +86,16 @@
     </div>
   </nav>
 
+  <!-- Chapter rail -->
+  <nav id="chapter-rail" aria-label="Chapters">
+    <a href="#top" data-scroll class="rail-dot" data-rail="top">01</a>
+    <a href="#about" data-scroll class="rail-dot" data-rail="about">02</a>
+    <a href="#skills" data-scroll class="rail-dot" data-rail="skills">03</a>
+    <a href="#work" data-scroll class="rail-dot" data-rail="work">04</a>
+    <a href="#journey" data-scroll class="rail-dot" data-rail="journey">05</a>
+    <a href="#contact" data-scroll class="rail-dot" data-rail="contact">06</a>
+  </nav>
+
   <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden-menu fixed inset-0 z-[65] bg-void/90 backdrop-blur-xl flex flex-col items-center justify-center gap-7">
     <a href="#about" data-scroll class="font-display text-3xl text-cream">about</a>
@@ -110,6 +120,7 @@
           <p data-hero="eyebrow" class="font-mono text-xs sm:text-sm text-ember mb-5 tracking-wide">
             // Rupjyoti Talukdar — Assam, India
           </p>
+          <p class="chapter-tag mb-6">[ <b>01</b> / 06 ] — HELLO</p>
 
           <h1 class="font-display font-bold leading-[1.02] tracking-tight text-[clamp(2.6rem,7.5vw,4.9rem)]">
             <span class="mask"><span class="mask-inner" data-hero="line">I build <span class="grad-ember">security</span></span></span>
@@ -190,9 +201,12 @@
       <div class="w-[min(1060px,100%)] mx-auto px-6 grid lg:grid-cols-12 gap-12">
         <div class="lg:col-span-5">
           <div class="lg:sticky lg:top-32">
-            <p class="section-eyebrow mb-4" data-reveal>01 · about</p>
-            <h2 class="font-display font-bold tracking-tight text-[clamp(1.9rem,4.5vw,2.9rem)] leading-tight" data-reveal>
-              Solo builder,<br />security mindset.
+            <p class="chapter-tag mb-6" data-reveal>[ <b>02</b> / 06 ] — MANIFESTO</p>
+            <h2 class="mega">
+              <span class="mask"><span class="mask-inner mask-line">MCA, 2024.</span></span>
+              <span class="mask"><span class="mask-inner mask-line">Corporate, 2025.</span></span>
+              <span class="mask"><span class="mask-inner mask-line">Resigned, 2026.</span></span>
+              <span class="mask"><span class="mask-inner mask-line grad-ember">Best decision ever.</span></span>
             </h2>
             <div class="mt-8 glass rounded-2xl p-6 flex items-center gap-5 spot-card" data-reveal>
               <div class="relative shrink-0 w-24 -ml-1" title="pspsps… click her">
@@ -249,9 +263,9 @@
     <!-- ================= Skills ================= -->
     <section id="skills" class="py-28 sm:py-32 border-t hairline">
       <div class="w-[min(1060px,100%)] mx-auto px-6">
-        <p class="section-eyebrow mb-4" data-reveal>02 · arsenal</p>
+        <p class="chapter-tag mb-4" data-reveal>[ <b>03</b> / 06 ] — ARSENAL</p>
         <div class="flex flex-wrap items-end justify-between gap-4 mb-12">
-          <h2 class="font-display font-bold tracking-tight text-[clamp(1.9rem,4.5vw,2.9rem)]" data-reveal>What I work with.</h2>
+          <h2 class="mega" data-reveal>Weapons<br />of choice.</h2>
           <p class="font-mono text-xs text-fog max-w-xs" data-reveal>hover a card — the spotlight follows your cursor.</p>
         </div>
         <div id="skills-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
@@ -261,14 +275,14 @@
     <!-- ================= Work ================= -->
     <section id="work" class="py-28 sm:py-32 border-t hairline">
       <div class="w-[min(1060px,100%)] mx-auto px-6">
-        <p class="section-eyebrow mb-4" data-reveal>03 · flagship work</p>
+        <p class="chapter-tag mb-4" data-reveal>[ <b>04</b> / 06 ] — THREAT FILES</p>
         <div class="flex flex-wrap items-end justify-between gap-4 mb-12">
-          <h2 class="font-display font-bold tracking-tight text-[clamp(1.9rem,4.5vw,2.9rem)]" data-reveal>Things I've shipped.</h2>
-          <p class="font-mono text-xs text-fog" data-reveal>click a card to expand ↓</p>
+          <h2 class="mega" data-reveal>Every case,<br />closed.</h2>
+          <p class="font-mono text-xs text-fog" data-reveal>click a dossier to open ↓</p>
         </div>
-        <div id="projects-grid" class="grid md:grid-cols-2 gap-5"></div>
+        <div id="projects-grid" class="flex flex-col gap-6 max-w-4xl mx-auto"></div>
 
-        <p class="section-eyebrow mt-20 mb-8" data-reveal>also shipped</p>
+        <p class="chapter-tag mt-20 mb-8" data-reveal>[ <b>04.5</b> ] — ALSO SHIPPED</p>
         <div id="shipped-grid" class="grid sm:grid-cols-2 gap-4"></div>
       </div>
     </section>
@@ -278,7 +292,7 @@
       <div class="w-[min(1060px,100%)] mx-auto px-6 grid lg:grid-cols-12 gap-12">
         <div class="lg:col-span-4">
           <div class="lg:sticky lg:top-32">
-            <p class="section-eyebrow mb-4" data-reveal>04 · kill chain</p>
+            <p class="chapter-tag mb-4" data-reveal>[ <b>05</b> / 06 ] — KILL CHAIN</p>
             <h2 class="font-display font-bold tracking-tight text-[clamp(1.9rem,4.5vw,2.9rem)] leading-tight" data-reveal>How I got here.</h2>
           </div>
         </div>
@@ -291,9 +305,9 @@
     <!-- ================= Contact ================= -->
     <section id="contact" class="py-28 sm:py-36 border-t hairline relative overflow-hidden">
       <div class="w-[min(1060px,100%)] mx-auto px-6 text-center">
-        <p class="section-eyebrow mb-5" data-reveal>05 · secure channel</p>
+        <p class="chapter-tag mb-5" data-reveal>[ <b>06</b> / 06 ] — SECURE CHANNEL</p>
         <p class="font-mono text-xs tracking-[0.2em] text-ember mb-5" data-scramble data-reveal>ENCRYPTED · AES-256 · ZERO LOGS</p>
-        <h2 class="font-display font-bold tracking-tight leading-[1.05] text-[clamp(2.4rem,7vw,4.6rem)]" data-reveal>
+        <h2 class="mega" data-reveal>
           Have an idea?<br /><span class="grad-ember">Let's secure it.</span>
         </h2>
         <p class="mt-6 text-fog max-w-xl mx-auto" data-reveal>
@@ -326,7 +340,10 @@
   </main>
 
   <!-- ================= Footer ================= -->
-  <footer class="relative z-10 border-t hairline">
+  <footer class="relative z-10 border-t hairline overflow-hidden">
+    <div class="w-[min(1060px,100%)] mx-auto px-6 pt-14 pb-4 text-center" aria-hidden="true">
+      <div class="outline-text" data-reveal>RUPJYOTI</div>
+    </div>
     <div class="w-[min(1060px,100%)] mx-auto px-6 py-8 flex flex-wrap items-center justify-between gap-4">
       <p class="font-mono text-xs text-fog">© <span id="year">2026</span> Rupjyoti Talukdar · designed & built solo · supervised by a cat</p>
       <p class="font-mono text-xs text-fog/70 hidden sm:block">vite · tailwind · gsap · lenis</p>
