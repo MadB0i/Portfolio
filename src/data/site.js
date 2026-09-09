@@ -37,6 +37,8 @@ export const FLAGSHIP = [
     status: 'Active development',
     statusKey: 'active',
     featured: true,
+    img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop',
+    alt: 'Digital padlock over a circuit board — zero-trust security',
     link: { label: 'GitHub', url: 'https://github.com/MadB0i/KAVACH' },
   },
   {
@@ -47,6 +49,8 @@ export const FLAGSHIP = [
     stack: ['Node.js', 'CLI', 'npm'],
     status: 'Live',
     statusKey: 'live',
+    img: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop',
+    alt: 'Source code on a monitor — CLI audit tooling',
     link: { label: 'GitHub', url: 'https://github.com/MadB0i/RepoProof' },
   },
   {
@@ -57,6 +61,8 @@ export const FLAGSHIP = [
     stack: ['Python', 'Electron', 'Android'],
     status: 'Live',
     statusKey: 'live',
+    img: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1200&auto=format&fit=crop',
+    alt: 'Hand holding a smartphone — mobile device security',
     link: { label: 'GitHub', url: 'https://github.com/MadB0i/Pehredar' },
   },
   {
@@ -67,6 +73,8 @@ export const FLAGSHIP = [
     stack: ['Rust', 'Forensics', 'USB'],
     status: 'MVP shipped',
     statusKey: 'shipped',
+    img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop',
+    alt: 'Macro shot of a circuit board — hardware forensics',
     link: { label: 'GitHub', url: 'https://github.com/MadB0i/C.U.R.E' },
   },
   {
@@ -77,6 +85,8 @@ export const FLAGSHIP = [
     stack: ['Rust', 'Axum', 'LLM APIs'],
     status: 'Active development',
     statusKey: 'active',
+    img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop',
+    alt: 'Server racks in a data center — API infrastructure',
     link: { label: 'GitHub', url: 'https://github.com/MadB0i/TokenGuard' },
   },
   {
@@ -87,6 +97,8 @@ export const FLAGSHIP = [
     stack: ['Android', 'Play Store', 'i18n'],
     status: 'Live',
     statusKey: 'live',
+    img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1200&auto=format&fit=crop',
+    alt: 'Study notes and writing — exam preparation',
     link: {
       label: 'Play Store',
       url: 'https://play.google.com/store/apps/details?id=com.rupjyoti.missionkhaki',
@@ -99,21 +111,29 @@ export const SECONDARY = [
     name: 'KavachBench',
     desc: 'Research benchmark testing the Kavach policy engine against real prompt-injection and supply-chain attack payloads.',
     stack: 'Research',
+    img: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=70&w=400&auto=format&fit=crop',
+    alt: 'Terminal-style code — adversarial testing research',
   },
   {
     name: 'Ustad',
     desc: 'Local studio for distilling and fine-tuning LLMs — teacher via Ollama, student with LoRA/QLoRA, live training graphs, runs on a 4GB consumer GPU.',
     stack: 'Python',
+    img: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?q=70&w=400&auto=format&fit=crop',
+    alt: 'Abstract AI artwork — LLM fine-tuning studio',
   },
   {
     name: 'Wick',
     desc: 'Open-source tool for fine-tuning vision-language models on low-VRAM GPUs by streaming encoder layers between CPU and GPU through the full backward pass.',
     stack: 'Python',
+    img: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=70&w=400&auto=format&fit=crop',
+    alt: 'Robot portrait — vision-language models',
   },
   {
     name: 'ShopFloor OS',
     desc: 'Open-source ops tool for small factories and print shops — job cards, downtime logs, wastage tracking, shift handoff.',
     stack: 'Open source',
+    img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=70&w=400&auto=format&fit=crop',
+    alt: 'Industrial factory machinery — shop-floor operations',
   },
 ];
 

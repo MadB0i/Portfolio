@@ -63,7 +63,10 @@ function renderProjects() {
     card.className = `glass rounded-2xl p-6 sm:p-7 spot-card tilt flex flex-col ${p.featured ? 'md:col-span-2' : ''}`;
     card.setAttribute('data-reveal', '');
     card.innerHTML = `
-      <div class="flex items-start justify-between gap-4 mb-5">
+      <div class="p-media ${p.featured ? 'h-52 sm:h-64' : 'h-44'}" data-media>
+        <img src="${p.img}" alt="${p.alt}" loading="lazy" onerror="this.closest('[data-media]')?.remove()" />
+      </div>
+      <div class="flex items-start justify-between gap-4 mb-5 mt-5">
         <span class="font-mono text-xs text-fog">/${String(i + 1).padStart(2, '0')}</span>
         <span class="status-pill" data-status="${p.statusKey}">${p.status}</span>
       </div>
@@ -101,14 +104,20 @@ function renderShipped() {
   const grid = document.getElementById('shipped-grid');
   SECONDARY.forEach((p) => {
     const card = document.createElement('div');
-    card.className = 'border hairline rounded-2xl p-5 sm:p-6 spot-card hover:border-ember/40 transition-colors bg-panel/40';
+    card.className = 'border hairline rounded-2xl p-5 sm:p-6 spot-card hover:border-ember/40 transition-colors bg-panel/40 flex gap-4';
     card.setAttribute('data-reveal', '');
     card.innerHTML = `
+      <div class="shrink-0" data-media>
+        <img src="${p.img}" alt="${p.alt}" loading="lazy" onerror="this.closest('[data-media]')?.remove()"
+             class="thumb-img w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover" />
+      </div>
+      <div class="min-w-0">
       <div class="flex items-center justify-between gap-3 mb-2.5">
         <h3 class="font-display font-medium text-lg">${p.name}</h3>
         <span class="chip shrink-0">${p.stack}</span>
       </div>
-      <p class="text-sm text-fog leading-relaxed">${p.desc}</p>`;
+      <p class="text-sm text-fog leading-relaxed">${p.desc}</p>
+      </div>`;
     grid.appendChild(card);
   });
 }
