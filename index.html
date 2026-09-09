@@ -101,7 +101,15 @@
       <div class="w-[min(1060px,100%)] mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center">
         <div class="lg:col-span-7">
           <div data-hero="badge" class="inline-flex items-center gap-2.5 glass rounded-full pl-3 pr-5 py-2 mb-8">
-            <span class="pulse-dot"></span>
+            <svg class="hero-cat" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="#e8a33d" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+              <path class="cat-ear-l" d="M3.5 6 4.8 2.2 6.4 5.6" />
+              <path class="cat-ear-r" d="M9.6 5.6 11.2 2.2 12.5 6" />
+              <path d="M3.5 6 C3.5 11.5 12.5 11.5 12.5 6" />
+              <ellipse class="cat-eye" cx="6" cy="8" rx="0.7" ry="0.7" fill="#e8a33d" stroke="none" />
+              <ellipse class="cat-eye" cx="10" cy="8" rx="0.7" ry="0.7" fill="#e8a33d" stroke="none" />
+              <path d="M7.6 9.4 C7.8 9.8 8.2 9.8 8.4 9.4" />
+              <path class="cat-tail" d="M12.5 10.5 C14.5 10.5 15 7 13 6" />
+            </svg>
             <span class="font-mono text-xs text-fog">available for freelance & collabs</span>
           </div>
 
@@ -169,7 +177,7 @@
     </header>
 
     <!-- ================= Threat feed ================= -->
-    <div class="border-y hairline bg-[#04070d]/85 py-3.5 px-6 flex items-center gap-5 overflow-hidden" aria-hidden="true">
+    <div class="border-y hairline bg-[#080d16]/85 py-3.5 px-6 flex items-center gap-5 overflow-hidden" aria-hidden="true">
       <span class="feed-label">LIVE FEED</span>
       <div class="marquee flex-1">
         <div class="marquee-track feed-track" id="feed-track"></div>

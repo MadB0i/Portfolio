@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-void: #05080f;
-  --color-panel: #0b0f1a;
+  --color-void: #0A0D14;
+  --color-panel: #101621;
   --color-panel2: #111828;
   --color-ember: #e8a33d;
   --color-ember-soft: #f0b85a;
@@ -31,9 +31,9 @@ html.lenis body {
 
 body {
   background:
-    radial-gradient(900px 520px at 12% -4%, rgba(232, 163, 61, 0.06), transparent 62%),
-    radial-gradient(1050px 620px at 88% 4%, rgba(77, 124, 255, 0.08), transparent 62%),
-    radial-gradient(860px 620px at 50% 112%, rgba(255, 93, 110, 0.04), transparent 60%),
+    radial-gradient(900px 520px at 12% -4%, rgba(232, 163, 61, 0.04), transparent 62%),
+    radial-gradient(1050px 620px at 88% 4%, rgba(77, 124, 255, 0.09), transparent 62%),
+    radial-gradient(860px 620px at 50% 112%, rgba(255, 93, 110, 0.03), transparent 60%),
     var(--color-void);
   background-attachment: fixed;
   color: var(--color-cream);
@@ -51,12 +51,12 @@ body {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #070b14;
+  background: #0D1118;
 }
 ::-webkit-scrollbar-thumb {
   background: #232b3d;
   border-radius: 8px;
-  border: 2px solid #070b14;
+  border: 2px solid #0D1118;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(232, 163, 61, 0.6);
@@ -567,7 +567,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: #04070d;
+  background: #09111A;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -612,27 +612,38 @@ body {
   background: rgba(232, 163, 61, 0.06);
 }
 
-.pulse-dot {
-  position: relative;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #4ade80;
+/* ---------- hero cat ---------- */
+.hero-cat {
+  flex-shrink: 0;
 }
-.pulse-dot::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 1px solid #4ade80;
-  animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+.cat-eye {
+  animation: cat-blink 4s ease-in-out infinite;
 }
-@keyframes ping {
-  75%,
-  100% {
-    transform: scale(2);
-    opacity: 0;
-  }
+.cat-ear-l {
+  animation: cat-ear-l 5s ease-in-out infinite;
+}
+.cat-ear-r {
+  animation: cat-ear-r 5s ease-in-out infinite 0.3s;
+}
+.cat-tail {
+  animation: cat-tail 3s ease-in-out infinite;
+  transform-origin: 12.5px 10.5px;
+}
+@keyframes cat-blink {
+  0%, 92%, 100% { ry: 0.7; }
+  95% { ry: 0.1; }
+}
+@keyframes cat-ear-l {
+  0%, 88%, 100% { transform: rotate(0deg); }
+  92% { transform: rotate(-3deg); }
+}
+@keyframes cat-ear-r {
+  0%, 88%, 100% { transform: rotate(0deg); }
+  92% { transform: rotate(3deg); }
+}
+@keyframes cat-tail {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(7deg); }
 }
 
 /* ---------- misc ---------- */
@@ -662,11 +673,14 @@ body {
   .marquee-track {
     animation: none;
   }
-  .pulse-dot::after {
-    animation: none;
-  }
   #cursor-dot,
   #cursor-ring {
     display: none;
+  }
+  .cat-eye,
+  .cat-ear-l,
+  .cat-ear-r,
+  .cat-tail {
+    animation: none;
   }
 }
