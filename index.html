@@ -151,14 +151,13 @@
 
         <!-- Terminal card -->
         <div class="lg:col-span-5" data-hero="term">
-          <div class="glass rounded-2xl overflow-hidden mb-4" id="radar-panel">
+          <div class="glass rounded-2xl overflow-hidden mb-4">
             <div class="flex items-center justify-between px-5 py-3 border-b hairline">
-              <span class="font-mono text-[0.7rem] text-ember tracking-[0.18em]">◉ LIVE SCAN — SECTOR 7</span>
-              <span class="font-mono text-[0.65rem] text-fog">6 contacts</span>
+              <span class="font-mono text-[0.7rem] text-ember tracking-[0.18em]">◉ SUPERVISOR — ON DUTY</span>
+              <span class="font-mono text-[0.65rem] text-fog">click to pet</span>
             </div>
-            <div class="radar-box h-48 sm:h-56" id="radar-box">
-              <canvas id="radar-canvas" aria-hidden="true"></canvas>
-              <div id="radar-blips"></div>
+            <div class="px-8 pt-4 pb-5 grid place-items-center">
+              <div id="cat-mount" class="w-40 sm:w-48" role="button" tabindex="0" aria-label="Pet the cat" title="pspsps…"></div>
             </div>
           </div>
           <div class="glass rounded-2xl overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] tilt spot-card" id="term-card">
@@ -201,17 +200,14 @@
       <div class="w-[min(1060px,100%)] mx-auto px-6 grid lg:grid-cols-12 gap-12">
         <div class="lg:col-span-5">
           <div class="lg:sticky lg:top-32">
-            <p class="chapter-tag mb-6" data-reveal>[ <b>02</b> / 06 ] — MANIFESTO</p>
-            <h2 class="mega">
-              <span class="mask"><span class="mask-inner mask-line">MCA, 2024.</span></span>
-              <span class="mask"><span class="mask-inner mask-line">Corporate, 2025.</span></span>
-              <span class="mask"><span class="mask-inner mask-line">Resigned, 2026.</span></span>
-              <span class="mask"><span class="mask-inner mask-line grad-ember">Best decision ever.</span></span>
+            <p class="chapter-tag mb-6" data-reveal>[ <b>02</b> / 06 ] — ABOUT</p>
+            <h2 class="font-display font-bold tracking-tight text-[clamp(1.9rem,4.5vw,2.9rem)] leading-tight" data-reveal>
+              Solo builder,<br />security mindset.
             </h2>
             <div class="mt-8 glass rounded-2xl p-6 flex items-center gap-5 spot-card" data-reveal>
-              <div class="relative shrink-0 w-24 -ml-1" title="pspsps… click her">
-                <div id="cat-mount" role="button" tabindex="0" aria-label="Pet the cat"></div>
-                <span class="absolute bottom-1 -right-1 w-5 h-5 rounded-full bg-[#28c840] border-4 border-white"></span>
+              <div class="relative shrink-0">
+                <div class="w-20 h-20 rounded-2xl grid place-items-center font-display font-bold text-2xl text-[#0a0b0e] bg-gradient-to-br from-ember-soft to-ember shadow-[0_10px_36px_-8px_rgba(232,163,61,.6)]">RT</div>
+                <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#28c840] border-4 border-void"></span>
               </div>
               <div>
                 <p class="font-display font-medium text-lg">Rupjyoti Talukdar</p>

@@ -4,7 +4,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { ROLES, STATS, MARQUEE, FLAGSHIP, SECONDARY, SKILLS, TIMELINE, THREAT_FEED } from './data/site.js';
 import { initParticles } from './anim/particles.js';
-import { initRadar } from './anim/radar.js';
 import { initCat } from './anim/cat.js';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -698,31 +697,10 @@ function initScramble() {
   });
 }
 
-/* ---------- radar ops ---------- */
-const BLIP_POS = [[22, 32], [46, 62], [66, 34], [38, 78], [72, 66], [56, 20]];
-
-function initOpsRadar() {
-  initRadar(
-    document.getElementById('radar-canvas'),
-    document.getElementById('radar-blips'),
-    FLAGSHIP.map((p, i) => ({ name: p.name, x: BLIP_POS[i][0], y: BLIP_POS[i][1], index: i })),
-    (c) => {
-      scrollToTarget(`#proj-${c.index}`);
-      const card = document.getElementById(`proj-${c.index}`);
-      if (card) {
-        setTimeout(() => {
-          card.classList.remove('card-flash');
-          void card.offsetWidth;
-          card.classList.add('card-flash');
-          setTimeout(() => card.classList.remove('card-flash'), 1600);
-        }, 900);
-      }
-    },
-  );
-}
+/* ---------- go ---------- */
+runPreloader();
 runPreloader();
 initScrollFX();
-initOpsRadar();
 initPointerFX();
 initTilt();
 initRotator();
