@@ -279,19 +279,6 @@ body {
   }
 }
 
-/* ---------- terminal card ---------- */
-.term-caret::after {
-  content: "▊";
-  color: var(--color-ember);
-  animation: blink 1s steps(1) infinite;
-  margin-left: 2px;
-}
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
 /* ---------- project media ---------- */
 .p-media {
   position: relative;
@@ -321,16 +308,6 @@ body {
   pointer-events: none;
   background: linear-gradient(to top, rgba(10, 15, 28, 0.55), transparent 55%);
 }
-.thumb-img {
-  filter: saturate(0.85) brightness(0.92);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  background: #0a0f1c;
-  transition: filter 0.4s ease;
-}
-.spot-card:hover .thumb-img {
-  filter: saturate(1.05) brightness(1);
-}
-
 /* ---------- project expand ---------- */
 .p-details {
   display: grid;
@@ -427,118 +404,6 @@ body {
   box-shadow: none;
 }
 
-/* ---------- cat companion ---------- */
-#cat-mount {
-  position: relative;
-  cursor: pointer;
-}
-#cat-mount svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  animation: catBob 5s ease-in-out infinite;
-  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.5));
-}
-@keyframes catBob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-.cat-eyes {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: catBlink 4.8s infinite;
-}
-@keyframes catBlink {
-  0%,
-  92%,
-  100% {
-    transform: scaleY(1);
-  }
-  95.5% {
-    transform: scaleY(0.08);
-  }
-}
-.cat-tail {
-  transform-box: view-box;
-  transform-origin: 172px 158px;
-  animation: tailSway 3.6s ease-in-out infinite;
-}
-@keyframes tailSway {
-  0%,
-  100% {
-    transform: rotate(-7deg);
-  }
-  50% {
-    transform: rotate(9deg);
-  }
-}
-#cat-mount:hover .cat-ear-l {
-  animation: earTwitch 0.45s ease;
-}
-@keyframes earTwitch {
-  30% {
-    transform: rotate(-14deg);
-  }
-  60% {
-    transform: rotate(6deg);
-  }
-}
-.cat-ear-l {
-  transform-box: fill-box;
-  transform-origin: bottom right;
-}
-#cat-mount.meow svg {
-  animation: catBounce 0.55s ease;
-}
-@keyframes catBounce {
-  30% {
-    transform: translateY(6px) scale(1.05, 0.9);
-  }
-  60% {
-    transform: translateY(-7px) scale(0.96, 1.06);
-  }
-}
-.cat-bubble {
-  position: absolute;
-  top: -8px;
-  right: -6px;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--color-ember-soft);
-  background: rgba(16, 20, 32, 0.9);
-  border: 1px solid rgba(232, 163, 61, 0.4);
-  border-radius: 999px;
-  padding: 3px 11px;
-  opacity: 0;
-  pointer-events: none;
-  white-space: nowrap;
-}
-#cat-mount.meow .cat-bubble {
-  animation: bubblePop 1.5s ease forwards;
-}
-@keyframes bubblePop {
-  0% {
-    opacity: 0;
-    transform: translateY(6px) scale(0.8);
-  }
-  15% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  75% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-}
-
 /* ---------- honey-scale editorial type ---------- */
 .mega {
   font-family: var(--font-display);
@@ -625,22 +490,6 @@ body {
   color: transparent;
   -webkit-text-stroke: 1px rgba(236, 233, 226, 0.16);
   user-select: none;
-}
-
-/* ---------- ops layer: scanlines + vignette ---------- */
-.scanlines {
-  position: fixed;
-  inset: 0;
-  z-index: 55;
-  pointer-events: none;
-  opacity: 0.5;
-  background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0, 0, 0, 0.2) 2px 4px);
-}
-.scanlines::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.5));
 }
 
 /* ---------- threat feed ---------- */
@@ -763,58 +612,6 @@ body {
   background: rgba(232, 163, 61, 0.06);
 }
 
-/* ---------- orbs ---------- */
-.orb {
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(110px);
-  pointer-events: none;
-  z-index: 0;
-  will-change: transform;
-  animation: orbFloat 24s ease-in-out infinite alternate;
-}
-@keyframes orbFloat {
-  from {
-    translate: 0 0;
-  }
-  to {
-    translate: 70px -50px;
-  }
-}
-
-/* Signature aurora — slow-spinning conic halo behind the hero,
-   inspired by generative-gradient portfolio art. Blurred + faint
-   so it stays premium, never sloppy. Rotate-only = GPU cheap. */
-.vibe-blob {
-  position: absolute;
-  top: -140px;
-  right: -160px;
-  width: min(620px, 90vw);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0.18;
-  background: conic-gradient(from 180deg, #ff5d8f, #ff9a3d, #e8a33d, #4d7cff, #b44dff, #ff5d8f);
-  filter: blur(110px) saturate(1.2);
-  animation: blobSpin 48s linear infinite;
-  will-change: transform;
-}
-@keyframes blobSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Film grain — subtle texture over the ambient layers so the
-   background reads rich, not flat. Below nav/cursor/preloader. */
-.grain {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");
-}
 .pulse-dot {
   position: relative;
   width: 8px;
@@ -865,15 +662,6 @@ body {
   .marquee-track {
     animation: none;
   }
-  .term-caret::after,
-  .pulse-dot::after,
-  .orb,
-  .vibe-blob,
-  #cat-mount svg,
-  #cat-mount svg * {
-    animation: none !important;
-  }
-  .term-caret::after,
   .pulse-dot::after {
     animation: none;
   }

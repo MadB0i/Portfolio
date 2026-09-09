@@ -3,8 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { ROLES, STATS, MARQUEE, FLAGSHIP, SECONDARY, SKILLS, TIMELINE, THREAT_FEED } from './data/site.js';
-import { initParticles } from './anim/particles.js';
-import { initCat } from './anim/cat.js';
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -120,20 +119,14 @@ function renderShipped() {
   const grid = document.getElementById('shipped-grid');
   SECONDARY.forEach((p) => {
     const card = document.createElement('div');
-    card.className = 'border hairline rounded-2xl p-5 sm:p-6 spot-card hover:border-ember/40 transition-colors bg-panel/40 flex gap-4';
+    card.className = 'border hairline rounded-2xl p-5 sm:p-6 spot-card hover:border-ember/40 transition-colors bg-panel/40';
     card.setAttribute('data-reveal', '');
     card.innerHTML = `
-      <div class="shrink-0" data-media>
-        <img src="${p.img}" alt="${p.alt}" loading="lazy" onerror="this.closest('[data-media]')?.remove()"
-             class="thumb-img w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover" />
-      </div>
-      <div class="min-w-0">
       <div class="flex items-center justify-between gap-3 mb-2.5">
         <h3 class="font-display font-medium text-lg">${p.name}</h3>
         <span class="chip shrink-0">${p.stack}</span>
       </div>
-      <p class="text-sm text-fog leading-relaxed">${p.desc}</p>
-      </div>`;
+      <p class="text-sm text-fog leading-relaxed">${p.desc}</p>`;
     grid.appendChild(card);
   });
 }
@@ -156,72 +149,6 @@ function renderTimeline() {
 }
 
 /* ============================================================
-   Terminal typing (hero)
-   ============================================================ */
-
-const TERM_LINES = [
-  { prompt: true, text: 'whoami' },
-  { prompt: false, text: '→ rupjyoti.talukdar — security tooling', cls: 'text-cream' },
-  { prompt: true, text: 'stack --list' },
-  { prompt: false, text: '→ rust · python · node · kotlin', cls: 'text-ice' },
-  { prompt: true, text: 'status' },
-  { prompt: false, text: '→ shipping solo · 10 projects · 4 live ✓', cls: 'text-ember-soft' },
-  { prompt: true, text: 'companion --status' },
-  { prompt: false, text: '→ cat: online · supervising ♥', cls: 'text-ember-soft' },
-];
-
-function typeTerminal() {
-  const body = document.getElementById('term-body');
-  if (REDUCED) {
-    body.innerHTML = TERM_LINES.map((l) =>
-      l.prompt ? `<div><span class="text-ember">$</span> <span class="text-cream">${l.text}</span></div>`
-               : `<div class="${l.cls ?? ''}">${l.text}</div>`,
-    ).join('') + `<div class="term-caret"></div>`;
-    return;
-  }
-  body.innerHTML = '';
-  let li = 0;
-  function nextLine() {
-    if (li >= TERM_LINES.length) {
-      const caret = document.createElement('div');
-      caret.className = 'term-caret';
-      caret.innerHTML = '<span class="text-ember">$</span> ';
-      body.appendChild(caret);
-      return;
-    }
-    const line = TERM_LINES[li];
-    const div = document.createElement('div');
-    if (line.prompt) {
-      div.innerHTML = '<span class="text-ember">$</span> <span class="text-cream"></span>';
-      body.appendChild(div);
-      const target = div.querySelector('span:last-child');
-      let ci = 0;
-      (function tick() {
-        target.textContent = line.text.slice(0, ++ci);
-        if (ci < line.text.length) setTimeout(tick, 34);
-        else {
-          li++;
-          setTimeout(nextLine, 160);
-        }
-      })();
-    } else {
-      div.className = line.cls ?? '';
-      body.appendChild(div);
-      let ci = 0;
-      (function tick() {
-        div.textContent = line.text.slice(0, ++ci);
-        if (ci < line.text.length) setTimeout(tick, 12);
-        else {
-          li++;
-          setTimeout(nextLine, 200);
-        }
-      })();
-    }
-  }
-  nextLine();
-}
-
-/* ============================================================
    Boot
    ============================================================ */
 
@@ -233,8 +160,6 @@ renderProjects();
 renderShipped();
 renderTimeline();
 document.getElementById('year').textContent = String(new Date().getFullYear());
-
-initParticles(document.getElementById('bg-canvas'));
 
 let lenis = null;
 if (!REDUCED) {
@@ -269,7 +194,6 @@ if (!REDUCED) {
     y: 26,
   });
   gsap.set('[data-hero="line"]', { yPercent: 115 });
-  gsap.set('[data-hero="term"]', { opacity: 0, y: 40, rotateX: 8 });
 }
 
 function heroIntro() {
@@ -278,9 +202,7 @@ function heroIntro() {
   tl.to('[data-hero="badge"], [data-hero="eyebrow"]', { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 })
     .to('[data-hero="line"]', { yPercent: 0, duration: 1, stagger: 0.12, ease: 'power4.out' }, '-=0.45')
     .to('[data-hero="role"], [data-hero="para"]', { opacity: 1, y: 0, duration: 0.7, stagger: 0.12 }, '-=0.6')
-    .to('[data-hero="cta"], [data-hero="stats"]', { opacity: 1, y: 0, duration: 0.7, stagger: 0.12 }, '-=0.5')
-    .to('[data-hero="term"]', { opacity: 1, y: 0, rotateX: 0, duration: 1.1, ease: 'power2.out' }, '-=0.9')
-    .add(typeTerminal, '-=0.9');
+    .to('[data-hero="cta"], [data-hero="stats"]', { opacity: 1, y: 0, duration: 0.7, stagger: 0.12 }, '-=0.5');
 }
 
 const BOOT_WORDS = ['perimeter scan', 'intrusion detected', 'tracing source', 'threat isolated', 'threat neutralized ✓'];
@@ -296,9 +218,6 @@ function runPreloader() {
     done();
     if (!REDUCED) {
       gsap.set('[data-hero]', { clearProps: 'all' });
-      typeTerminal();
-    } else {
-      typeTerminal();
     }
     return;
   }
@@ -546,20 +465,6 @@ function initPointerFX() {
     });
   });
 
-  // Orb parallax
-  const orbs = document.querySelectorAll('[data-orb]');
-  window.addEventListener(
-    'pointermove',
-    (e) => {
-      const nx = e.clientX / window.innerWidth - 0.5;
-      const ny = e.clientY / window.innerHeight - 0.5;
-      orbs.forEach((o, i) => {
-        const f = (i + 1) * 26;
-        gsap.to(o, { x: nx * f, y: ny * f, duration: 1.2, ease: 'power2.out', overwrite: 'auto' });
-      });
-    },
-    { passive: true },
-  );
 }
 
 function initTilt() {
@@ -699,10 +604,8 @@ function initScramble() {
 
 /* ---------- go ---------- */
 runPreloader();
-runPreloader();
 initScrollFX();
 initPointerFX();
 initTilt();
 initRotator();
-initCat(document.getElementById('cat-mount'));
 initScramble();
