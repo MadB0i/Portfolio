@@ -63,6 +63,7 @@ function renderSkills() {
       <h3 class="font-display font-medium text-xl mb-2">${s.title}</h3>
       <p class="text-sm text-fog mb-5">${s.desc}</p>
       <div class="flex flex-wrap gap-2 mb-5">${s.tags.map((t) => `<span class="chip">${t}</span>`).join('')}</div>
+      ${s.accent ? s.accent : ''}
       <p class="skill-proof">▸ ${s.proof}</p>`;
     grid.appendChild(card);
   });

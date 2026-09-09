@@ -646,6 +646,15 @@ body {
   50% { transform: rotate(7deg); }
 }
 
+/* ---------- skill card accents ---------- */
+.skill-accent {
+  width: 100%;
+  max-width: 140px;
+  height: auto;
+  opacity: 0.6;
+  margin-top: 12px;
+}
+
 /* ---------- misc ---------- */
 #progress-bar {
   transform-origin: left;
