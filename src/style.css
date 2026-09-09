@@ -694,10 +694,60 @@ body {
 /* ---------- skill card accents ---------- */
 .skill-accent {
   width: 100%;
-  max-width: 140px;
+  max-width: 240px;
   height: auto;
   opacity: 0.6;
   margin-top: 12px;
+}
+.skill-media {
+  max-width: none;
+  height: 58px;
+  color: var(--color-sig);
+  opacity: 0.72;
+}
+.skill-media .media-frame {
+  fill: rgba(111, 209, 140, 0.025);
+  stroke: rgba(111, 209, 140, 0.22);
+}
+.skill-media .media-label {
+  letter-spacing: 0.14em;
+  opacity: 0.62;
+}
+.skill-media .media-line {
+  stroke: currentColor;
+  opacity: 0.38;
+  stroke-dasharray: 3 6;
+  animation: mediaDash 7s linear infinite;
+}
+.skill-media .media-node {
+  fill: var(--color-panel);
+  stroke: currentColor;
+  opacity: 0.8;
+}
+.skill-media .media-pulse {
+  fill: rgba(111, 209, 140, 0.08);
+  stroke: currentColor;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: mediaPulse 3.8s ease-in-out infinite;
+}
+.skill-media .media-packet {
+  stroke: currentColor;
+  fill: none;
+  opacity: 0.9;
+  stroke-dasharray: 2 5;
+  animation: mediaPacket 3.8s ease-in-out infinite;
+}
+@keyframes mediaDash {
+  to { stroke-dashoffset: -36; }
+}
+@keyframes mediaPulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.82); }
+  50% { opacity: 0.95; transform: scale(1.08); }
+}
+@keyframes mediaPacket {
+  0%, 100% { opacity: 0.2; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(13px); }
 }
 
 /* ---------- shipped card icons ---------- */
@@ -858,5 +908,9 @@ body {
   [data-tl-reveal] {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .skill-media * {
+    animation: none !important;
   }
 }
