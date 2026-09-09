@@ -697,11 +697,38 @@ body {
   max-width: 240px;
   height: auto;
   opacity: 0.6;
-  margin-top: 12px;
+}
+.skill-visual {
+  position: relative;
+  overflow: hidden;
+  min-height: 78px;
+  border: 1px solid rgba(111, 209, 140, 0.16);
+  border-radius: 0.75rem;
+  background: var(--color-surface);
+  margin: 0 0 1.15rem;
+}
+.skill-visual > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.22;
+  filter: grayscale(0.35) saturate(0.7) brightness(0.7);
+  transform: scale(1.03);
+}
+.skill-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(10, 10, 11, 0.74), rgba(10, 10, 11, 0.3) 55%, rgba(10, 10, 11, 0.7));
 }
 .skill-media {
+  position: relative;
+  z-index: 1;
   max-width: none;
-  height: 58px;
+  height: 78px;
   color: var(--color-sig);
   opacity: 0.72;
 }
