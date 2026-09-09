@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { ROLES, STATS, MARQUEE, FLAGSHIP, SECONDARY, SKILLS, TIMELINE } from './data/site.js';
 import { initParticles } from './anim/particles.js';
+import { initCat } from './anim/cat.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -139,6 +140,8 @@ const TERM_LINES = [
   { prompt: false, text: '→ rust · python · node · kotlin', cls: 'text-ice' },
   { prompt: true, text: 'status' },
   { prompt: false, text: '→ shipping solo · 10 projects · 4 live ✓', cls: 'text-ember-soft' },
+  { prompt: true, text: 'companion --status' },
+  { prompt: false, text: '→ cat: online · supervising ♥', cls: 'text-ember-soft' },
 ];
 
 function typeTerminal() {
@@ -602,3 +605,4 @@ initScrollFX();
 initPointerFX();
 initTilt();
 initRotator();
+initCat(document.getElementById('cat-mount'));
