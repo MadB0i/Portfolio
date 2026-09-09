@@ -123,6 +123,7 @@ function renderShipped() {
     card.className = 'border hairline rounded-2xl p-5 sm:p-6 spot-card hover:border-ember/40 transition-colors bg-panel/40';
     card.setAttribute('data-reveal', '');
     card.innerHTML = `
+      ${p.icon ? `<div class="shipped-icon mb-3">${p.icon}</div>` : ''}
       <div class="flex items-center justify-between gap-3 mb-2.5">
         <h3 class="font-display font-medium text-lg">${p.name}</h3>
         <span class="chip shrink-0">${p.stack}</span>

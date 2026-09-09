@@ -111,21 +111,25 @@ export const SECONDARY = [
     name: 'KavachBench',
     desc: 'Research benchmark testing the Kavach policy engine against real prompt-injection and supply-chain attack payloads.',
     stack: 'Research',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke-width="1.4"/></svg>',
   },
   {
     name: 'Ustad',
     desc: 'Local studio for distilling and fine-tuning LLMs — teacher via Ollama, student with LoRA/QLoRA, live training graphs, runs on a 4GB consumer GPU.',
     stack: 'Python',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4"/><circle cx="17" cy="17" r="4"/><path d="M10.5 9.5L13.5 14.5"/><path d="M17 21c0-3-2-5-5-5" stroke-width="1.4"/></svg>',
   },
   {
     name: 'Wick',
     desc: 'Open-source tool for fine-tuning vision-language models on low-VRAM GPUs by streaming encoder layers between CPU and GPU through the full backward pass.',
     stack: 'Python',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="7" height="12" rx="1.5"/><rect x="15" y="6" width="7" height="12" rx="1.5"/><path d="M9 9h6M15 9l-3 1.5M9 15h6M9 15l3-1.5" stroke-width="1.4"/><text x="5.5" y="13.5" text-anchor="middle" fill="currentColor" stroke="none" font-size="4" font-family="monospace">CPU</text><text x="18.5" y="13.5" text-anchor="middle" fill="currentColor" stroke="none" font-size="4" font-family="monospace">GPU</text></svg>',
   },
   {
     name: 'ShopFloor OS',
     desc: 'Open-source ops tool for small factories and print shops — job cards, downtime logs, wastage tracking, shift handoff.',
     stack: 'Open source',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h4"/><path d="M9 16l1.5 1.5L14 14" stroke-width="1.6"/></svg>',
   },
 ];
 
