@@ -618,20 +618,26 @@ body {
 }
 .cat-eye {
   animation: cat-blink 4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 .cat-ear-l {
   animation: cat-ear-l 5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 .cat-ear-r {
   animation: cat-ear-r 5s ease-in-out infinite 0.3s;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 .cat-tail {
   animation: cat-tail 3s ease-in-out infinite;
-  transform-origin: 12.5px 10.5px;
+  transform-origin: var(--tail-origin, 12.5px 10.5px);
 }
 @keyframes cat-blink {
-  0%, 92%, 100% { ry: 0.7; }
-  95% { ry: 0.1; }
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
 }
 @keyframes cat-ear-l {
   0%, 88%, 100% { transform: rotate(0deg); }
@@ -644,6 +650,28 @@ body {
 @keyframes cat-tail {
   0%, 100% { transform: rotate(0deg); }
   50% { transform: rotate(7deg); }
+}
+
+/* ---------- hero cat character (large, perched on card) ---------- */
+.cat-perch {
+  position: relative;
+}
+.hero-cat-big {
+  position: absolute;
+  top: -78px;
+  right: 14px;
+  width: clamp(112px, 42%, 152px);
+  height: auto;
+  pointer-events: none;
+  --tail-origin: 71px 106px;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
+}
+@media (max-width: 1023px) {
+  .hero-cat-big {
+    width: 104px;
+    top: -62px;
+    right: 10px;
+  }
 }
 
 /* ---------- skill card accents ---------- */
