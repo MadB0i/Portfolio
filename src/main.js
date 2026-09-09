@@ -84,7 +84,7 @@ function renderProjects() {
       </div>
       <div class="flex items-center justify-between gap-4 pt-4 border-t hairline">
         <a href="${p.link.url}" target="_blank" rel="noopener"
-           class="font-mono text-xs text-ember hover:text-ember-soft transition-colors">${p.link.label} ↗</a>
+           class="font-mono text-xs text-ember hover:text-[#8a5a08] transition-colors">${p.link.label} ↗</a>
         <button class="expand-btn font-mono text-xs text-fog hover:text-cream transition-colors inline-flex items-center gap-2 cursor-pointer"
                 aria-expanded="false" aria-controls="pd-${i}">
           details <span class="p-chev text-ember text-base leading-none">+</span>
