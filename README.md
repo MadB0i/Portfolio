@@ -2,35 +2,45 @@
 
 **[→ View the live site](https://madb0i.github.io/Portfolio/)**
 
-Personal portfolio for Rupjyoti Talukdar ([@MadB0i](https://github.com/MadB0i)) — an independent developer building security and systems tooling. The site treats itself as a verification ledger: each project is a record you expand, not a card in a grid.
+Personal portfolio for Rupjyoti Talukdar ([@MadB0i](https://github.com/MadB0i)) — an independent developer building security and systems tooling. Premium dark theme with cinematic, performance-safe motion throughout.
 
 ## What's on it
 
-- **Boot sequence** — a short verification check runs once on load (identity, projects, status), then resolves into the hero. Skips instantly on repeat visits and respects `prefers-reduced-motion`.
-- **Flagship projects** — expandable ledger rows for the main shipped work: Kavach, RepoProof, Pehredar, C.U.R.E, TokenGuard, and Mission Khaki. Click a row for the full description, stack, and outbound link.
-- **Also shipped** — a lighter-treatment list for secondary projects.
-- **Motion** — scroll-triggered scan-line reveals, cursor-tracked hover feedback on desktop, count-up on real numbers. All of it degrades to instant/static under reduced motion and on touch.
+- **Preloader** — a 0→100 verification count with curtain-wipe reveal into the hero. Shows once per session, skippable, and respects `prefers-reduced-motion`.
+- **Hero** — masked-line title reveal, rotating role line, live-typing terminal card, and count-up stats over an interactive dot-grid canvas.
+- **Flagship projects** — expandable spotlight cards for Kavach, RepoProof, Pehredar, C.U.R.E, TokenGuard, and Mission Khaki, with 3D tilt, status pills, and stack chips.
+- **Plus** — skills bento grid, journey timeline, marquee strip, contact section with copy-email, and a floating glass nav.
+- **Motion** — Lenis smooth scroll, GSAP scroll reveals, custom cursor, and magnetic buttons. Everything degrades gracefully under reduced motion and on touch.
 
 ## Stack
 
-Plain HTML, CSS, and vanilla JS — no framework, no build step, no dependencies. Deploys straight to GitHub Pages.
+Vite + Tailwind CSS v4 + GSAP (ScrollTrigger) + Lenis. No framework — vanilla JS modules.
 
 ## Structure
 
 ```
-index.html   — page structure and content
-style.css    — design system (colors, type, layout, animation)
-script.js    — boot sequence, ledger rendering, scroll/hover motion
-serve.py     — local dev server helper
+index.html                  — page structure and sections
+src/main.js                 — all interaction (preloader, cursor, reveals, tilt)
+src/style.css               — Tailwind theme tokens + custom effects
+src/data/site.js            — all copy/content (edit text here, layout untouched)
+src/anim/particles.js       — ambient dot-grid canvas
+legacy/                     — the previous plain HTML/CSS/JS version (v1)
+serve.py                    — local server helper (serves dist/ when built)
+.github/workflows/deploy.yml — auto-deploy to GitHub Pages on push to main
 ```
 
 ## Running locally
 
 ```bash
-python serve.py
+npm install
+npm run dev      # dev server with hot reload
+npm run build    # production build into dist/
+npm run preview  # preview the production build
 ```
 
-Then open the printed local URL in a browser.
+## Deploy
+
+Pushes to `main` auto-build and deploy via the Pages workflow. No manual step needed.
 
 ## License
 
