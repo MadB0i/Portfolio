@@ -16,14 +16,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet"
   />
 </head>
 <body class="bg-void text-cream font-body">
 
   <!-- Scroll progress -->
-  <div id="progress-bar" class="fixed top-0 left-0 right-0 h-[2px] z-[80] bg-gradient-to-r from-ember-soft via-ember to-ember-soft"></div>
+  <div id="progress-bar" class="fixed top-0 left-0 right-0 h-[2px] z-[80] bg-gradient-to-r from-sig-soft via-sig to-sig-soft"></div>
 
   <!-- Custom cursor -->
   <div id="cursor-dot" aria-hidden="true"></div>
@@ -34,17 +34,17 @@
   <div id="preloader" aria-hidden="true">
     <div class="w-full max-w-xl px-8">
       <div class="flex items-center justify-between font-mono text-xs text-fog mb-10">
-        <span><span class="text-ember font-medium">RT</span> — portfolio v2.0</span>
-        <button id="boot-skip" class="border hairline rounded-full px-4 py-1.5 hover:border-ember hover:text-cream transition-colors cursor-pointer">skip</button>
+        <span><span class="text-sig font-medium">RT</span> — portfolio v2.0</span>
+        <button id="boot-skip" class="border hairline rounded-full px-4 py-1.5 hover:border-sig hover:text-cream transition-colors cursor-pointer">skip</button>
       </div>
       <div class="font-mono text-sm text-fog mb-4 h-6">
-        <span class="text-ember">▸</span> <span id="boot-word">perimeter scan</span><span class="term-caret"></span>
+        <span class="text-sig">▸</span> <span id="boot-word">perimeter scan</span><span class="term-caret"></span>
       </div>
       <div class="font-display font-bold leading-none text-[clamp(4rem,14vw,7.5rem)] text-cream tabular-nums">
-        <span id="boot-count">0</span><span class="text-ember">%</span>
+        <span id="boot-count">0</span><span class="text-sig">%</span>
       </div>
       <div class="mt-8 h-px w-full bg-white/10 overflow-hidden">
-        <div id="boot-bar" class="h-full w-full origin-left scale-x-0 bg-gradient-to-r from-[#ff5d6e] to-ember"></div>
+        <div id="boot-bar" class="h-full w-full origin-left scale-x-0 bg-gradient-to-r from-sig to-sig-soft"></div>
       </div>
       <div class="mt-4 font-mono text-[0.7rem] text-fog/70">verifying artifacts · rust · python · node</div>
     </div>
@@ -54,7 +54,7 @@
   <nav id="site-nav" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70] w-[min(1060px,calc(100%-2rem))]">
     <div class="glass rounded-full pl-6 pr-3 py-2.5 flex items-center justify-between shadow-[0_16px_40px_-16px_rgba(12,25,50,0.35)]">
       <a href="#top" data-scroll class="font-mono font-medium text-cream text-sm tracking-tight" aria-label="Back to top">
-        RT<span class="text-ember">_</span>
+        RT<span class="text-sig">_</span>
       </a>
       <div class="hidden md:flex items-center gap-7">
         <a href="#about" data-scroll class="nav-link" data-nav="about">about</a>
@@ -64,7 +64,7 @@
         <a href="#contact" data-scroll class="nav-link" data-nav="contact">contact</a>
       </div>
       <div class="flex items-center gap-2">
-        <a href="#contact" data-scroll data-magnetic class="hidden sm:inline-flex font-mono text-xs bg-ember text-[#0a0b0e] font-medium rounded-full px-5 py-2.5 hover:brightness-110 transition">
+        <a href="#contact" data-scroll data-magnetic class="hidden sm:inline-flex font-mono text-xs bg-sig text-[#0a0b0e] font-medium rounded-full px-5 py-2.5 hover:brightness-110 transition">
           hire me ↗
         </a>
         <button id="menu-btn" class="md:hidden w-10 h-10 grid place-items-center rounded-full border hairline" aria-label="Open menu" aria-expanded="false">
@@ -77,21 +77,21 @@
 
   <!-- Chapter rail -->
   <nav id="chapter-rail" aria-label="Chapters">
-    <a href="#top" data-scroll class="rail-dot" data-rail="top">01</a>
-    <a href="#about" data-scroll class="rail-dot" data-rail="about">02</a>
-    <a href="#skills" data-scroll class="rail-dot" data-rail="skills">03</a>
-    <a href="#work" data-scroll class="rail-dot" data-rail="work">04</a>
-    <a href="#journey" data-scroll class="rail-dot" data-rail="journey">05</a>
-    <a href="#contact" data-scroll class="rail-dot" data-rail="contact">06</a>
+    <a href="#top" data-scroll class="rail-dot" data-rail="top" data-label="hello">01</a>
+    <a href="#about" data-scroll class="rail-dot" data-rail="about" data-label="about">02</a>
+    <a href="#skills" data-scroll class="rail-dot" data-rail="skills" data-label="arsenal">03</a>
+    <a href="#work" data-scroll class="rail-dot" data-rail="work" data-label="threat files">04</a>
+    <a href="#journey" data-scroll class="rail-dot" data-rail="journey" data-label="kill chain">05</a>
+    <a href="#contact" data-scroll class="rail-dot" data-rail="contact" data-label="secure channel">06</a>
   </nav>
 
   <!-- Mobile menu -->
-  <div id="mobile-menu" class="hidden-menu fixed inset-0 z-[65] bg-void/90 backdrop-blur-xl flex flex-col items-center justify-center gap-7">
-    <a href="#about" data-scroll class="font-display text-3xl text-cream">about</a>
-    <a href="#skills" data-scroll class="font-display text-3xl text-cream">skills</a>
-    <a href="#work" data-scroll class="font-display text-3xl text-cream">work</a>
-    <a href="#journey" data-scroll class="font-display text-3xl text-cream">journey</a>
-    <a href="#contact" data-scroll class="font-display text-3xl text-ember">contact</a>
+  <div id="mobile-menu" class="hidden-menu fixed inset-0 z-[65] bg-void/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-8">
+    <a href="#about" data-scroll class="font-mono text-lg tracking-wide text-cream">about</a>
+    <a href="#skills" data-scroll class="font-mono text-lg tracking-wide text-cream">skills</a>
+    <a href="#work" data-scroll class="font-mono text-lg tracking-wide text-cream">work</a>
+    <a href="#journey" data-scroll class="font-mono text-lg tracking-wide text-cream">journey</a>
+    <a href="#contact" data-scroll class="font-mono text-lg tracking-wide text-sig">contact</a>
   </div>
 
   <main class="relative z-10">
@@ -101,31 +101,31 @@
       <div class="w-[min(1060px,100%)] mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center">
         <div class="lg:col-span-7">
           <div data-hero="badge" class="inline-flex items-center gap-3 glass rounded-full pl-3.5 pr-6 py-2.5 mb-8">
-            <svg class="hero-cat" viewBox="0 0 16 16" width="32" height="32" fill="none" stroke="#e8a33d" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="hero-cat" viewBox="0 0 16 16" width="32" height="32" fill="none" stroke="#6FD18C" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
               <path class="cat-ear-l" d="M3.5 6 4.8 2.2 6.4 5.6" />
               <path class="cat-ear-r" d="M9.6 5.6 11.2 2.2 12.5 6" />
               <path d="M3.5 6 C3.5 11.5 12.5 11.5 12.5 6" />
-              <ellipse class="cat-eye" cx="6" cy="8" rx="0.7" ry="0.7" fill="#e8a33d" stroke="none" />
-              <ellipse class="cat-eye" cx="10" cy="8" rx="0.7" ry="0.7" fill="#e8a33d" stroke="none" />
+              <ellipse class="cat-eye" cx="6" cy="8" rx="0.7" ry="0.7" fill="#6FD18C" stroke="none" />
+              <ellipse class="cat-eye" cx="10" cy="8" rx="0.7" ry="0.7" fill="#6FD18C" stroke="none" />
               <path d="M7.6 9.4 C7.8 9.8 8.2 9.8 8.4 9.4" />
               <path class="cat-tail" d="M12.5 10.5 C14.5 10.5 15 7 13 6" />
             </svg>
             <span class="font-mono text-xs text-fog">available for freelance & collabs</span>
           </div>
 
-          <p data-hero="eyebrow" class="font-mono text-xs sm:text-sm text-ember mb-5 tracking-wide">
+          <p data-hero="eyebrow" class="font-mono text-xs sm:text-sm text-sig mb-5 tracking-wide">
             // Rupjyoti Talukdar — Assam, India
           </p>
           <p class="chapter-tag mb-6">[ <b>01</b> / 06 ] — HELLO</p>
 
           <h1 class="font-display font-bold leading-[1.02] tracking-tight text-[clamp(2.6rem,7.5vw,4.9rem)]">
-            <span class="mask"><span class="mask-inner" data-hero="line">I build <span class="grad-ember">security</span></span></span>
+            <span class="mask"><span class="mask-inner" data-hero="line">I build <span class="grad-sig">security</span></span></span>
             <span class="mask"><span class="mask-inner" data-hero="line">tooling for the</span></span>
             <span class="mask"><span class="mask-inner" data-hero="line">AI era.</span></span>
           </h1>
 
           <div data-hero="role" class="mt-6 font-mono text-sm sm:text-base text-fog h-7 overflow-hidden relative">
-            <span class="text-ember">▸</span>
+            <span class="text-sig">▸</span>
             <span id="role-word" class="text-cream">zero-trust runtimes</span><span class="term-caret"></span>
           </div>
 
@@ -147,16 +147,16 @@
 
         <div class="lg:col-span-5 flex flex-col justify-center" data-hero="term">
           <div class="cat-perch">
-          <svg class="hero-cat-big" viewBox="0 0 120 120" fill="none" stroke="#e8a33d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg class="hero-cat-big" viewBox="0 0 120 120" fill="none" stroke="#6FD18C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <!-- Head -->
             <path class="cat-ear-l" d="M40 42 L46 20 L58 36" />
             <path class="cat-ear-r" d="M80 36 L74 20 L80 42" />
-            <path d="M40 42 C40 28 80 28 80 42" />
+            <path class="cat-head" d="M40 42 C40 28 80 28 80 42" />
             <!-- Eyes -->
-            <ellipse class="cat-eye" cx="52" cy="44" rx="2.4" ry="3.2" fill="#e8a33d" stroke="none" />
-            <ellipse class="cat-eye" cx="68" cy="44" rx="2.4" ry="3.2" fill="#e8a33d" stroke="none" />
+            <ellipse class="cat-eye" cx="52" cy="44" rx="2.4" ry="3.2" fill="#6FD18C" stroke="none" />
+            <ellipse class="cat-eye" cx="68" cy="44" rx="2.4" ry="3.2" fill="#6FD18C" stroke="none" />
             <!-- Nose & mouth -->
-            <path d="M60 50 L58 53 L62 53 Z" fill="#e8a33d" stroke="none" />
+            <path d="M60 50 L58 53 L62 53 Z" fill="#6FD18C" stroke="none" />
             <path d="M56 55 C58 57 62 57 64 55" />
             <!-- Whiskers -->
             <path d="M44 48 L28 45 M44 52 L28 54 M76 48 L92 45 M76 52 L92 54" stroke-width="1.4" opacity="0.5" />
@@ -178,7 +178,13 @@
             <path class="cat-tail" d="M82 100 C96 96 100 78 92 68" />
           </svg>
           <div class="glass rounded-2xl p-6 spot-card" data-reveal>
-            <p class="font-mono text-xs text-ember mb-3 tracking-widest">◉ CURRENTLY BUILDING</p>
+            <div class="flex items-center gap-2 mb-4">
+              <span class="w-2.5 h-2.5 rounded-full bg-alert/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-ember/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-sig/80"></span>
+              <span class="font-mono text-[0.6rem] text-fog ml-2 tracking-wider">status.cfg</span>
+            </div>
+            <p class="font-mono text-xs text-sig mb-3 tracking-widest">◉ CURRENTLY BUILDING</p>
             <ul class="space-y-3">
               <li class="flex items-center justify-between gap-3">
                 <span class="font-medium text-sm">Kavach</span>
@@ -195,16 +201,16 @@
             </ul>
             <div class="mt-5 pt-4 border-t hairline flex items-center justify-between">
               <span class="font-mono text-[0.7rem] text-fog">mca · solo · ships tested code</span>
-              <a href="https://github.com/MadB0i" target="_blank" rel="noopener" class="font-mono text-xs text-ember hover:text-ember-soft transition-colors">github.com/MadB0i ↗</a>
+              <a href="https://github.com/MadB0i" target="_blank" rel="noopener" class="font-mono text-xs text-sig hover:text-sig-soft transition-colors">github.com/MadB0i ↗</a>
             </div>
           </div>
           </div>
         </div>
       </div>
 
-      <a href="#about" data-scroll class="absolute bottom-7 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-fog hover:text-ember transition-colors" aria-label="Scroll to about">
+      <a href="#about" data-scroll class="absolute bottom-7 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-fog hover:text-sig transition-colors" aria-label="Scroll to about">
         <span class="font-mono text-[0.65rem] tracking-[0.2em]">SCROLL</span>
-        <span class="block w-px h-10 bg-gradient-to-b from-ember to-transparent"></span>
+        <span class="block w-px h-10 bg-gradient-to-b from-sig to-transparent"></span>
       </a>
     </header>
 
@@ -232,13 +238,13 @@
             </h2>
             <div class="mt-8 glass rounded-2xl p-6 flex items-center gap-5 spot-card" data-reveal>
               <div class="relative shrink-0">
-                <div class="w-20 h-20 rounded-2xl grid place-items-center font-display font-bold text-2xl text-[#0a0b0e] bg-gradient-to-br from-ember-soft to-ember shadow-[0_10px_36px_-8px_rgba(232,163,61,.6)]">RT</div>
+                <div class="w-20 h-20 rounded-2xl grid place-items-center font-display font-bold text-2xl text-[#0a0b0e] bg-gradient-to-br from-sig-soft to-sig shadow-[0_10px_36px_-8px_rgba(111,209,140,.5)]">RT</div>
                 <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#28c840] border-4 border-void"></span>
               </div>
               <div>
                 <p class="font-display font-medium text-lg">Rupjyoti Talukdar</p>
                 <p class="font-mono text-xs text-fog mt-1">assam, india · utc +5:30</p>
-                <p class="font-mono text-xs text-ember mt-1.5">open to work ●</p>
+                <p class="font-mono text-xs text-sig mt-1.5">open to work ●</p>
               </div>
             </div>
           </div>
@@ -257,7 +263,7 @@
             the industry. No team, no fundraise — just building.
           </p>
           <div class="mt-8 glass rounded-2xl p-6 spot-card" data-reveal>
-            <p class="font-mono text-xs text-ember mb-4 tracking-widest">◉ CURRENTLY BUILDING</p>
+            <p class="font-mono text-xs text-sig mb-4 tracking-widest">◉ CURRENTLY BUILDING</p>
             <ul class="space-y-3.5">
               <li class="flex items-center justify-between gap-4">
                 <span class="font-medium">Kavach <span class="text-fog font-normal text-sm">— policy engine hardening</span></span>
@@ -328,9 +334,10 @@
     <section id="contact" class="py-28 sm:py-36 border-t hairline relative overflow-hidden">
       <div class="w-[min(1060px,100%)] mx-auto px-6 text-center">
         <p class="chapter-tag mb-5" data-reveal>[ <b>06</b> / 06 ] — SECURE CHANNEL</p>
-        <p class="font-mono text-xs tracking-[0.2em] text-ember mb-5" data-scramble data-reveal>ENCRYPTED · AES-256 · ZERO LOGS</p>
+        <p class="font-mono text-[0.68rem] text-fog/70 mb-4 tracking-widest" data-scramble data-reveal>handshake in progress · TLS 1.3</p>
+        <p class="font-mono text-xs tracking-[0.2em] text-sig mb-5" data-scramble data-reveal>ENCRYPTED · AES-256 · ZERO LOGS</p>
         <h2 class="mega" data-reveal>
-          Have an idea?<br /><span class="grad-ember">Let's secure it.</span>
+          Have an idea?<br /><span class="grad-sig">Let's secure it.</span>
         </h2>
         <p class="mt-6 text-fog max-w-xl mx-auto" data-reveal>
           Freelance builds, security reviews, or just a good systems
@@ -344,15 +351,15 @@
           <a href="https://github.com/MadB0i" target="_blank" rel="noopener" data-magnetic class="btn-ghost">github ↗</a>
         </div>
         <div class="mt-14 grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left" data-reveal-group>
-          <a href="mailto:contact.rupjyoti26@gmail.com" class="glass rounded-2xl p-5 spot-card hover:border-ember/50 transition-colors block">
+          <a href="mailto:contact.rupjyoti26@gmail.com" class="glass rounded-2xl p-5 contact-card block">
             <p class="font-mono text-[0.7rem] text-fog mb-2">EMAIL</p>
             <p class="font-medium text-sm break-all">contact.rupjyoti26@gmail.com</p>
           </a>
-          <a href="https://github.com/MadB0i" target="_blank" rel="noopener" class="glass rounded-2xl p-5 spot-card hover:border-ember/50 transition-colors block">
+          <a href="https://github.com/MadB0i" target="_blank" rel="noopener" class="glass rounded-2xl p-5 contact-card block">
             <p class="font-mono text-[0.7rem] text-fog mb-2">GITHUB</p>
             <p class="font-medium text-sm">github.com/MadB0i ↗</p>
           </a>
-          <a href="https://play.google.com/store/apps/details?id=com.rupjyoti.missionkhaki" target="_blank" rel="noopener" class="glass rounded-2xl p-5 spot-card hover:border-ember/50 transition-colors block">
+          <a href="https://play.google.com/store/apps/details?id=com.rupjyoti.missionkhaki" target="_blank" rel="noopener" class="glass rounded-2xl p-5 contact-card block">
             <p class="font-mono text-[0.7rem] text-fog mb-2">PLAY STORE</p>
             <p class="font-medium text-sm">Mission Khaki ↗</p>
           </a>
@@ -360,6 +367,27 @@
       </div>
     </section>
   </main>
+
+  <!-- ================= Project Modal ================= -->
+  <div id="project-modal" class="fixed inset-0 z-[90] hidden" aria-hidden="true" role="dialog" aria-modal="true">
+    <div id="modal-backdrop" class="absolute inset-0 bg-void/90 backdrop-blur-sm"></div>
+    <div id="modal-panel" class="absolute inset-4 sm:inset-8 lg:inset-y-8 lg:inset-x-[12%] glass rounded-2xl overflow-hidden flex flex-col">
+      <div class="flex items-center justify-between px-6 py-4 border-b hairline">
+        <div class="flex items-center gap-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-alert/80"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-ember/80"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-sig/80"></span>
+          <span id="modal-title" class="font-mono text-xs text-fog ml-2 tracking-wider"></span>
+        </div>
+        <button id="modal-close" class="w-8 h-8 grid place-items-center rounded-full border hairline text-fog hover:text-cream hover:border-cream/30 transition-colors cursor-pointer" aria-label="Close">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l12 12M13 1L1 13"/></svg>
+        </button>
+      </div>
+      <div id="modal-body" class="flex-1 overflow-y-auto p-6 sm:p-8">
+        <!-- injected -->
+      </div>
+    </div>
+  </div>
 
   <!-- ================= Footer ================= -->
   <footer class="relative z-10 border-t hairline overflow-hidden">
@@ -369,7 +397,7 @@
     <div class="w-[min(1060px,100%)] mx-auto px-6 py-8 flex flex-wrap items-center justify-between gap-4">
       <p class="font-mono text-xs text-fog">© <span id="year">2026</span> Rupjyoti Talukdar · designed & built solo</p>
       <p class="font-mono text-xs text-fog/70 hidden sm:block">vite · tailwind · gsap · lenis</p>
-      <button id="to-top" class="font-mono text-xs text-fog hover:text-ember transition-colors border hairline rounded-full px-5 py-2.5 cursor-pointer" aria-label="Back to top">↑ top</button>
+      <button id="to-top" class="font-mono text-xs text-fog hover:text-sig transition-colors border hairline rounded-full px-5 py-2.5 cursor-pointer" aria-label="Back to top">↑ top</button>
     </div>
   </footer>
 
