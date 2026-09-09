@@ -1,0 +1,840 @@
+/* ============================================================
+   Portfolio — Verification Ledger Design System
+   ============================================================ */
+
+:root {
+  /* Palette */
+  --bg:         #0C0D10;
+  --surface:    #15171C;
+  --surface-2:  #1C1E24;
+  --amber:      #E8A33D;
+  --amber-dim:  rgba(232, 163, 61, 0.08);
+  --blue:       #4C6B8A;
+  --blue-dim:   rgba(76, 107, 138, 0.25);
+  --text:       #ECE9E2;
+  --text-muted: #8A8D93;
+  --rule:       rgba(138, 141, 147, 0.1);
+  --rule-strong:rgba(138, 141, 147, 0.2);
+}
+
+/* ---- Reset ---- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  overflow-x: hidden;
+}
+
+/* ---- Ambient background trace ------------------------------------
+   Faint drifting dot field + one slow vertical scan line behind the
+   whole page. Purely decorative; both layers sit behind all content
+   and animate only transform. Labels/scan copied to JS for structure.
+   ------------------------------------------------------------------ */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  inset: -40% -40%;
+  background-image: radial-gradient(rgba(76, 107, 138, 0.10) 1px, transparent 1.5px);
+  background-size: 56px 56px;
+  animation: ambientDrift 90s linear infinite;
+}
+
+body::after {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  left: 12%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(232, 163, 61, 0.10) 30%,
+    rgba(232, 163, 61, 0.16) 50%,
+    rgba(232, 163, 61, 0.10) 70%,
+    transparent
+  );
+  animation: ambientScan 26s ease-in-out infinite alternate;
+}
+
+@keyframes ambientDrift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(0, -56px, 0); }
+}
+
+@keyframes ambientScan {
+  from { transform: translateX(0); }
+  to   { transform: translateX(78vw); }
+}
+
+a {
+  color: var(--amber);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+a:hover { color: #f0b85a; }
+
+/* Visible focus ring — keyboard only */
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+::selection {
+  background: rgba(232, 163, 61, 0.25);
+  color: var(--text);
+}
+
+/* ---- Typography ---- */
+.font-mono {
+  font-family: 'IBM Plex Mono', 'SF Mono', 'Consolas', monospace;
+}
+
+h1, h2, h3, h4 { font-weight: 500; line-height: 1.2; }
+
+/* ---- Layout ---- */
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+section { padding: 80px 0; }
+
+.section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  letter-spacing: 0.02em;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Scan draw — a hairline sweeps in under each section label on
+   entry, matching the ledger-row scan language */
+.section-label::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  height: 1px;
+  width: 100%;
+  background: var(--amber);
+  opacity: 0;
+  transform: translateX(-101%);
+}
+.section-label.revealed::after {
+  animation: labelDraw 520ms cubic-bezier(0.22, 1, 0.36, 1) 0.18s forwards;
+}
+
+@keyframes labelDraw {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ============================================================
+   Boot Screen
+   ============================================================ */
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  transition: opacity 0.35s ease;
+}
+.boot-screen.done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.boot-panel {
+  max-width: 440px;
+  width: 100%;
+  position: relative;
+}
+
+.boot-line {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.875rem;
+  line-height: 2.2;
+  color: var(--text-muted);
+  opacity: 0;
+  position: relative;
+}
+
+/* Scanning cursor — a narrow amber bar that ticks down line by line
+   while the sequence runs, then fades out */
+.boot-scan {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 16px;
+  margin-top: 8px;
+  border-left: 2px solid var(--amber);
+  z-index: 2;
+  pointer-events: none;
+  transition: transform 0.18s ease;
+}
+.boot-scan::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 4px;
+  height: 1px;
+  background: var(--amber);
+  box-shadow: 0 0 12px 2px rgba(232, 163, 61, 0.55);
+  opacity: 0.9;
+}
+.boot-scan.hidden {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.boot-line .label { white-space: nowrap; }
+
+.boot-line .dots {
+  flex: 1;
+  overflow: hidden;
+  color: var(--text-muted);
+  opacity: 0.3;
+  min-width: 20px;
+}
+
+.boot-line .result {
+  white-space: nowrap;
+  color: transparent;
+}
+
+.boot-line.show .dots {
+  opacity: 0.3;
+}
+
+.boot-line.verified .result {
+  color: var(--amber);
+  animation: amberFlicker 0.35s ease;
+}
+
+/* Verified lines get a brief amber glow under the text while the
+   single scan bar is still crossing below them */
+.boot-line.verified .label {
+  text-shadow: 0 0 18px rgba(232, 163, 61, 0.35);
+}
+
+.boot-line.verified .label {
+  color: var(--text);
+}
+
+.boot-line.active-status .result {
+  color: var(--blue);
+  animation: statusReveal 0.3s ease;
+}
+
+.boot-line.active-status .label {
+  color: var(--text);
+}
+
+.boot-skip {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 1001;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: opacity 0.2s, color 0.15s;
+  border-radius: 2px;
+}
+.boot-skip:hover {
+  color: var(--text);
+  border-color: var(--amber);
+}
+.boot-skip.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes amberFlicker {
+  0%   { opacity: 0.3; }
+  25%  { opacity: 1; }
+  40%  { opacity: 0.4; }
+  60%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+@keyframes statusReveal {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.hero {
+  padding-top: 120px;
+  padding-bottom: 80px;
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition: opacity 0.5s ease 0.05s, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.05s;
+}
+.hero.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.hero-name {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.hero-positioning {
+  font-size: 1.125rem;
+  color: var(--text-muted);
+  max-width: 560px;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8125rem;
+  color: var(--bg);
+  background: var(--amber);
+  padding: 10px 22px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-radius: 2px;
+  font-weight: 500;
+}
+.btn-primary:hover {
+  background: #f0b85a;
+  color: var(--bg);
+}
+
+.btn-ghost {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  padding: 10px 22px;
+  border: 1px solid var(--rule-strong);
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  border-radius: 2px;
+}
+.btn-ghost:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
+/* ============================================================
+   Divider
+   ============================================================ */
+.divider {
+  height: 1px;
+  background: var(--rule);
+  border: none;
+}
+
+/* ============================================================
+   Scroll Reveal — verification scan language
+   Rows begin closed; when JS adds `.revealed` (IntersectionObserver)
+   an amber scan bar sweeps left→right and the content wipes open
+   behind it via clip-path. Both are plain animatable properties
+   (clip-path inset + background-position), so no @property needed.
+   Animate transform/opacity/clip only — GC-friendly, 60fps.
+   ============================================================ */
+
+.scroll-reveal {
+  --scan-stagger: 0s;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+}
+
+/* Ledger rows: hard left→right wipe that reads as a scan fill.
+   --bar-sweep defaults to the container max-width so the bar still
+   crosses a full row even if JS never measures it. */
+.scroll-reveal.reveal-line {
+  --bar-sweep: 860px;
+  position: relative;
+}
+
+.scroll-reveal.reveal-line.revealed {
+  animation: rowWipe 760ms cubic-bezier(0.22, 1, 0.36, 1) forwards
+             var(--scan-stagger);
+}
+
+/* Transient amber scan bar — slides across during the reveal, then
+   sits outside the row (clipped by overflow: hidden) once done */
+.scroll-reveal.reveal-line.revealed::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 58px;
+  pointer-events: none;
+  background: linear-gradient(to right,
+    rgba(232, 163, 61, 0.9),
+    rgba(232, 163, 61, 0.35) 70%,
+    rgba(232, 163, 61, 0));
+  box-shadow: 0 0 22px 2px rgba(232, 163, 61, 0.22);
+  transform: translateX(calc(var(--bar-sweep) * -1));
+  animation: rowBarSweep 760ms cubic-bezier(0.22, 1, 0.36, 1) forwards
+             var(--scan-stagger);
+}
+
+@keyframes rowBarSweep {
+  to { transform: translateX(var(--bar-sweep)); }
+}
+
+@keyframes rowWipe {
+  0%   { clip-path: inset(0 100% 0 0); transform: translate3d(0, 10px, 0); }
+  12%  { clip-path: inset(0 88% 0 0); }
+  100% { clip-path: inset(0 0 0 0);    transform: translate3d(0, 0, 0); }
+}
+
+/* Generic fade-up for headings, labels, secondary items */
+.scroll-reveal.reveal-fade {
+  animation: revealFade 640ms cubic-bezier(0.22, 1, 0.36, 1) forwards
+             var(--scan-stagger);
+}
+
+@keyframes revealFade {
+  0%   { opacity: 0; transform: translate3d(0, 10px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* After the wipe the row is fully open; drop any leftover clip */
+.scroll-reveal.reveal-line.revealed {
+  clip-path: none;
+}
+
+/* ============================================================
+   Projects Ledger
+   ============================================================ */
+.projects-section {
+  padding: 64px 0;
+}
+
+/* Ledger header row */
+.ledger-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding: 0 0 12px 0;
+  border-bottom: 1px solid var(--rule-strong);
+  margin-bottom: 0;
+}
+
+.ledger-header span {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Project row.
+   ::before  = cursor-tracking amber sight line (coarse pointers only)
+   ::after   = transient scan-sweep bar during the reveal animation
+   overflow  hidden keeps both incapable of leaking past the row */
+.project-row {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  transition: background 0.2s;
+}
+
+.project-row.expanded {
+  background: var(--surface);
+}
+
+.project-row:hover {
+  background: var(--amber-dim);
+}
+
+/* Cursor sight line — a 1px amber contrail that tracks the pointer's
+   Y within the row. Driven by --gy set in JS (pointer events only);
+   an rAF loop keeps the transform cheap. Same element is used as a
+   static left rail on touch via a separate rule below. */
+.project-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 1px;
+  background: var(--amber);
+  box-shadow: 0 0 14px 2px rgba(232, 163, 61, 0.4);
+  opacity: 0;
+  transform: translateY(var(--gy, 0px));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Only fine pointer devices get the tracking contrail; touch and
+   coarse pointers keep the static flat hover background */
+@media (hover: hover) and (pointer: fine) {
+  .project-row:hover::before {
+    opacity: 0.9;
+  }
+}
+
+/* Verified pulse — the status dot emits an amber ring when the row
+   expands, reinforcing the "checked off" language */
+.project-row.expanded .project-status::before {
+  animation: verifiedPulse 0.55s ease 0.28s;
+}
+
+@keyframes verifiedPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(232, 163, 61, 0.55); }
+  70%  { box-shadow: 0 0 0 9px rgba(232, 163, 61, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(232, 163, 61, 0); }
+}
+
+.project-main {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: baseline;
+  padding: 18px 0;
+  cursor: pointer;
+}
+
+.project-info { min-width: 0; }
+
+.project-name {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.project-row.expanded .project-name {
+  color: var(--amber);
+}
+
+.project-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.project-status {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  padding-top: 2px;
+  align-self: start;
+}
+
+/* Status dot indicator */
+.project-status::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 7px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+.project-status[data-status="live"]::before,
+.project-status[data-status="active"]::before {
+  background: var(--amber);
+}
+
+.project-status[data-status="shipped"]::before,
+.project-status[data-status="beta"]::before {
+  background: var(--blue);
+}
+
+.project-status[data-status="archived"]::before {
+  background: var(--text-muted);
+}
+
+/* Expandable details — height animates on the grid track while the
+   inner content cross-fades and settles. Both cheap properties. */
+.project-details {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.project-details.open {
+  grid-template-rows: 1fr;
+}
+
+.project-details-inner {
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.28s ease 0.1s, transform 0.28s ease 0.1s;
+}
+
+.project-details.open .project-details-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.project-details-content {
+  padding: 0 0 22px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.project-full-desc {
+  font-size: 0.9375rem;
+  color: var(--text);
+  line-height: 1.65;
+  max-width: 600px;
+}
+
+.project-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  align-items: center;
+}
+
+.project-stack {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--blue);
+  background: var(--blue-dim);
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+
+.project-links {
+  display: flex;
+  gap: 16px;
+}
+
+.project-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--amber);
+  padding: 3px 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+.project-link:hover {
+  border-bottom-color: var(--amber);
+}
+
+/* ============================================================
+   Secondary Projects (Also Shipped)
+   ============================================================ */
+.secondary-section {
+  padding: 48px 0 64px;
+}
+
+.secondary-list {
+  list-style: none;
+}
+
+.secondary-item {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px 20px;
+}
+
+.secondary-item:last-child {
+  border-bottom: none;
+}
+
+.secondary-name {
+  font-weight: 500;
+  font-size: 0.9375rem;
+  color: var(--text);
+}
+
+.secondary-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  flex: 1;
+  min-width: 200px;
+}
+
+.secondary-stack {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--blue);
+  white-space: nowrap;
+}
+
+.secondary-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--amber);
+}
+
+/* ============================================================
+   About
+   ============================================================ */
+.about-section {
+  padding: 64px 0;
+}
+
+.about-text {
+  font-size: 1rem;
+  color: var(--text);
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+.about-text + .about-text {
+  margin-top: 16px;
+}
+
+/* ============================================================
+   Contact
+   ============================================================ */
+.contact-section {
+  padding: 64px 0 96px;
+}
+
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  list-style: none;
+}
+
+.contact-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.875rem;
+  color: var(--text);
+  transition: color 0.15s;
+  border-bottom: 1px solid var(--rule-strong);
+  padding-bottom: 1px;
+}
+.contact-link:hover {
+  color: var(--amber);
+  border-bottom-color: var(--amber);
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.site-footer {
+  padding: 24px 0;
+  border-top: 1px solid var(--rule);
+  margin-top: 0;
+}
+
+.footer-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 640px) {
+  section { padding: 56px 0; }
+
+  .container { padding: 0 18px; }
+
+  .hero { padding-top: 80px; padding-bottom: 56px; }
+
+  .hero-name { font-size: 1.75rem; }
+
+  .hero-positioning { font-size: 1rem; }
+
+  .ledger-header {
+    display: none;
+  }
+
+  .project-main {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .project-status {
+    padding-top: 0;
+  }
+
+  .secondary-item {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .secondary-desc { min-width: 0; }
+
+  .boot-line { font-size: 0.75rem; }
+
+  .hero-actions { flex-direction: column; align-items: flex-start; }
+}
+
+/* ============================================================
+   Reduced Motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .boot-screen { display: none !important; }
+  .hero { opacity: 1 !important; }
+  body::before, body::after { display: none !important; }
+  .scroll-reveal { opacity: 1 !important; transform: none !important; }
+  .section-label::after { display: none !important; }
+  html { scroll-behavior: auto; }
+}
