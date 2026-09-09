@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-void: #07080b;
-  --color-panel: #0e1015;
-  --color-panel2: #14171e;
+  --color-void: #0a0f1c;
+  --color-panel: #0f1524;
+  --color-panel2: #161e33;
   --color-ember: #e8a33d;
   --color-ember-soft: #f0b85a;
   --color-ice: #7d9cc4;
@@ -29,7 +29,12 @@ html.lenis body {
 }
 
 body {
-  background: var(--color-void);
+  background:
+    radial-gradient(900px 520px at 12% -4%, rgba(232, 163, 61, 0.07), transparent 62%),
+    radial-gradient(1050px 620px at 88% 4%, rgba(93, 123, 190, 0.1), transparent 62%),
+    radial-gradient(860px 620px at 50% 112%, rgba(93, 123, 190, 0.06), transparent 60%),
+    var(--color-void);
+  background-attachment: fixed;
   color: var(--color-cream);
   font-family: var(--font-body);
   overflow-x: hidden;
@@ -45,12 +50,12 @@ body {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0b0e;
+  background: #0a0e18;
 }
 ::-webkit-scrollbar-thumb {
   background: #262a33;
   border-radius: 8px;
-  border: 2px solid #0a0b0e;
+  border: 2px solid #0a0e18;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(232, 163, 61, 0.55);
@@ -324,6 +329,12 @@ body {
   width: 1px;
   background: linear-gradient(to bottom, rgba(232, 163, 61, 0.6), rgba(255, 255, 255, 0.08));
 }
+/* Gutter lives on the item itself so the absolute dot never
+   sits on top of the text (dot: 0–15px, text starts at 40px). */
+.t-item {
+  position: relative;
+  padding-left: 2.5rem;
+}
 .t-dot {
   position: absolute;
   left: 0;
@@ -410,6 +421,16 @@ body {
   will-change: transform;
 }
 
+/* Film grain — subtle texture over the ambient layers so the
+   background reads rich, not flat. Below nav/cursor/preloader. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");
+}
 .pulse-dot {
   position: relative;
   width: 8px;

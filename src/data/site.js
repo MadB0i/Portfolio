@@ -83,10 +83,10 @@ export const FLAGSHIP = [
     name: 'Mission Khaki',
     desc: 'Exam-prep app for SSC, Assam Police, Army GD and Railway aspirants',
     fullDesc:
-      'Exam-prep app for SSC, Assam Police, Army GD and Railway aspirants, with thousands of tri-lingual questions, full mock tests and section-wise scoring. Live on the Play Store (beta).',
+      'Exam-prep app for SSC, Assam Police, Army GD and Railway aspirants, with thousands of tri-lingual questions, full mock tests and section-wise scoring. Live on the Play Store.',
     stack: ['Android', 'Play Store', 'i18n'],
-    status: 'Live (beta)',
-    statusKey: 'beta',
+    status: 'Live',
+    statusKey: 'live',
     link: {
       label: 'Play Store',
       url: 'https://play.google.com/store/apps/details?id=com.rupjyoti.missionkhaki',
@@ -158,7 +158,7 @@ export const TIMELINE = [
     period: '2025',
     title: 'Shipped to real users',
     org: 'RepoProof · Mission Khaki',
-    desc: 'Published RepoProof on npm (MIT) and took Mission Khaki live on the Play Store beta with thousands of tri-lingual questions.',
+    desc: 'Published RepoProof on npm (MIT) and took Mission Khaki live on the Play Store with thousands of tri-lingual questions.',
   },
   {
     period: '2024',
