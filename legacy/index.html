@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rupjyoti Talukdar — Security & Systems Tooling</title>
+  <meta name="description" content="Independent developer building security and systems tooling — zero-trust runtimes, malware forensics, LLM infrastructure.">
+
+  <!-- Fonts: IBM Plex Sans + Mono (monospace used only for data) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============================================================
+       Boot / Verification Sequence
+       ============================================================ -->
+  <div class="boot-screen" id="boot-screen" aria-hidden="true">
+    <div class="boot-panel">
+      <div class="boot-line font-mono">
+        <span class="label">identity</span>
+        <span class="dots"></span>
+        <span class="result"></span>
+      </div>
+      <div class="boot-line font-mono">
+        <span class="label">repositories</span>
+        <span class="dots"></span>
+        <span class="result"></span>
+      </div>
+      <div class="boot-line font-mono">
+        <span class="label">languages</span>
+        <span class="dots"></span>
+        <span class="result"></span>
+      </div>
+      <div class="boot-line font-mono">
+        <span class="label">projects</span>
+        <span class="dots"></span>
+        <span class="result"></span>
+      </div>
+      <div class="boot-line font-mono">
+        <span class="label">toolchain</span>
+        <span class="dots"></span>
+        <span class="result"></span>
+      </div>
+      <div class="boot-line font-mono">
+        <span class="label">platform</span>
+        <span class="dots"></span>
+        <span class="result"></span>
+      </div>
+      <div class="boot-line font-mono">
+        <span class="label">license</span>
+        <span class="dots"></span>
+        <span class="result"></span>
+      </div>
+      <div class="boot-line font-mono">
+        <span class="label">status</span>
+        <span class="dots"></span>
+        <span class="result"></span>
+      </div>
+    </div>
+  </div>
+
+  <button class="boot-skip" id="boot-skip" aria-label="Skip boot sequence">skip</button>
+
+  <!-- ============================================================
+       Hero
+       ============================================================ -->
+  <header class="hero" id="hero">
+    <div class="container">
+      <h1 class="hero-name">Rupjyoti Talukdar</h1>
+      <p class="hero-positioning">Independent developer building security and systems tooling — zero-trust runtimes, malware forensics, LLM infrastructure — plus a couple of things people actually use.</p>
+      <div class="hero-actions">
+        <a href="#work" class="btn-primary">View work</a>
+        <a href="#contact" class="btn-ghost">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <hr class="divider">
+
+  <!-- ============================================================
+       Flagship Work — Ledger
+       ============================================================ -->
+  <section class="projects-section" id="work">
+    <div class="container">
+      <div class="section-label font-mono scroll-reveal reveal-fade">flagship projects</div>
+
+      <div class="ledger-header">
+        <span>Project</span>
+        <span>Status</span>
+      </div>
+
+      <div id="flagship-ledger"></div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================================================
+       Also Shipped
+       ============================================================ -->
+  <section class="secondary-section">
+    <div class="container">
+      <div class="section-label font-mono scroll-reveal reveal-fade">also shipped</div>
+      <ul class="secondary-list" id="secondary-list"></ul>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================================================
+       About
+       ============================================================ -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="section-label font-mono scroll-reveal reveal-fade">about</div>
+      <p class="about-text scroll-reveal reveal-fade">I'm Rupjyoti — an independent developer based in Assam, India. MCA graduate, working solo. I build security and systems tooling: zero-trust runtimes, malware forensics tools, LLM infrastructure. Most of my projects are some flavor of "prove that something is what it claims to be."</p>
+      <p class="about-text scroll-reveal reveal-fade" style="--scan-stagger: 90ms">I ship things that work, test them, and open-source what I can. No team, no fundraise, just building.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================================================
+       Contact
+       ============================================================ -->
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <div class="section-label font-mono scroll-reveal reveal-fade">contact</div>
+      <ul class="contact-links">
+        <li class="scroll-reveal reveal-fade"><a class="contact-link" href="mailto:contact.rupjyoti26@gmail.com">contact.rupjyoti26@gmail.com</a></li>
+        <li class="scroll-reveal reveal-fade" style="--scan-stagger: 90ms"><a class="contact-link" href="https://github.com/MadB0i" target="_blank" rel="noopener noreferrer">github.com/MadB0i</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Footer
+       ============================================================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <p class="footer-text font-mono">Rupjyoti Talukdar · Built and tested · 2026</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
