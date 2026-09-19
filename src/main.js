@@ -228,7 +228,12 @@ function heroIntro() {
     .to('[data-hero="stats"]', { opacity: 1, y: 0, duration: 0.5 }, 0.6);
 }
 
-const BOOT_WORDS = ['perimeter scan', 'intrusion detected', 'tracing source', 'threat isolated', 'threat neutralized ✓'];
+const BOOT_LINES = [
+  { text: '$ perimeter scan --all', color: '#9AA3A6' },
+  { text: '$ intrusion detected :: tracing source', color: '#ff5d6e' },
+  { text: '$ isolating threat vector …', color: '#ff5d6e' },
+  { text: '$ threat neutralized ✓', color: '#6FD18C' },
+];
 
 function runPreloader() {
   const pre = document.getElementById('preloader');
@@ -250,11 +255,13 @@ function runPreloader() {
   const word = document.getElementById('boot-word');
   const state = { v: 0 };
   let wi = 0;
+  word.textContent = BOOT_LINES[0].text;
+  word.style.color = BOOT_LINES[0].color;
   const wordTimer = setInterval(() => {
-    wi = (wi + 1) % BOOT_WORDS.length;
-    word.textContent = BOOT_WORDS[wi];
-    // Red while hostile, green once neutralized.
-    word.style.color = wi === BOOT_WORDS.length - 1 ? '#6FD18C' : '#ff5d6e';
+    wi = (wi + 1) % BOOT_LINES.length;
+    word.textContent = BOOT_LINES[wi].text;
+    // Grey while scanning, red while hostile, green once neutralized.
+    word.style.color = BOOT_LINES[wi].color;
   }, 300);
 
   document.getElementById('boot-skip').addEventListener('click', () => {
@@ -349,6 +356,27 @@ function initScrollFX() {
           scrollTrigger: { trigger: item, start: 'top 86%', once: true } }
       );
     });
+
+    /* scroll scanner sweeping down the kill-chain */
+    const scan = document.getElementById('tl-scan');
+    const tl = document.getElementById('timeline');
+    if (scan && tl) {
+      gsap.fromTo(
+        scan,
+        { top: 0, opacity: 0 },
+        {
+          top: '100%',
+          opacity: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#journey',
+            start: 'top 70%',
+            end: 'bottom 60%',
+            scrub: 0.6,
+          },
+        },
+      );
+    }
   }
 
   // Masked-line rises (manifesto) — Honey kinetic feel
@@ -369,11 +397,10 @@ function initScrollFX() {
 
   // Count-up stats
   document.querySelectorAll('[data-count]').forEach((el) => {
-    const target = Number(el.dataset.count);
     const pad = el.dataset.pad === '1';
     const fmt = (v) => (pad ? String(v).padStart(2, '0') : String(v));
     if (REDUCED) {
-      el.textContent = fmt(target);
+      el.textContent = fmt(Number(el.dataset.count));
       return;
     }
     const obj = { v: 0 };
@@ -381,7 +408,9 @@ function initScrollFX() {
       trigger: el,
       start: 'top 92%',
       once: true,
-      onEnter: () =>
+      onEnter: () => {
+        // Read target lazily so live GitHub data (arriving later) still counts up correctly.
+        const target = Number(el.dataset.count);
         gsap.to(obj, {
           v: target,
           duration: 1.4,
@@ -389,7 +418,8 @@ function initScrollFX() {
           onUpdate: () => {
             el.textContent = fmt(Math.round(obj.v));
           },
-        }),
+        });
+      },
     });
   });
 
@@ -629,8 +659,247 @@ document.getElementById('copy-email').addEventListener('click', async () => {
   }, 1800);
 });
 
-/* ---------- text scramble (secure-channel line) ---------- */
-function initScramble() {
+/* ---------- interactive terminal ---------- */
+function initTerminal() {
+  const out = document.getElementById('term-out');
+  const form = document.getElementById('term-form');
+  const input = document.getElementById('term-in');
+  const shell = document.getElementById('term-shell');
+  if (!out || !form || !input) return;
+
+  const PROMPT = 'visitor@rt:~$';
+  const hist = [];
+  let hi = -1;
+
+  function print(html) {
+    const d = document.createElement('div');
+    d.className = 'term-line';
+    d.innerHTML = html;
+    out.appendChild(d);
+    out.scrollTop = out.scrollHeight;
+  }
+  function echo(cmd) {
+    const d = document.createElement('div');
+    d.className = 'term-line';
+    const p = document.createElement('span');
+    p.className = 't-prompt';
+    p.textContent = `${PROMPT} `;
+    const c = document.createElement('span');
+    c.className = 't-cmd';
+    c.textContent = cmd;
+    d.append(p, c);
+    out.appendChild(d);
+    out.scrollTop = out.scrollHeight;
+  }
+
+  const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+  const COMMANDS = {
+    help() {
+      return `<span class="t-ok">available commands:</span>
+  <span class="t-cmd">about</span>      who is this guy
+  <span class="t-cmd">skills</span>     weapons of choice
+  <span class="t-cmd">projects</span>   flagship builds
+  <span class="t-cmd">journey</span>    how he got here
+  <span class="t-cmd">contact</span>    open a secure channel
+  <span class="t-cmd">github</span>     github.com/MadB0i
+  <span class="t-cmd">cat</span>        pet the cat
+  <span class="t-cmd">whoami</span>     check clearance
+  <span class="t-cmd">date</span>       system time
+  <span class="t-cmd">clear</span>      wipe the shell`;
+    },
+    about() {
+      return `Rupjyoti Talukdar — independent developer, Assam IN.
+zero-trust runtimes · malware forensics · LLM infra.
+<span class="t-dim">mode: solo · ships tested code · open to work</span>`;
+    },
+    skills() {
+      return SKILLS.map((s) => `<span class="t-ok">▸ ${esc(s.title)}</span> — ${esc(s.tags.slice(0, 4).join(' · '))}`).join('\n');
+    },
+    projects() {
+      return FLAGSHIP.map((p, i) => `<span class="t-ok">[${String(i + 1).padStart(2, '0')}] ${esc(p.name)}</span> — ${esc(p.desc)} <span class="t-dim">(${esc(p.status)})</span>`).join('\n')
+        + `\n<span class="t-dim">full dossiers in the THREAT FILES section below ↓</span>`;
+    },
+    journey() {
+      return TIMELINE.map((t) => `<span class="t-ok">${esc(t.period)}</span>  ${esc(t.title)} <span class="t-dim">— ${esc(t.org)}</span>`).join('\n');
+    },
+    contact() {
+      return `email   <a href="mailto:contact.rupjyoti26@gmail.com">contact.rupjyoti26@gmail.com</a>
+github  <a href="https://github.com/MadB0i" target="_blank" rel="noopener">github.com/MadB0i</a>
+<span class="t-dim">or scroll down to the SECURE CHANNEL section.</span>`;
+    },
+    github() {
+      return `opening <a href="https://github.com/MadB0i" target="_blank" rel="noopener">github.com/MadB0i ↗</a>`;
+    },
+    whoami() {
+      return `visitor — clearance: <span class="t-warn">GUEST</span> (the cat is watching you)`;
+    },
+    date() {
+      return esc(new Date().toString());
+    },
+    cat() {
+      return `<span class="t-ok"> /\\_/\\
+( o.o )
+ &gt; ^ &lt;</span>  <span class="t-dim">— hiss acknowledged. threat level: adorable.</span>`;
+    },
+    sudo() {
+      return `<span class="t-err">permission denied.</span> <span class="t-dim">nice try, visitor.</span>`;
+    },
+  };
+
+  function run(raw) {
+    const cmd = raw.trim().toLowerCase();
+    echo(raw.trim());
+    if (!cmd) return;
+    if (cmd === 'clear') {
+      out.innerHTML = '';
+      return;
+    }
+    if (COMMANDS[cmd]) print(COMMANDS[cmd]());
+    else print(`<span class="t-err">command not found:</span> ${esc(cmd)} <span class="t-dim">— try 'help'</span>`);
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const v = input.value;
+    if (v.trim()) {
+      hist.unshift(v);
+      if (hist.length > 50) hist.pop();
+    }
+    hi = -1;
+    run(v);
+    input.value = '';
+    input.focus();
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (hi < hist.length - 1) {
+        hi += 1;
+        input.value = hist[hi] || '';
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (hi > 0) {
+        hi -= 1;
+        input.value = hist[hi] || '';
+      } else {
+        hi = -1;
+        input.value = '';
+      }
+    }
+  });
+  if (shell) {
+    shell.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return;
+      if (window.getSelection()?.toString()) return;
+      input.focus({ preventScroll: true });
+    });
+  }
+
+  /* boot text once visible */
+  let booted = false;
+  const boot = () => {
+    if (booted) return;
+    booted = true;
+    print(`<span class="t-ok">● rt shell v2.4 — secure channel established</span>`);
+    print(`<span class="t-dim">type <span class="t-cmd">help</span> to interrogate. type <span class="t-cmd">cat</span> at your own risk.</span>`);
+  };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (en) => {
+        if (en[0].isIntersecting) {
+          boot();
+          io.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+    io.observe(shell || out);
+  } else {
+    boot();
+  }
+}
+
+/* ---------- live github stats ---------- */
+function initLiveStats() {
+  const wrap = document.querySelector('[data-hero="stats"]');
+  if (!wrap) return;
+  const KEY = 'rt_gh_cache_v1';
+  const TTL = 6 * 3600 * 1000;
+
+  const ago = (iso) => {
+    const s = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (s < 90) return 'just now';
+    const m = Math.floor(s / 60);
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    const d = Math.floor(h / 24);
+    if (d < 30) return `${d}d ago`;
+    return `${Math.floor(d / 30)}mo ago`;
+  };
+
+  const apply = (data) => {
+    const cells = wrap.querySelectorAll(':scope > div');
+    if (cells[0]) {
+      const el = cells[0].querySelector('[data-count]');
+      if (el) {
+        el.dataset.count = String(data.repos);
+        if (REDUCED) el.textContent = String(data.repos).padStart(2, '0');
+      }
+    }
+    if (cells[1]) {
+      const el = cells[1].querySelector('[data-count]');
+      if (el) {
+        el.dataset.count = String(data.langs);
+        if (REDUCED) el.textContent = String(data.langs).padStart(2, '0');
+      }
+    }
+    if (!document.getElementById('live-stats-line')) {
+      const p = document.createElement('p');
+      p.id = 'live-stats-line';
+      p.className = 'font-mono text-[0.68rem] text-fog/80 mt-4 col-span-full';
+      p.innerHTML = `<span class="live-dot"></span>live · ${data.stars}★ total · pushed ${ago(data.pushed)}`;
+      wrap.after(p);
+    }
+  };
+
+  try {
+    const cached = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (cached && Date.now() - cached.ts < TTL) {
+      apply(cached.data);
+      return;
+    }
+  } catch { /* ignore */ }
+
+  Promise.all([
+    fetch('https://api.github.com/users/MadB0i').then((r) => {
+      if (!r.ok) throw new Error('gh user');
+      return r.json();
+    }),
+    fetch('https://api.github.com/users/MadB0i/repos?per_page=100&sort=pushed').then((r) => {
+      if (!r.ok) throw new Error('gh repos');
+      return r.json();
+    }),
+  ])
+    .then(([user, repos]) => {
+      const own = Array.isArray(repos) ? repos.filter((r) => !r.fork) : [];
+      const data = {
+        repos: own.length || user.public_repos || 0,
+        stars: own.reduce((a, r) => a + (r.stargazers_count || 0), 0),
+        langs: new Set(own.map((r) => r.language).filter(Boolean)).size || 0,
+        pushed: (own[0] && own[0].pushed_at) || user.updated_at,
+      };
+      try {
+        localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), data }));
+      } catch { /* ignore */ }
+      apply(data);
+    })
+    .catch(() => { /* offline / rate-limited → keep static numbers */ });
+}
+
+/* ---------- text scramble (secure-channel line) ---------- */function initScramble() {
   const els = document.querySelectorAll('[data-scramble]');
   if (!els.length || REDUCED) return;
   const GLYPHS = '$>_#%:;@&|~^!?=[]{}';
@@ -1123,3 +1392,5 @@ initRotator();
 initScramble();
 initCatState();
 initProjectModal();
+initTerminal();
+initLiveStats();

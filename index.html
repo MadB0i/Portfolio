@@ -42,7 +42,7 @@
         <button id="boot-skip" class="border hairline rounded-full px-4 py-1.5 hover:border-sig hover:text-cream transition-colors cursor-pointer">skip</button>
       </div>
       <div class="font-mono text-sm text-fog mb-4 h-6">
-        <span class="text-sig">▸</span> <span id="boot-word">perimeter scan</span><span class="term-caret"></span>
+        <span class="text-sig">▸</span> <span id="boot-word">$ perimeter scan --all</span><span class="term-caret"></span>
       </div>
       <div class="font-display font-bold leading-none text-[clamp(4rem,14vw,7.5rem)] text-cream tabular-nums">
         <span id="boot-count">0</span><span class="text-sig">%</span>
@@ -233,6 +233,33 @@
       <div class="marquee-track" id="marquee-track"></div>
     </div>
 
+    <!-- ================= Terminal ================= -->
+    <section id="terminal" class="py-24 sm:py-28">
+      <div class="w-[min(1060px,100%)] mx-auto px-6">
+        <p class="chapter-tag mb-4" data-reveal>[ <b>01.5</b> ] — SHELL ACCESS</p>
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-10">
+          <h2 class="font-display font-bold tracking-tight text-[clamp(1.9rem,4.5vw,2.9rem)] leading-tight" data-reveal>
+            Don't scroll.<br /><span class="grad-sig">Talk to it.</span>
+          </h2>
+          <p class="font-mono text-xs text-fog max-w-xs" data-reveal>click the shell, type <span class="text-sig">help</span> — it's listening.</p>
+        </div>
+        <div class="glass rounded-2xl overflow-hidden spot-card" data-reveal id="term-shell">
+          <div class="flex items-center gap-2 px-5 py-3.5 border-b hairline">
+            <span class="w-2.5 h-2.5 rounded-full bg-alert/80"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-ember/80"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-sig/80"></span>
+            <span class="font-mono text-[0.65rem] text-fog ml-2 tracking-widest">visitor@rt:~ — zsh</span>
+            <span class="ml-auto font-mono text-[0.65rem] text-sig/80 hidden sm:inline">● live shell</span>
+          </div>
+          <div id="term-out" class="px-5 sm:px-6 pt-5 pb-2 h-72 sm:h-80 overflow-y-auto font-mono text-[0.8rem] sm:text-[0.85rem] leading-[1.7]" aria-live="polite"></div>
+          <form id="term-form" class="flex items-center gap-2 px-5 sm:px-6 pb-5 pt-1 font-mono text-[0.8rem] sm:text-[0.85rem]" autocomplete="off">
+            <span class="text-sig shrink-0">visitor@rt:~$</span>
+            <input id="term-in" type="text" class="term-input flex-1 bg-transparent outline-none border-none text-cream placeholder:text-fog/40" placeholder="type 'help'…" aria-label="Terminal command" maxlength="64" />
+          </form>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= About ================= -->
     <section id="about" class="py-28 sm:py-36">
       <div class="w-[min(1060px,100%)] mx-auto px-6 grid lg:grid-cols-12 gap-12">
@@ -331,7 +358,9 @@
           </div>
         </div>
         <div class="lg:col-span-8">
-          <div id="timeline" class="timeline space-y-10"></div>
+          <div id="timeline" class="timeline space-y-10">
+            <div id="tl-scan" aria-hidden="true"></div>
+          </div>
         </div>
       </div>
     </section>
