@@ -173,6 +173,15 @@ renderShipped();
 renderTimeline();
 document.getElementById('year').textContent = String(new Date().getFullYear());
 
+/* ---------- hero WebGL scene (lazy chunk) ---------- */
+let heroScene = null;
+const hero3d = document.getElementById('hero-3d');
+if (hero3d) {
+  import('./three/heroScene.js').then(({ initHeroScene }) => {
+    heroScene = initHeroScene(hero3d, { reduced: REDUCED });
+  });
+}
+
 let lenis = null;
 if (!REDUCED) {
   lenis = new Lenis({ duration: 1.15, smoothWheel: true });
@@ -386,12 +395,20 @@ function initScrollFX() {
 
   // Hero parallax-out
   if (!REDUCED) {
-    gsap.to('#top > div', {
+    gsap.to('#top > .hero-grid', {
       y: -70,
       opacity: 0.25,
       ease: 'none',
       scrollTrigger: { trigger: '#top', start: 'top top', end: 'bottom top', scrub: true },
     });
+    if (!REDUCED) {
+      gsap.to('#hero-3d', {
+        y: -140,
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: { trigger: '#top', start: 'top top', end: 'bottom top', scrub: true },
+      });
+    }
   }
 
   // Progress bar + nav hide/show + active link

@@ -943,3 +943,95 @@ body {
     animation: none !important;
   }
 }
+
+/* ============================================================
+   Futuristic 3D upgrade — hero WebGL, HUD overlays, glow type
+   ============================================================ */
+
+/* --- hero WebGL canvas layer --- */
+#hero-3d {
+  pointer-events: none;
+  overflow: hidden;
+}
+#hero-3d canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* --- cinematic film grain + scanlines --- */
+.film-grain,
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 45;
+}
+.film-grain {
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.scanlines {
+  opacity: 0.07;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.55) 0px,
+    rgba(255, 255, 255, 0.55) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+@keyframes scanFlicker {
+  0%,
+  100% {
+    opacity: 0.055;
+  }
+  50% {
+    opacity: 0.085;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .scanlines {
+    animation: scanFlicker 7s steps(1) infinite;
+  }
+}
+
+/* --- HUD corner brackets (hero status card) --- */
+.hud-corners {
+  position: absolute;
+  inset: -14px;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--color-sig), var(--color-sig)) top left / 22px 2px,
+    linear-gradient(var(--color-sig), var(--color-sig)) top left / 2px 22px,
+    linear-gradient(var(--color-sig), var(--color-sig)) top right / 22px 2px,
+    linear-gradient(var(--color-sig), var(--color-sig)) top right / 2px 22px,
+    linear-gradient(var(--color-sig), var(--color-sig)) bottom left / 22px 2px,
+    linear-gradient(var(--color-sig), var(--color-sig)) bottom left / 2px 22px,
+    linear-gradient(var(--color-sig), var(--color-sig)) bottom right / 22px 2px,
+    linear-gradient(var(--color-sig), var(--color-sig)) bottom right / 2px 22px;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+  filter: drop-shadow(0 0 6px rgba(111, 209, 140, 0.55));
+  transition: opacity 0.4s ease;
+}
+.cat-perch:hover .hud-corners {
+  opacity: 1;
+}
+
+/* --- glow type --- */
+.text-glow {
+  text-shadow: 0 0 18px rgba(111, 209, 140, 0.5), 0 0 60px rgba(111, 209, 140, 0.2);
+}
+.mega {
+  text-shadow: 0 2px 40px rgba(11, 12, 14, 0.6);
+}
+.grad-sig {
+  filter: drop-shadow(0 0 16px rgba(111, 209, 140, 0.28));
+}
+.mega [class*="grad-"],
+.mega > .grad-sig {
+  filter: drop-shadow(0 0 22px rgba(111, 209, 140, 0.4));
+}

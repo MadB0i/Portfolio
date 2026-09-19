@@ -22,6 +22,10 @@
 </head>
 <body class="bg-void text-cream font-body">
 
+  <!-- Cinematic overlays -->
+  <div class="film-grain" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
   <!-- Scroll progress -->
   <div id="progress-bar" class="fixed top-0 left-0 right-0 h-[2px] z-[80] bg-gradient-to-r from-sig-soft via-sig to-sig-soft"></div>
 
@@ -98,7 +102,8 @@
 
     <!-- ================= Hero ================= -->
     <header id="top" class="relative min-h-screen flex items-center pt-32 pb-20 overflow-hidden">
-      <div class="w-[min(1060px,100%)] mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center">
+      <div id="hero-3d" aria-hidden="true" class="absolute inset-0 z-0"></div>
+      <div class="hero-grid relative z-10 w-[min(1060px,100%)] mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center">
         <div class="lg:col-span-7">
           <div data-hero="badge" class="inline-flex items-center gap-3 glass rounded-full pl-3.5 pr-6 py-2.5 mb-8">
             <svg class="hero-cat" viewBox="0 0 16 16" width="32" height="32" fill="none" stroke="#6FD18C" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
@@ -118,7 +123,7 @@
           </p>
           <p class="chapter-tag mb-6">[ <b>01</b> / 06 ] — HELLO</p>
 
-          <h1 class="font-display font-bold leading-[1.02] tracking-tight text-[clamp(2.6rem,7.5vw,4.9rem)]">
+          <h1 class="font-display font-bold leading-[1.02] tracking-tight text-[clamp(2.6rem,7.5vw,4.9rem)] text-glow">
             <span class="mask"><span class="mask-inner" data-hero="line">I build <span class="grad-sig">security</span></span></span>
             <span class="mask"><span class="mask-inner" data-hero="line">tooling for the</span></span>
             <span class="mask"><span class="mask-inner" data-hero="line">AI era.</span></span>
@@ -147,6 +152,7 @@
 
         <div class="lg:col-span-5 flex flex-col justify-center" data-hero="term">
           <div class="cat-perch">
+          <span class="hud-corners" aria-hidden="true"></span>
           <svg class="hero-cat-big" viewBox="0 0 120 120" fill="none" stroke="#6FD18C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <!-- Head -->
             <path class="cat-ear-l" d="M40 42 L46 20 L58 36" />
