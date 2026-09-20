@@ -206,29 +206,24 @@ if (hero3d) {
   });
 }
 
-/* ---------- contact dot-globe (lazy chunk) ---------- */
-let globeScene = null;
+/* ---------- cat planet traveler: right → left across the page ---------- */
 const globeEl = document.getElementById('contact-globe');
 if (globeEl) {
   import('./three/globe.js').then(({ initGlobe }) => {
-    globeScene = initGlobe(globeEl, { reduced: REDUCED });
+    initGlobe(globeEl, { reduced: REDUCED });
   });
+  if (!REDUCED) {
+    gsap.fromTo(
+      globeEl,
+      { x: () => window.innerWidth - 200 },
+      {
+        x: 30,
+        ease: 'none',
+        scrollTrigger: { start: 0, end: 'max', scrub: 0.6, invalidateOnRefresh: true },
+      },
+    );
+  }
 }
-
-/* Pause WebGL loops while their sections are offscreen. */
-function watchVisible(sectionId, getScene) {
-  if (!('IntersectionObserver' in window) || REDUCED) return;
-  const sec = document.getElementById(sectionId);
-  if (!sec) return;
-  new IntersectionObserver(
-    ([entry]) => {
-      const s = getScene();
-      if (s && s.setVisible) s.setVisible(entry.isIntersecting);
-    },
-    { threshold: 0 },
-  ).observe(sec);
-}
-watchVisible('contact', () => globeScene);
 
 let lenis = null;
 if (!REDUCED) {

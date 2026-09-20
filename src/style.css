@@ -1370,17 +1370,17 @@ body {
   }
 }
 
-/* --- contact dot-globe --- */
+/* --- contact dot-globe: fixed traveler across the whole page --- */
 #contact-globe {
-  position: absolute;
+  position: fixed;
   top: 50%;
-  right: max(-160px, calc(50% - 740px));
-  width: min(580px, 92vw);
-  height: min(580px, 92vw);
-  transform: translateY(-50%);
-  z-index: 0;
+  left: 0;
+  width: min(380px, 68vw);
+  aspect-ratio: 1;
+  translate: 0 -50%;
+  z-index: 1;
   pointer-events: none;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 #contact-globe canvas {
   display: block;
@@ -1389,9 +1389,8 @@ body {
 }
 @media (max-width: 767px) {
   #contact-globe {
-    right: 50%;
-    transform: translate(50%, -50%);
-    opacity: 0.35;
+    width: min(240px, 60vw);
+    opacity: 0.5;
   }
 }
 

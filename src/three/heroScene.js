@@ -159,47 +159,6 @@ export function initHeroScene(container, opts = {}) {
   rig.add(sparks);
   rig.add(embers);
 
-  /* --- cat constellation: faint feline outline in the stars --- */
-  const catStars = (() => {
-    const pts = [];
-    const cx = 2.7;
-    const cy = 1.0;
-    const cz = -1.6;
-    const R = 1.15;
-    for (let k = 0; k < 44; k++) {
-      const a = (k / 44) * Math.PI * 2;
-      pts.push(cx + Math.cos(a) * R, cy + Math.sin(a) * R, cz);
-    }
-    const ear = (sx) => {
-      const c = [[sx * 0.5, 0.95], [sx * 1.0, 0.8], [sx * 0.8, 1.45]];
-      for (let e = 0; e < 3; e++) {
-        for (let k = 0; k <= 7; k++) {
-          const t = k / 7;
-          const [x1, y1] = c[e];
-          const [x2, y2] = c[(e + 1) % 3];
-          pts.push(cx + x1 + (x2 - x1) * t, cy + y1 + (y2 - y1) * t, cz);
-        }
-      }
-    };
-    ear(1);
-    ear(-1);
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pts), 3));
-    const m = new THREE.PointsMaterial({
-      size: 0.075,
-      map: softSprite(SIG_SOFT),
-      color: SIG_SOFT,
-      transparent: true,
-      opacity: 0.75,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-      sizeAttenuation: true,
-    });
-    const p = new THREE.Points(g, m);
-    rig.add(p);
-    return p;
-  })();
-
   /* --- holographic core --- */
   const coreOuter = new THREE.Mesh(
     new THREE.IcosahedronGeometry(1.28, 1),
@@ -306,7 +265,6 @@ export function initHeroScene(container, opts = {}) {
     dust.rotation.y = t * 0.012;
     sparks.rotation.y = -t * 0.02;
     embers.rotation.y = t * 0.026;
-    catStars.rotation.y = -t * 0.015;
 
     coreOuter.rotation.x = t * 0.16;
     coreOuter.rotation.y = t * 0.22;
