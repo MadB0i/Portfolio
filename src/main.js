@@ -1060,7 +1060,6 @@ function initDive() {
   const hud = document.getElementById('dive-hud');
   const hudText = document.getElementById('dive-hud-text');
   const chipsBox = document.getElementById('space-chips');
-  const nodes = document.getElementById('space-nodes');
   if (!world || !space || !hud || !hudText) return;
 
   const MOBILE = window.matchMedia('(max-width: 767px)').matches;
@@ -1234,7 +1233,6 @@ function initDive() {
     }
 
     const wcEls = [world, outEl, inEl, sweep];
-    if (b.modules && nodes) wcEls.push(nodes);
     if (b.modules && chipsBox) wcEls.push(chipsBox);
     if (b.trace && traceEl) wcEls.push(traceEl);
 
@@ -1291,11 +1289,7 @@ function initDive() {
       if (hexHost) tl.to(hexHost, { opacity: 0, duration: 0.08 }, 0.26);
     }
     if (b.modules && chipsBox) {
-      /* nodes collapse, modules emerge at staggered depths, then pass */
-      if (nodes) {
-        tl.fromTo(nodes, { opacity: 0.4, scale: 1 }, { opacity: 0, scale: 0.35, duration: 0.35 }, 0)
-          .to(nodes, { opacity: 0.4, scale: 1, duration: 0.4 }, 0.6);
-      }
+      /* modules emerge at staggered depths, then pass */
       tl.fromTo(chipsBox, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.15)
         .to(chipsBox, { opacity: 0, duration: 0.2 }, 0.8);
     }

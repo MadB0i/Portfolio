@@ -1222,21 +1222,6 @@ body {
 .sp-ice {
   background: var(--color-ice);
 }
-/* floating node network (midground plane) */
-#space-nodes {
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  width: min(430px, 88vw);
-  color: var(--color-sig);
-  opacity: 0.4;
-  transform: translate(-50%, -50%) translateZ(-320px);
-}
-#space-nodes svg {
-  width: 100%;
-  height: auto;
-  overflow: visible;
-}
 /* ghost project modules at staggered depths */
 #space-chips {
   position: absolute;
