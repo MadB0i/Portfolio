@@ -5,9 +5,9 @@ import * as THREE from 'three';
    + receding neon grid floor. Camera-mouse parallax rig.
    ============================================================ */
 
-const SIG = '#6FD18C';
-const SIG_SOFT = '#8FE3A6';
-const EMBER = '#e8a33d';
+const SIG = '#F5A524';
+const SIG_SOFT = '#FBD38D';
+const EMBER = '#DD6B20';
 const ICE = '#8aa0b8';
 const WHITE = '#dde6f0';
 
@@ -217,6 +217,7 @@ export function initHeroScene(container, opts = {}) {
   const clock = new THREE.Clock();
   let raf = 0;
   let running = false;
+  let scrollP = 0; // 0..1 dive driven by page scroll
 
   const tick = () => {
     raf = requestAnimationFrame(tick);
@@ -237,8 +238,12 @@ export function initHeroScene(container, opts = {}) {
     coreOuter.rotation.y = t * 0.22;
     coreInner.rotation.x = -t * 0.34;
     coreInner.rotation.y = t * 0.4;
-    const coreScale = 1 + Math.sin(t * 1.4) * 0.05;
+    const coreScale = (1 + Math.sin(t * 1.4) * 0.05) * (1 + scrollP * 0.35);
     coreRig.scale.setScalar(coreScale);
+
+    /* scroll dive: camera pushes into the field */
+    camera.position.z = 6.6 - scrollP * 2.1;
+    camera.position.y = 2.1 - scrollP * 0.5;
 
     floor.material.uniforms.uTime.value = t;
 
@@ -279,6 +284,9 @@ export function initHeroScene(container, opts = {}) {
 
   return {
     renderer,
+    setScroll(p) {
+      scrollP = Math.max(0, Math.min(1, p || 0));
+    },
     dispose() {
       stop();
       window.removeEventListener('pointermove', onPointer);

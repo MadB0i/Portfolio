@@ -2,7 +2,7 @@
 
 **[→ View the live site](https://madb0i.github.io/Portfolio/)**
 
-Personal portfolio for Rupjyoti Talukdar ([@MadB0i](https://github.com/MadB0i)) — an independent developer building security and systems tooling. Premium dark theme with cinematic, performance-safe motion throughout.
+Personal portfolio for Rupjyoti Talukdar ([@MadB0i](https://github.com/MadB0i)) — an independent developer building security and systems tooling. Amber Noir theme, 3D futuristic depth, cinematic motion throughout.
 
 ## What's on it
 
@@ -14,7 +14,7 @@ Personal portfolio for Rupjyoti Talukdar ([@MadB0i](https://github.com/MadB0i)) 
 
 ## Stack
 
-Vite + Tailwind CSS v4 + GSAP (ScrollTrigger) + Lenis. No framework — vanilla JS modules.
+Vite + Tailwind CSS v4 + Three.js + GSAP (ScrollTrigger) + Lenis. No framework — vanilla JS modules.
 
 ## Structure
 

@@ -1,7 +1,7 @@
 {
   "name": "portfolio",
   "version": "2.0.0",
-  "description": "Rupjyoti Talukdar — personal portfolio. Premium dark, cinematic motion. Built with Vite, Tailwind CSS, GSAP and Lenis.",
+    "description": "Rupjyoti Talukdar — personal portfolio. Amber Noir, 3D futuristic, cinematic motion. Built with Vite, Tailwind CSS, Three.js, GSAP and Lenis.",
   "type": "module",
   "scripts": {
     "dev": "vite",

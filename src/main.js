@@ -51,16 +51,17 @@ function renderFeed() {
 
 function renderSkills() {
   const grid = document.getElementById('skills-grid');
-  SKILLS.forEach((s) => {
+  SKILLS.forEach((s, si) => {
     const card = document.createElement('div');
     card.className = `glass rounded-2xl p-6 sm:p-7 spot-card tilt ${s.wide ? 'sm:col-span-2 lg:col-span-1' : ''}`;
-    card.setAttribute('data-reveal', '');
+    card.setAttribute('data-reveal-3d', '');
+    card.setAttribute('data-tilt-dir', String(si % 2 === 0 ? -1 : 1));
     card.innerHTML = `
       <div class="flex items-start justify-between mb-5">
         <span class="skill-icon">${s.icon}</span>
         <span class="font-mono text-xs text-sig/90">${s.index}</span>
       </div>
-      ${s.media || s.accent ? `<div class="skill-visual">${s.image ? `<img src="${s.image}" alt="" loading="lazy" aria-hidden="true" />` : ''}${s.media || s.accent}</div>` : ''}
+      ${s.media || s.accent || s.cover ? `<div class="skill-visual">${s.cover ? `<div class="cover cover-${s.cover} cover-mini" aria-hidden="true"><span class="cover-grid"></span><span class="cover-glyph">${s.index}</span><span class="cover-orbit"></span></div>` : ''}${s.media || s.accent}</div>` : ''}
       <h3 class="font-display font-medium text-xl mb-2">${s.title}</h3>
       <p class="text-sm text-fog mb-5">${s.desc}</p>
       <div class="flex flex-wrap gap-2 mb-5">${s.tags.map((t) => `<span class="chip">${t}</span>`).join('')}</div>
@@ -81,10 +82,16 @@ function renderProjects() {
     card.setAttribute('aria-label', `Open ${p.name} dossier`);
     card.style.top = `calc(92px + ${i * 16}px)`;
     card.style.zIndex = String(i + 1);
-    card.setAttribute('data-reveal', '');
+    card.setAttribute('data-reveal-3d', '');
     card.innerHTML = `
       <div class="p-media ${p.featured ? 'h-52 sm:h-64' : 'h-44'}" data-media>
-        <img src="${p.img}" alt="${p.alt}" loading="lazy" onerror="this.closest('[data-media]')?.remove()" />
+        <div class="cover cover-${p.cover}" role="img" aria-label="${p.name} cover art">
+          <span class="cover-grid"></span>
+          <span class="cover-glyph">${p.glyph}</span>
+          <span class="cover-index">FILE ${String(i + 1).padStart(2, '0')}</span>
+          <span class="cover-orbit"></span>
+          <span class="cover-sweep"></span>
+        </div>
       </div>
       <span class="dossier-open" aria-hidden="true">↗</span>
       <div class="flex items-start justify-between gap-4 mb-5 mt-5">
@@ -182,6 +189,14 @@ if (hero3d) {
   });
 }
 
+/* ---------- contact dot-globe (lazy chunk) ---------- */
+const globeEl = document.getElementById('contact-globe');
+if (globeEl) {
+  import('./three/globe.js').then(({ initGlobe }) => {
+    initGlobe(globeEl, { reduced: REDUCED });
+  });
+}
+
 let lenis = null;
 if (!REDUCED) {
   lenis = new Lenis({ duration: 1.15, smoothWheel: true });
@@ -229,10 +244,10 @@ function heroIntro() {
 }
 
 const BOOT_LINES = [
-  { text: '$ perimeter scan --all', color: '#9AA3A6' },
+  { text: '$ perimeter scan --all', color: '#A8A29E' },
   { text: '$ intrusion detected :: tracing source', color: '#ff5d6e' },
   { text: '$ isolating threat vector …', color: '#ff5d6e' },
-  { text: '$ threat neutralized ✓', color: '#6FD18C' },
+  { text: '$ threat neutralized ✓', color: '#F5A524' },
 ];
 
 function runPreloader() {
@@ -319,7 +334,8 @@ function initScrollFX() {
     );
   });
 
-  gsap.utils.toArray('[data-reveal-group]').forEach((group) => {    if (REDUCED) return;
+  gsap.utils.toArray('[data-reveal-group]').forEach((group) => {
+    if (REDUCED) return;
     gsap.fromTo(
       group.children,
       { opacity: 0, y: 26 },
@@ -333,6 +349,45 @@ function initScrollFX() {
       },
     );
   });
+
+  /* 3D entrances — dossiers swing up, skill cards flip in, terminal tilts */
+  gsap.utils.toArray('[data-reveal-3d]').forEach((el) => {
+    if (REDUCED) return;
+    const dir = Number(el.dataset.tiltDir || 0);
+    const origin = el.dataset.origin || 'center top';
+    const from = dir
+      ? { opacity: 0, y: 50, rotateY: 10 * dir, transformPerspective: 1000, transformOrigin: 'center' }
+      : { opacity: 0, y: 70, rotateX: 12, transformPerspective: 1000, transformOrigin: origin };
+    gsap.fromTo(
+      el,
+      from,
+      {
+        opacity: 1,
+        y: 0,
+        rotateX: 0,
+        rotateY: 0,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      },
+    );
+  });
+
+  /* footer giant-type drift */
+  if (!REDUCED) {
+    const outline = document.querySelector('.outline-text');
+    if (outline) {
+      gsap.fromTo(
+        outline,
+        { xPercent: 2 },
+        {
+          xPercent: -4,
+          ease: 'none',
+          scrollTrigger: { trigger: 'footer', start: 'top bottom', end: 'bottom bottom', scrub: true },
+        },
+      );
+    }
+  }
 
   // Timeline — progressive terminal-log colorization
   if (!REDUCED) {
@@ -436,7 +491,15 @@ function initScrollFX() {
         y: -140,
         opacity: 0,
         ease: 'none',
-        scrollTrigger: { trigger: '#top', start: 'top top', end: 'bottom top', scrub: true },
+        scrollTrigger: {
+          trigger: '#top',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+          onUpdate: (self) => {
+            if (heroScene && heroScene.setScroll) heroScene.setScroll(self.progress);
+          },
+        },
       });
     }
   }
@@ -1244,7 +1307,13 @@ function buildModalContent(p, i) {
   return `
     <div class="max-w-3xl mx-auto">
       <div class="p-media h-56 sm:h-72 md:h-[22rem] mb-8" data-mr>
-        <img src="${p.img}" alt="${p.alt}" />
+        <div class="cover cover-${p.cover}" role="img" aria-label="${p.name} cover art">
+          <span class="cover-grid"></span>
+          <span class="cover-glyph">${p.glyph}</span>
+          <span class="cover-index">CASE ${caseNo}</span>
+          <span class="cover-orbit"></span>
+          <span class="cover-sweep"></span>
+        </div>
       </div>
       <div class="grid sm:grid-cols-12 gap-8 sm:gap-10">
         <div class="sm:col-span-7">
