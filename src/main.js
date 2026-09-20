@@ -1056,7 +1056,6 @@ function initDive() {
   if (!layer || REDUCED) return;
   const world = document.getElementById('space-world');
   const space = document.getElementById('space');
-  const sweep = document.getElementById('dive-sweep');
   const hud = document.getElementById('dive-hud');
   const hudText = document.getElementById('dive-hud-text');
   const chipsBox = document.getElementById('space-chips');
@@ -1232,7 +1231,7 @@ function initDive() {
       return;
     }
 
-    const wcEls = [world, outEl, inEl, sweep];
+    const wcEls = [world, outEl, inEl];
     if (b.modules && chipsBox) wcEls.push(chipsBox);
     if (b.trace && traceEl) wcEls.push(traceEl);
 
@@ -1272,7 +1271,6 @@ function initDive() {
       0,
     );
 
-    tl.fromTo(sweep, { xPercent: -170 }, { xPercent: 340, duration: 1 }, 0);
     tl.fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.1 }, 0.45)
       .to(hud, { opacity: 0, duration: 0.1 }, 0.55);
 
@@ -1875,15 +1873,16 @@ function initProjectModal() {
 }
 
 /* ---------- go ---------- */
+// Simplified boot sequence for smooth modern feel
 runPreloader();
 initScrollFX();
-initPointerFX();
 initTilt();
 initScramble();
-initCatState();
 initProjectModal();
 initTerminal();
 initLiveStats();
-initWorkAgent();
-initDive();
-initBackdrop();
+// initCatState(); // Removed: distracting
+// initWorkAgent(); // Removed: too noisy
+// initDive(); // Removed: excessive 3D boundary overlays
+// initBackdrop(); // Removed: background clutter
+

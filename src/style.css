@@ -1329,16 +1329,6 @@ body {
   box-shadow: 0 0 24px 6px rgb(var(--sig-rgb) / 0.55), 0 0 90px 20px rgb(var(--sig-rgb) / 0.18);
   transform: translate(-50%, -50%) translateZ(-700px);
 }
-#dive-sweep {
-  position: absolute;
-  top: -10%;
-  bottom: -10%;
-  left: 0;
-  width: 34%;
-  background: linear-gradient(100deg, transparent, rgb(var(--sig-rgb) / 0.1), transparent);
-  transform: translateX(-160%) skewX(-10deg);
-  will-change: transform;
-}
 #dive-hud {
   position: absolute;
   left: 50%;
@@ -1360,7 +1350,6 @@ body {
 }
 @media (max-width: 767px) {
   /* simplified mobile dive: HUD pill + gentle drift only */
-  #dive-sweep,
   #space-point,
   #space-chips {
     display: none;
