@@ -1380,7 +1380,7 @@ body {
   translate: 0 -50%;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.9;
+  opacity: 0.65;
 }
 #contact-globe canvas {
   display: block;
@@ -1390,7 +1390,7 @@ body {
 @media (max-width: 767px) {
   #contact-globe {
     width: min(240px, 60vw);
-    opacity: 0.5;
+    opacity: 0.35;
   }
 }
 

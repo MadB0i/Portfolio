@@ -148,7 +148,7 @@ export function initGlobe(container, opts = {}) {
         }
       }
     }
-    addPoints(pos, col, 0.045, 0.95);
+    addPoints(pos, col, 0.045, 0.8);
   }
 
   /* --- eye sprites: blink + follow cursor --- */
@@ -158,7 +158,7 @@ export function initGlobe(container, opts = {}) {
     map: eyeTex,
     color: CREAM,
     transparent: true,
-    opacity: 0.95,
+    opacity: 0.8,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
   });
@@ -216,8 +216,8 @@ export function initGlobe(container, opts = {}) {
     target.x += (target.tx - target.x) * 0.04;
     target.y += (target.ty - target.y) * 0.04;
     /* gentle rock (face stays front) + cursor lean */
-    rig.rotation.y = Math.sin(t * 0.35) * 0.14 + target.x * 0.22;
-    rig.rotation.x = Math.sin(t * 0.3) * 0.04 + target.y * 0.12;
+    rig.rotation.y = Math.sin(t * 0.24) * 0.14 + target.x * 0.22;
+    rig.rotation.x = Math.sin(t * 0.2) * 0.04 + target.y * 0.12;
     eyes.forEach((sp) => {
       const b = sp.userData.base;
       sp.position.x = b.x + target.x * 0.07;

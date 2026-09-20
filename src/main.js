@@ -222,6 +222,10 @@ if (globeEl) {
         scrollTrigger: { start: 0, end: 'max', scrub: 0.6, invalidateOnRefresh: true },
       },
     );
+    /* gentle vertical arc so it floats, not slides on rails */
+    gsap.timeline({ scrollTrigger: { start: 0, end: 'max', scrub: 0.6 } })
+      .fromTo(globeEl, { y: '6vh' }, { y: '-4vh', duration: 0.5, ease: 'none' }, 0)
+      .to(globeEl, { y: '2vh', duration: 0.5, ease: 'none' }, 0.5);
   }
 }
 
