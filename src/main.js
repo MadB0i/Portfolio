@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { STATS, MARQUEE, FLAGSHIP, SECONDARY, SKILLS, TIMELINE, THREAT_FEED } from './data/site.js';
+import { diagramSVG, miniSVG } from './diagrams.js';
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -61,7 +62,7 @@ function renderSkills() {
         <span class="skill-icon">${s.icon}</span>
         <span class="font-mono text-xs text-sig/90">${s.index}</span>
       </div>
-      ${s.media || s.accent || s.cover ? `<div class="skill-visual">${s.cover ? `<div class="cover cover-${s.cover} cover-mini" aria-hidden="true"><span class="cover-grid"></span><span class="cover-glyph">${s.index}</span><span class="cover-orbit"></span></div>` : ''}${s.media || s.accent}</div>` : ''}
+      ${s.media || s.accent || s.cover ? `<div class="skill-visual">${s.cover ? `<div class="cover cover-${s.cover} cover-mini" aria-hidden="true"><span class="cover-grid"></span><span class="cover-glyph">${s.index}</span></div>` : ''}${s.media || s.accent}</div>` : ''}
       <h3 class="font-display font-medium text-xl mb-2">${s.title}</h3>
       <p class="text-sm text-fog mb-5">${s.desc}</p>
       <div class="flex flex-wrap gap-2 mb-5">${s.tags.map((t) => `<span class="chip">${t}</span>`).join('')}</div>
@@ -69,6 +70,21 @@ function renderSkills() {
     grid.appendChild(card);
   });
 }
+
+function coverInner(p, i, live = false, tag = 'FILE') {
+  const fileNo = String(i + 1).padStart(2, '0');
+  return `
+        <div class="cover cover-${p.cover}" role="img" aria-label="${p.name} cover art">
+          <span class="cover-grid"></span>
+          <div class="cover-diagram">${diagramSVG(p.diagram)}</div>
+          <span class="cover-marker">${p.glyph}</span>
+          <span class="cover-index">${tag} ${fileNo}</span>
+          ${live ? '<span class="cover-live">● LIVE</span>' : ''}
+          <span class="cover-sweep"></span>
+        </div>`;
+}
+
+const MINI_COVERS = { bench: 'amber', ustad: 'ice', wick: 'bone', shop: 'ember' };
 
 function renderProjects() {
   const grid = document.getElementById('projects-grid');
@@ -83,20 +99,15 @@ function renderProjects() {
     card.style.top = `calc(92px + ${i * 16}px)`;
     card.style.zIndex = String(i + 1);
     card.setAttribute('data-reveal-3d', '');
+    card.setAttribute('data-agent', p.agent || 'OPEN PROJECT');
     card.innerHTML = `
-      <div class="p-media ${p.featured ? 'h-52 sm:h-64' : 'h-44'}" data-media>
-        <div class="cover cover-${p.cover}" role="img" aria-label="${p.name} cover art">
-          <span class="cover-grid"></span>
-          <span class="cover-glyph">${p.glyph}</span>
-          <span class="cover-index">FILE ${String(i + 1).padStart(2, '0')}</span>
-          <span class="cover-orbit"></span>
-          <span class="cover-sweep"></span>
-        </div>
+      <div class="p-media ${p.featured ? 'h-64 sm:h-80' : 'h-52 sm:h-60'}" data-media>
+${coverInner(p, i, p.featured)}
       </div>
       <span class="dossier-open" aria-hidden="true">↗</span>
       <div class="flex items-start justify-between gap-4 mb-5 mt-5">
-        <span class="font-mono text-xs text-fog">FILE ${String(i + 1).padStart(2, '0')}</span>
         <span class="status-pill" data-status="${p.statusKey}">${p.status}</span>
+        <span class="font-mono text-xs text-fog/70">${p.stack[0]}</span>
       </div>
       <h3 class="font-display font-medium text-2xl mb-2">${p.name}</h3>
       <p class="text-fog text-[0.95rem] leading-relaxed mb-5">${p.desc}</p>
@@ -132,9 +143,17 @@ function renderShipped() {
   const grid = document.getElementById('shipped-grid');
   SECONDARY.forEach((p) => {
     const card = document.createElement('div');
-    card.className = 'border hairline rounded-2xl p-5 sm:p-6 spot-card hover:border-sig/40 transition-colors bg-panel/40';
+    card.className = 'border hairline rounded-2xl p-5 sm:p-6 spot-card hover:border-sig/40 transition-colors bg-panel/40 overflow-hidden';
     card.setAttribute('data-reveal', '');
+    card.setAttribute('data-agent', p.agent || 'ARCHIVE');
     card.innerHTML = `
+      <div class="mini-strip" role="img" aria-label="${p.name} diagram">
+        <div class="cover cover-${MINI_COVERS[p.mini] || 'bone'}">
+          <span class="cover-grid"></span>
+          <div class="cover-diagram">${miniSVG(p.mini)}</div>
+          <span class="cover-sweep"></span>
+        </div>
+      </div>
       ${p.icon ? `<div class="shipped-icon mb-3">${p.icon}</div>` : ''}
       <div class="flex items-center justify-between gap-3 mb-2.5">
         <h3 class="font-display font-medium text-lg">${p.name}</h3>
@@ -644,6 +663,8 @@ function initTilt() {
         const py = (e.clientY - r.top) / r.height;
         card.style.setProperty('--mx', `${px * 100}%`);
         card.style.setProperty('--my', `${py * 100}%`);
+        card.style.setProperty('--px', (px - 0.5).toFixed(3));
+        card.style.setProperty('--py', (py - 0.5).toFixed(3));
         gsap.to(card, {
           rotateY: (px - 0.5) * 5,
           rotateX: (0.5 - py) * 5,
@@ -954,6 +975,49 @@ function initLiveStats() {
       apply(data);
     })
     .catch(() => { /* offline / rate-limited → keep static numbers */ });
+}
+
+/* ---------- work-section agent ---------- */
+function initWorkAgent() {
+  const hud = document.getElementById('work-agent');
+  const msg = document.getElementById('agent-msg');
+  const eyes = document.getElementById('wa-eyes');
+  const DEFAULT_MSG = 'OBSERVING';
+  if (msg) msg.textContent = DEFAULT_MSG;
+
+  document.querySelectorAll('#projects-grid [data-agent], #shipped-grid [data-agent]').forEach((card) => {
+    card.addEventListener('pointerenter', () => {
+      if (msg) msg.textContent = card.getAttribute('data-agent') || DEFAULT_MSG;
+      hud?.classList.add('agent-alert');
+    });
+    card.addEventListener('pointerleave', () => {
+      if (msg) msg.textContent = DEFAULT_MSG;
+      hud?.classList.remove('agent-alert');
+    });
+  });
+
+  if (!hud || !eyes || REDUCED || !FINE_POINTER) return;
+  /* subtle eye follow — lerped, idle when settled */
+  let raf = 0;
+  let tx = 0, ty = 0, cx = 0, cy = 0;
+  window.addEventListener('pointermove', (e) => {
+    const r = hud.getBoundingClientRect();
+    if (!r.width) return;
+    const dx = e.clientX - (r.left + r.width / 2);
+    const dy = e.clientY - (r.top + r.height / 2);
+    const m = Math.hypot(dx, dy) || 1;
+    const k = Math.min(m / 300, 1) * 1.6;
+    tx = (dx / m) * k;
+    ty = (dy / m) * k;
+    if (!raf) raf = requestAnimationFrame(apply);
+  }, { passive: true });
+  function apply() {
+    raf = 0;
+    cx += (tx - cx) * 0.12;
+    cy += (ty - cy) * 0.12;
+    eyes.setAttribute('transform', `translate(${cx.toFixed(2)} ${cy.toFixed(2)})`);
+    if (Math.abs(tx - cx) > 0.01 || Math.abs(ty - cy) > 0.01) raf = requestAnimationFrame(apply);
+  }
 }
 
 /* ---------- text scramble (secure-channel line) ---------- */function initScramble() {
@@ -1308,13 +1372,7 @@ function buildModalContent(p, i) {
   return `
     <div class="max-w-3xl mx-auto">
       <div class="p-media h-56 sm:h-72 md:h-[22rem] mb-8" data-mr>
-        <div class="cover cover-${p.cover}" role="img" aria-label="${p.name} cover art">
-          <span class="cover-grid"></span>
-          <span class="cover-glyph">${p.glyph}</span>
-          <span class="cover-index">CASE ${caseNo}</span>
-          <span class="cover-orbit"></span>
-          <span class="cover-sweep"></span>
-        </div>
+${coverInner(p, i, p.featured, 'CASE')}
       </div>
       <div class="grid sm:grid-cols-12 gap-8 sm:gap-10">
         <div class="sm:col-span-7">
@@ -1463,3 +1521,4 @@ initCatState();
 initProjectModal();
 initTerminal();
 initLiveStats();
+initWorkAgent();

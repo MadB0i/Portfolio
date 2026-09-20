@@ -1322,30 +1322,6 @@ body {
   letter-spacing: 0.2em;
   color: rgba(237, 233, 227, 0.5);
 }
-.cover-orbit {
-  position: absolute;
-  right: -34px;
-  bottom: -34px;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 1px dashed rgba(237, 233, 227, 0.22);
-  animation: coverSpin 24s linear infinite;
-}
-.cover-orbit::before {
-  content: "";
-  position: absolute;
-  top: -3px;
-  left: 50%;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-sig);
-  box-shadow: 0 0 10px 2px rgb(var(--sig-rgb) / 0.7);
-}
-@keyframes coverSpin {
-  to { transform: rotate(360deg); }
-}
 .cover-sweep {
   position: absolute;
   top: -20%;
@@ -1366,13 +1342,217 @@ body {
   left: 0.8rem;
   bottom: 0.1rem;
 }
-.cover-mini .cover-orbit {
-  width: 92px;
+@media (prefers-reduced-motion: reduce) {
+  .spot-card:hover .cover-sweep { transform: translateX(-160%) skewX(-12deg); }
+}
+
+/* ============================================================
+   Project banner diagrams — one design system, per-project story
+   ============================================================ */
+.cover-diagram {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.1rem 1.25rem;
+}
+.cover-diagram svg {
+  width: 100%;
+  height: 100%;
+}
+.dg text {
+  font-family: var(--font-mono);
+  fill: var(--color-fog);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+.dg .dg-tb {
+  fill: var(--color-cream);
+  font-size: 11px;
+}
+.dg .dg-ts {
+  font-size: 8.5px;
+  opacity: 0.7;
+}
+.dg .dg-tw {
+  fill: var(--color-sig-soft);
+}
+.dg-l { stroke: var(--color-sig); }
+.dg-i { stroke: var(--color-ice); }
+.dg-a { stroke: var(--color-alert); }
+.dg-f { stroke: rgba(237, 233, 227, 0.28); }
+.dg-fsa { fill: rgb(var(--sig-rgb) / 0.55); }
+.dg-fal { fill: rgba(255, 93, 110, 0.8); }
+.dg-fis { fill: rgba(138, 160, 184, 0.8); }
+
+/* animated sweep line (Pehredar) */
+.dg-scan {
+  fill: var(--color-sig);
+  filter: drop-shadow(0 0 6px rgb(var(--sig-rgb) / 0.8));
+  transform-box: fill-box;
+  animation: dgScan 4.5s ease-in-out infinite;
+}
+@keyframes dgScan {
+  0%, 100% { transform: translateY(0); opacity: 0.9; }
+  50% { transform: translateY(104px); opacity: 0.4; }
+}
+
+/* banner top marker + live pill */
+.cover-marker {
+  position: absolute;
+  left: 0.9rem;
+  top: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-cream);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(12, 10, 9, 0.55);
+  backdrop-filter: blur(4px);
+  width: 1.7rem;
+  height: 1.7rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.5rem;
+}
+.cover-live {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: var(--color-sig-soft);
+  border: 1px solid rgb(var(--sig-rgb) / 0.45);
+  background: rgba(12, 10, 9, 0.6);
+  padding: 3px 10px;
+  border-radius: 999px;
+  animation: livePulse 1.8s ease-in-out infinite;
+}
+
+/* also-shipped mini strips */
+.mini-strip {
+  position: relative;
   height: 92px;
-  right: -24px;
-  bottom: -24px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  margin-bottom: 1rem;
+}
+.mini-strip .cover-diagram {
+  padding: 0.5rem 0.75rem;
+}
+
+/* layered parallax inside dossiers (vars set by tilt handler) */
+.dossier .cover-diagram {
+  transform: translate3d(calc(var(--px, 0) * 8px), calc(var(--py, 0) * 8px), 0);
+  transition: transform 0.25s ease-out;
+}
+.dossier .cover-marker,
+.dossier .cover-index {
+  transform: translate3d(calc(var(--px, 0) * 14px), calc(var(--py, 0) * 14px), 0);
+  transition: transform 0.25s ease-out;
+}
+
+/* premium hover: restrained scale + brightness + marker drift */
+.spot-card:hover .p-media .cover {
+  transform: scale(1.02);
+  filter: brightness(1.08);
+}
+.p-media .cover {
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease;
+}
+
+/* ============================================================
+   Work-section agent HUD
+   ============================================================ */
+.agent-hud {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--color-sig);
+  padding: 0.55rem 0.8rem 0.55rem 0.55rem;
+  border: 1px solid var(--color-line);
+  border-radius: 0.9rem;
+  background: rgba(18, 16, 13, 0.72);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.agent-hud.agent-alert {
+  border-color: rgb(var(--sig-rgb) / 0.45);
+  box-shadow: 0 0 24px -6px rgb(var(--sig-rgb) / 0.35);
+}
+.agent-frame {
+  width: 52px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgb(var(--sig-rgb) / 0.3);
+  border-radius: 0.6rem;
+  background: rgba(12, 10, 9, 0.6);
+}
+.agent-frame svg {
+  width: 44px;
+  height: auto;
+}
+.agent-meta {
+  min-width: 92px;
+}
+.agent-title {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--color-fog);
+}
+.agent-status {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--color-sig-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 3px;
+  white-space: nowrap;
+}
+.agent-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-sig);
+  box-shadow: 0 0 8px 2px rgb(var(--sig-rgb) / 0.6);
+  animation: livePulse 1.6s ease-in-out infinite;
+}
+#wa-eyes {
+  transform-box: fill-box;
+}
+.wa-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: waBlink 5.2s steps(1) infinite;
+}
+@keyframes waBlink {
+  0%, 93%, 100% { transform: scaleY(1); }
+  94%, 97% { transform: scaleY(0.08); }
+}
+.wa-tail {
+  transform-box: fill-box;
+  transform-origin: bottom left;
+  animation: waTail 6s ease-in-out infinite;
+}
+@keyframes waTail {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(7deg); }
+}
+@media (max-width: 639px) {
+  .agent-hud { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .cover-orbit { animation: none; }
-  .spot-card:hover .cover-sweep { transform: translateX(-160%) skewX(-12deg); }
+  .dg-scan,
+  .wa-eye,
+  .wa-tail,
+  .cover-live,
+  .agent-dot {
+    animation: none !important;
+  }
 }
