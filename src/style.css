@@ -1121,6 +1121,65 @@ body {
 }
 
 /* --- journey scroll scanner --- */
+#tl-progress {
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, var(--color-sig-soft), var(--color-sig));
+  box-shadow: 0 0 12px 1px rgb(var(--sig-rgb) / 0.55);
+  transform: scaleY(0);
+  transform-origin: top center;
+  z-index: 1;
+  pointer-events: none;
+}
+.t-item .t-dot {
+  transition: box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.t-item.lit .t-dot {
+  transform: scale(1.25);
+  box-shadow: 0 0 0 4px rgb(var(--sig-rgb) / 0.15), 0 0 18px 3px rgb(var(--sig-rgb) / 0.45);
+}
+
+/* --- dossier unlock shutter --- */
+.unlock-bar {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, #14110c 0%, #0c0a09 100%);
+  border-bottom: 2px solid rgb(var(--sig-rgb) / 0.65);
+  transform-origin: top center;
+}
+.unlock-bar::after {
+  content: "DECRYPTING";
+  position: absolute;
+  left: 1rem;
+  bottom: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  color: var(--color-sig-soft);
+  opacity: 0.8;
+}
+
+/* --- declassification bars (armed by JS only when effect runs) --- */
+[data-redact] {
+  position: relative;
+}
+[data-redact].armed::after {
+  content: "";
+  position: absolute;
+  inset: -1px -4px;
+  background: #0b0a08;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 3px;
+  transform: scaleX(var(--rx, 1));
+  transform-origin: left center;
+  pointer-events: none;
+}
 #tl-scan {
   position: absolute;
   left: -6px;

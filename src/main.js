@@ -98,11 +98,11 @@ function renderProjects() {
     card.setAttribute('aria-label', `Open ${p.name} dossier`);
     card.style.top = `calc(92px + ${i * 16}px)`;
     card.style.zIndex = String(i + 1);
-    card.setAttribute('data-reveal-3d', '');
     card.setAttribute('data-agent', p.agent || 'OPEN PROJECT');
     card.innerHTML = `
       <div class="p-media ${p.featured ? 'h-64 sm:h-80' : 'h-52 sm:h-60'}" data-media>
 ${coverInner(p, i, p.featured)}
+        <span class="unlock-bar" aria-hidden="true"></span>
       </div>
       <span class="dossier-open" aria-hidden="true">↗</span>
       <div class="flex items-start justify-between gap-4 mb-5 mt-5">
@@ -1381,6 +1381,108 @@ function initBackdrop() {
   });
 }
 
+/* ============================================================
+   OPEN FX — per-section scroll-driven "opening" moments.
+   Work unlock · About declassify · Journey draw · Contact decrypt.
+   Scrubbed narrow triggers + one-shot enters only. No new deps.
+   ============================================================ */
+function initOpenFX() {
+  if (REDUCED) return;
+  const MOBILE = window.matchMedia('(max-width: 767px)').matches;
+  const TP = { transformPerspective: 900, transformOrigin: '50% 50%' };
+
+  /* --- Work: dossiers settle + banner shutter-wipe --- */
+  document.querySelectorAll('#projects-grid .dossier').forEach((card) => {
+    const bar = card.querySelector('.unlock-bar');
+    if (MOBILE) {
+      if (bar) bar.style.display = 'none';
+      return;
+    }
+    const tl = gsap.timeline({
+      defaults: { ease: 'none', overwrite: 'auto' },
+      scrollTrigger: { trigger: card, start: 'top 90%', end: 'top 52%', scrub: 0.4 },
+    });
+    tl.fromTo(
+      card,
+      { opacity: 0, y: 60, rotateX: 6, scale: 0.97, ...TP },
+      { opacity: 1, y: 0, rotateX: 0, scale: 1, duration: 1 },
+      0,
+    );
+    if (bar) {
+      tl.fromTo(bar, { scaleY: 1 }, { scaleY: 0, duration: 0.55, ease: 'none' }, 0.1);
+    }
+  });
+
+  /* --- About: declassification bars wipe away --- */
+  document.querySelectorAll('[data-redact]').forEach((el) => {
+    if (MOBILE) return;
+    el.classList.add('armed');
+    gsap.fromTo(
+      el,
+      { '--rx': 1 },
+      {
+        '--rx': 0,
+        ease: 'none',
+        scrollTrigger: { trigger: el, start: 'top 88%', end: 'top 58%', scrub: 0.4 },
+      },
+    );
+  });
+
+  /* --- Journey: line draws down + nodes light up --- */
+  {
+    const line = document.getElementById('tl-progress');
+    const journey = document.getElementById('journey');
+    if (line && journey && !MOBILE) {
+      gsap.fromTo(
+        line,
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: 'none',
+          scrollTrigger: { trigger: journey, start: 'top 75%', end: 'bottom 55%', scrub: 0.4 },
+        },
+      );
+    }
+    document.querySelectorAll('.t-item').forEach((item) => {
+      ScrollTrigger.create({
+        trigger: item,
+        start: 'top 85%',
+        once: true,
+        onEnter: () => item.classList.add('lit'),
+      });
+    });
+  }
+
+  /* --- Contact: values decrypt once on entry --- */
+  if (!MOBILE) {
+    const GLYPHS = '$>_#%:;@&|~^!?=[]{}';
+    document.querySelectorAll('.contact-card .font-medium').forEach((el) => {
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 88%',
+        once: true,
+        onEnter: () => {
+          const original = el.textContent;
+          if (!original.trim()) return;
+          const start = performance.now();
+          const dur = 550;
+          (function tick(now) {
+            const t = Math.min(((now ?? start) - start) / dur, 1);
+            const reveal = Math.floor(t * original.length);
+            let out = '';
+            for (let i = 0; i < original.length; i++) {
+              out += i < reveal || original[i] === ' ' ? original[i] : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+            }
+            el.textContent = out;
+            if (t < 1) requestAnimationFrame(tick);
+            else el.textContent = original;
+          })(start);
+        },
+      });
+    });
+  }
+}
+
 /* ---------- text scramble (secure-channel line) ---------- */function initScramble() {
   const els = document.querySelectorAll('[data-scramble]');
   if (!els.length || REDUCED) return;
@@ -1881,6 +1983,7 @@ initScramble();
 initProjectModal();
 initTerminal();
 initLiveStats();
+initOpenFX();
 // initCatState(); // Removed: distracting
 // initWorkAgent(); // Removed: too noisy
 // initDive(); // Removed: excessive 3D boundary overlays
