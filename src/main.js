@@ -4,7 +4,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { STATS, MARQUEE, FLAGSHIP, SECONDARY, SKILLS, TIMELINE, THREAT_FEED } from './data/site.js';
 import { diagramSVG, miniSVG } from './diagrams.js';
-import { initAgentCat } from './agentcat.js';
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -2067,7 +2066,6 @@ initOpenFX();
 initCatState();
 initCatEat();
 initPaws();
-initAgentCat();
 // initWorkAgent(); // Removed: too noisy
 // initDive(); // Removed: excessive 3D boundary overlays
 // initBackdrop(); // Removed: background clutter

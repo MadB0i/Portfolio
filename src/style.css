@@ -1293,27 +1293,119 @@ body {
   }
 }
 
-/* --- mini agent cat (corner pet) --- */
-#agent-cat {
-  position: fixed;
-  right: 14px;
-  bottom: 14px;
-  width: 150px;
-  height: 150px;
-  z-index: 55;
-  pointer-events: none;
+/* ============================================================
+   AMBIENT SECTION BACKGROUNDS — slow glow drift + grid pan.
+   Pure CSS (compositor transforms only), per-section identity,
+   always behind content. Hero keeps its WebGL scene.
+   ============================================================ */
+#terminal,
+#about,
+#skills,
+#work,
+#journey,
+#contact {
+  position: relative;
 }
-#agent-cat:empty {
-  display: none;
+#terminal::before,
+#about::before,
+#skills::before,
+#work::before,
+#journey::before,
+#contact::before {
+  content: "";
+  position: absolute;
+  inset: -4%;
+  z-index: -1;
+  pointer-events: none;
+  animation: ambientDrift 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
+#terminal::before {
+  background:
+    radial-gradient(46% 42% at 78% 40%, rgb(221 107 32 / 0.1), transparent 70%),
+    radial-gradient(40% 38% at 12% 85%, rgb(var(--sig-rgb) / 0.05), transparent 70%);
+}
+#about::before {
+  background:
+    radial-gradient(50% 44% at 14% 12%, rgb(var(--sig-rgb) / 0.09), transparent 70%),
+    radial-gradient(42% 40% at 88% 90%, rgb(221 107 32 / 0.07), transparent 70%);
+  animation-duration: 22s;
+}
+#skills::before {
+  background:
+    radial-gradient(48% 42% at 86% 14%, rgb(138 160 184 / 0.08), transparent 70%),
+    radial-gradient(44% 40% at 8% 88%, rgb(var(--sig-rgb) / 0.07), transparent 70%);
+  animation-duration: 16s;
+}
+#work::before {
+  background:
+    radial-gradient(56% 40% at 50% 100%, rgb(var(--sig-rgb) / 0.08), transparent 72%),
+    radial-gradient(36% 32% at 92% 8%, rgb(221 107 32 / 0.06), transparent 70%);
+  animation-duration: 20s;
+}
+#journey::before {
+  background:
+    radial-gradient(46% 44% at 8% 45%, rgb(221 107 32 / 0.08), transparent 70%),
+    radial-gradient(40% 36% at 90% 90%, rgb(var(--sig-rgb) / 0.05), transparent 70%);
+  animation-duration: 24s;
+}
+#contact::before {
+  background:
+    radial-gradient(52% 44% at 50% 18%, rgb(var(--sig-rgb) / 0.09), transparent 70%),
+    radial-gradient(38% 34% at 10% 95%, rgb(138 160 184 / 0.06), transparent 70%);
+  animation-duration: 18s;
+}
+#terminal::after,
+#about::after,
+#skills::after,
+#work::after,
+#journey::after,
+#contact::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to right, rgb(255 255 255 / 0.028) 0 1px, transparent 1px 46px),
+    repeating-linear-gradient(to bottom, rgb(255 255 255 / 0.028) 0 1px, transparent 1px 46px);
+  -webkit-mask-image: radial-gradient(75% 70% at 50% 45%, #000 20%, transparent 78%);
+  mask-image: radial-gradient(75% 70% at 50% 45%, #000 20%, transparent 78%);
+  animation: gridPan 38s linear infinite;
+}
+@keyframes ambientDrift {
+  from { transform: translate3d(-24px, -14px, 0) scale(1); }
+  to { transform: translate3d(24px, 16px, 0) scale(1.06); }
+}
+@keyframes gridPan {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 92px 46px, 46px 92px; }
 }
 @media (max-width: 767px) {
-  #agent-cat {
-    display: none;
+  #terminal::after,
+  #about::after,
+  #skills::after,
+  #work::after,
+  #journey::after,
+  #contact::after {
+    animation: none;
+    opacity: 0.7;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  #agent-cat {
-    display: none;
+  #terminal::before,
+  #about::before,
+  #skills::before,
+  #work::before,
+  #journey::before,
+  #contact::before,
+  #terminal::after,
+  #about::after,
+  #skills::after,
+  #work::after,
+  #journey::after,
+  #contact::after {
+    animation: none;
   }
 }
 
