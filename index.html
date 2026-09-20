@@ -173,13 +173,13 @@
                 <path class="cat-ear-r" d="M80 36 L74 20 L80 42" />
                 <path class="cat-head" d="M40 42 C40 28 80 28 80 42" />
                 <!-- Eyes -->
-                <ellipse class="cat-eye" cx="52" cy="44" rx="2.4" ry="3.2" fill="#F5A524" stroke="none" />
-                <ellipse class="cat-eye" cx="68" cy="44" rx="2.4" ry="3.2" fill="#F5A524" stroke="none" />
+                <ellipse class="cat-eye" cx="52" cy="44" rx="3" ry="3.8" fill="#F5A524" stroke="none" />
+                <ellipse class="cat-eye" cx="68" cy="44" rx="3" ry="3.8" fill="#F5A524" stroke="none" />
                 <!-- Nose & mouth -->
                 <path d="M60 50 L58 53 L62 53 Z" fill="#F5A524" stroke="none" />
                 <path d="M56 55 C58 57 62 57 64 55" />
                 <!-- Whiskers -->
-                <path d="M44 48 L28 45 M44 52 L28 54 M76 48 L92 45 M76 52 L92 54" stroke-width="1.4" opacity="0.5" />
+                <path d="M44 46 L26 42 M44 50 L26 50 M44 54 L26 58 M76 46 L94 42 M76 50 L94 50 M76 54 L94 58" stroke-width="1.4" opacity="0.5" />
                 <!-- Body - sitting cat silhouette -->
                 <path d="M40 56 C32 68 30 88 38 104" />
                 <path d="M80 56 C88 68 90 88 82 104" />
@@ -454,6 +454,38 @@
       <button id="to-top" class="font-mono text-xs text-fog hover:text-sig transition-colors border hairline rounded-full px-5 py-2.5 cursor-pointer" aria-label="Back to top">↑ top</button>
     </div>
   </footer>
+
+  <!-- Cat page-eat transition overlay -->
+  <div id="cat-eat" aria-hidden="true">
+    <svg id="eat-cat" viewBox="0 0 400 400" fill="none" stroke="#F5A524" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <g id="eat-head">
+        <path d="M108 108 L132 34 L172 88" />
+        <path d="M292 108 L268 34 L228 88" />
+        <path d="M68 190 C68 92 332 92 332 190" />
+        <ellipse class="eat-eye" cx="152" cy="168" rx="11" ry="14" fill="#F5A524" stroke="none" />
+        <ellipse class="eat-eye" cx="248" cy="168" rx="11" ry="14" fill="#F5A524" stroke="none" />
+        <path d="M200 196 L194 204 L206 204 Z" fill="#F5A524" stroke="none" />
+        <path d="M200 204 C196 210 188 210 184 206 M200 204 C204 210 212 210 216 206" stroke-width="3" />
+        <path d="M168 176 L174 208 L168 240" stroke-width="3" />
+        <path d="M232 176 L226 208 L232 240" stroke-width="3" />
+        <path d="M118 150 L58 138 M118 172 L56 172 M118 194 L58 206 M282 150 L342 138 M282 172 L344 172 M282 194 L342 206" stroke-width="3" opacity="0.55" />
+      </g>
+      <ellipse id="eat-mouth" cx="200" cy="252" rx="58" ry="34" fill="#0C0A09" stroke="#F5A524" stroke-width="4" />
+      <g id="eat-jaw">
+        <path d="M104 236 C130 312 270 312 296 236" />
+        <path d="M150 268 C170 284 230 284 250 268" stroke-width="3" />
+        <g fill="#FBD38D" stroke="none">
+          <ellipse cx="118" cy="330" rx="26" ry="20" />
+          <circle cx="106" cy="308" r="7" /><circle cx="120" cy="304" r="7" /><circle cx="132" cy="310" r="7" />
+          <ellipse cx="282" cy="330" rx="26" ry="20" />
+          <circle cx="268" cy="310" r="7" /><circle cx="280" cy="304" r="7" /><circle cx="294" cy="308" r="7" />
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Mini agent cat (corner pet) -->
+  <div id="agent-cat" aria-hidden="true"></div>
 
   <script type="module" src="/src/main.js"></script>
 </body>

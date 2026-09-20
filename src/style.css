@@ -1223,6 +1223,100 @@ body {
   );
   opacity: 0.05;
 }
+/* --- cat page-eat transition overlay --- */
+#cat-eat {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+}
+#eat-cat {
+  position: absolute;
+  left: 50%;
+  bottom: -4vh;
+  width: min(74vmin, 460px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 34px rgb(var(--sig-rgb) / 0.3));
+}
+@media (max-width: 767px) {
+  #cat-eat {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #cat-eat {
+    display: none;
+  }
+}
+
+/* --- paw-pull entry grippers --- */
+#about,
+#skills,
+#journey {
+  position: relative;
+}
+.paw-pull {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 30px;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+}
+.paw-pull .paw {
+  width: 40px;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 10px rgb(var(--sig-rgb) / 0.35));
+}
+.paw-pull .paw-l {
+  transform: rotate(-14deg);
+}
+.paw-pull .paw-r {
+  transform: rotate(14deg);
+}
+@media (max-width: 767px) {
+  .paw-pull {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .paw-pull {
+    display: none;
+  }
+}
+
+/* --- mini agent cat (corner pet) --- */
+#agent-cat {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  width: 150px;
+  height: 150px;
+  z-index: 55;
+  pointer-events: none;
+}
+#agent-cat:empty {
+  display: none;
+}
+@media (max-width: 767px) {
+  #agent-cat {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #agent-cat {
+    display: none;
+  }
+}
+
 /* --- contact dot-globe --- */
 #contact-globe {
   position: absolute;

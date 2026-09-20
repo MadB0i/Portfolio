@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { STATS, MARQUEE, FLAGSHIP, SECONDARY, SKILLS, TIMELINE, THREAT_FEED } from './data/site.js';
 import { diagramSVG, miniSVG } from './diagrams.js';
+import { initAgentCat } from './agentcat.js';
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -1483,6 +1484,85 @@ function initOpenFX() {
   }
 }
 
+/* ============================================================
+   CAT PAGE-EAT — giant cat rises, opens its mouth over the
+   viewport, then dives up carrying the page away. Scrubbed 1:1,
+   reverse-safe. Desktop only; big boundaries only.
+   ============================================================ */
+function initCatEat() {
+  if (REDUCED) return;
+  if (window.matchMedia('(max-width: 767px)').matches) return;
+  const overlay = document.getElementById('cat-eat');
+  const cat = document.getElementById('eat-cat');
+  const head = document.getElementById('eat-head');
+  const jaw = document.getElementById('eat-jaw');
+  const mouth = document.getElementById('eat-mouth');
+  if (!overlay || !cat || !head || !jaw || !mouth) return;
+  const eyes = overlay.querySelectorAll('.eat-eye');
+
+  let cover = 10;
+  const measure = () => {
+    cover = Math.hypot(window.innerWidth, window.innerHeight) / 110;
+  };
+  measure();
+  window.addEventListener('resize', measure);
+
+  gsap.set(overlay, { autoAlpha: 0, yPercent: 0 });
+  gsap.set(cat, { xPercent: -50, y: '44vh', scale: 0.7, transformOrigin: '50% 92%' });
+
+  ['#work', '#contact'].forEach((sel) => {
+    const sec = document.querySelector(sel);
+    if (!sec) return;
+    const tl = gsap.timeline({
+      defaults: { ease: 'none', overwrite: 'auto' },
+      scrollTrigger: { trigger: sec, start: 'top 92%', end: 'top 28%', scrub: 0.5 },
+    });
+    /* rise */
+    tl.fromTo(overlay, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.08 }, 0);
+    tl.fromTo(cat, { y: '44vh', scale: 0.7 }, { y: '6vh', scale: 1.05, duration: 0.35 }, 0);
+    /* blink on approach */
+    if (eyes.length) {
+      tl.to(eyes, { attr: { ry: 1.5 }, duration: 0.04 }, 0.28)
+        .to(eyes, { attr: { ry: 14 }, duration: 0.05 }, 0.32);
+    }
+    /* jaw opens, mouth swallows the viewport */
+    tl.to(head, { yPercent: -5, duration: 0.28 }, 0.32);
+    tl.to(jaw, { yPercent: 9, duration: 0.28 }, 0.32);
+    tl.fromTo(mouth, { scale: 0, svgOrigin: '200 252' }, { scale: cover, duration: 0.28 }, 0.32);
+    /* dive up, carrying the page away */
+    tl.to(overlay, { yPercent: -100, duration: 0.3 }, 0.7);
+    tl.to(overlay, { autoAlpha: 0, duration: 0.05 }, 0.95);
+  });
+}
+
+/* ============================================================
+   PAW-PULL — paws grip the top edge and tug the section in.
+   Scrubbed, desktop only. Zero conflict with reveals (overlay).
+   ============================================================ */
+const PAW_SVG = `<svg class="paw PAWCLASS" viewBox="0 0 60 60" fill="none" stroke="#F5A524" stroke-width="3" stroke-linecap="round" aria-hidden="true"><ellipse cx="30" cy="40" rx="14" ry="11" /><circle cx="17" cy="22" r="5.5" fill="#F5A524" stroke="none" /><circle cx="30" cy="16" r="5.5" fill="#F5A524" stroke="none" /><circle cx="43" cy="22" r="5.5" fill="#F5A524" stroke="none" /></svg>`;
+
+function initPaws() {
+  if (REDUCED) return;
+  if (window.matchMedia('(max-width: 767px)').matches) return;
+  ['#about', '#skills', '#journey'].forEach((sel) => {
+    const sec = document.querySelector(sel);
+    if (!sec) return;
+    const d = document.createElement('div');
+    d.className = 'paw-pull';
+    d.setAttribute('aria-hidden', 'true');
+    d.innerHTML = PAW_SVG.replace('PAWCLASS', 'paw-l') + PAW_SVG.replace('PAWCLASS', 'paw-r');
+    sec.appendChild(d);
+    const paws = d.querySelectorAll('.paw');
+    const tl = gsap.timeline({
+      defaults: { ease: 'none', overwrite: 'auto' },
+      scrollTrigger: { trigger: sec, start: 'top 94%', end: 'top 58%', scrub: 0.4 },
+    });
+    tl.fromTo(d, { opacity: 0 }, { opacity: 1, duration: 0.25 }, 0);
+    tl.fromTo(paws, { scale: 0.8, y: -8 }, { scale: 1.08, y: 5, duration: 0.35, transformOrigin: '50% 0%' }, 0.1);
+    tl.to(d, { opacity: 0, duration: 0.4 }, 0.6);
+  });
+}
+
 /* ---------- text scramble (secure-channel line) ---------- */function initScramble() {
   const els = document.querySelectorAll('[data-scramble]');
   if (!els.length || REDUCED) return;
@@ -1561,7 +1641,7 @@ function initCatState() {
         duration: dur / 2000,
         ease: 'power2.in',
         onComplete: () => {
-          gsap.to(eye, { attr: { ry: 3.2 }, duration: dur / 2000, ease: 'power2.out' });
+          gsap.to(eye, { attr: { ry: 3.8 }, duration: dur / 2000, ease: 'power2.out' });
         },
       });
     });
@@ -1642,7 +1722,7 @@ function initCatState() {
         if (isAlert) {
           eyes.forEach((eye) => {
             gsap.to(eye, {
-              attr: { ry: 3.45 },
+              attr: { ry: 4.1 },
               duration: 0.2,
               ease: 'power2.out',
               overwrite: 'auto',
@@ -1710,7 +1790,7 @@ function initCatState() {
     });
     eyes.forEach((eye) => {
       gsap.to(eye, {
-        attr: { ry: 3.2 },
+        attr: { ry: 3.8 },
         duration: 0.3,
         ease: 'power2.out',
         overwrite: 'auto',
@@ -1761,7 +1841,7 @@ function initCatState() {
     // Open eyes
     eyes.forEach((eye) => {
       gsap.to(eye, {
-        attr: { ry: 3.2 },
+        attr: { ry: 3.8 },
         duration: 0.25,
         ease: 'power2.out',
       });
@@ -1984,7 +2064,10 @@ initProjectModal();
 initTerminal();
 initLiveStats();
 initOpenFX();
-// initCatState(); // Removed: distracting
+initCatState();
+initCatEat();
+initPaws();
+initAgentCat();
 // initWorkAgent(); // Removed: too noisy
 // initDive(); // Removed: excessive 3D boundary overlays
 // initBackdrop(); // Removed: background clutter
