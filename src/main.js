@@ -1045,82 +1045,105 @@ function initWorkAgent() {
 }
 
 /* ============================================================
-   RT_ SYSTEM DIVE — scroll-driven section transitions.
-   Visual layer only: fixed warp/sweep/HUD driven by scroll
-   progress (scrub). Native scroll, anchors, keyboard untouched.
+   RT_ SYSTEM SPACE — one continuous 3D environment (visual only).
+   #space-world is the camera rig: scrubbing its translateZ moves
+   a real perspective camera through objects at true Z depths.
+   Near objects rush past, far objects crawl — genuine parallax,
+   no flat scaling. Native scroll/anchors/keyboard untouched.
    ============================================================ */
 function initDive() {
   const layer = document.getElementById('dive-layer');
   if (!layer || REDUCED) return;
-  const warp = document.getElementById('dive-warp');
-  const scan = document.getElementById('dive-scan');
+  const world = document.getElementById('space-world');
+  const space = document.getElementById('space');
   const sweep = document.getElementById('dive-sweep');
-  const point = document.getElementById('dive-point');
   const hud = document.getElementById('dive-hud');
   const hudText = document.getElementById('dive-hud-text');
-  if (!warp || !hud || !hudText) return;
+  const chipsBox = document.getElementById('space-chips');
+  const nodes = document.getElementById('space-nodes');
+  if (!world || !space || !hud || !hudText) return;
 
   const MOBILE = window.matchMedia('(max-width: 767px)').matches;
 
-  /* build warp tunnel: radial lines + dashed rings (static, scrub-driven) */
-  const NS = 'http://www.w3.org/2000/svg';
-  const CX = 500;
-  const CY = 500;
-  const LINES = MOBILE ? 14 : 28;
-  for (let k = 0; k < LINES; k++) {
-    const a = (k / LINES) * Math.PI * 2;
-    const l = document.createElementNS(NS, 'line');
-    l.setAttribute('x1', String(CX + Math.cos(a) * 150));
-    l.setAttribute('y1', String(CY + Math.sin(a) * 150));
-    l.setAttribute('x2', String(CX + Math.cos(a) * 560));
-    l.setAttribute('y2', String(CY + Math.sin(a) * 560));
-    l.setAttribute('stroke-width', '1.5');
-    l.setAttribute('opacity', '0.5');
-    warp.appendChild(l);
+  /* depth particle field: FAR / MID / NEAR spread across Z.
+     Perspective projection moves each band at its true speed. */
+  const COUNT = MOBILE ? 14 : 34;
+  for (let k = 0; k < COUNT; k++) {
+    const band = k % 3; // 0 far · 1 mid · 2 near
+    const z = band === 0
+      ? -700 + Math.random() * 250
+      : band === 1
+        ? -380 + Math.random() * 220
+        : -120 + Math.random() * 220;
+    const size = band === 0 ? 2 + Math.random() * 1.5 : band === 1 ? 2.5 + Math.random() * 2 : 3.5 + Math.random() * 2.5;
+    const d = document.createElement('span');
+    d.className = `sp${Math.random() < 0.25 ? ' sp-ice' : ''}`;
+    d.style.cssText = `left:${4 + Math.random() * 92}%;top:${6 + Math.random() * 88}%;`
+      + `width:${size.toFixed(1)}px;height:${size.toFixed(1)}px;`
+      + `opacity:${(0.25 + Math.random() * 0.5).toFixed(2)};`
+      + `transform:translate(-50%,-50%) translateZ(${Math.round(z)}px);`
+      + `box-shadow:0 0 ${(4 + size).toFixed(0)}px 0 rgb(var(--sig-rgb) / 0.35);`;
+    world.appendChild(d);
   }
-  [210, 350].forEach((r, idx) => {
-    const c = document.createElementNS(NS, 'circle');
-    c.setAttribute('cx', String(CX));
-    c.setAttribute('cy', String(CY));
-    c.setAttribute('r', String(r));
-    c.setAttribute('fill', 'none');
-    c.setAttribute('stroke-width', '1.2');
-    c.setAttribute('stroke-dasharray', '3 9');
-    c.setAttribute('opacity', idx === 0 ? '0.55' : '0.3');
-    warp.appendChild(c);
-  });
 
-  gsap.set(warp, { opacity: 0, scale: 0.75, transformOrigin: '50% 50%' });
-  gsap.set([scan, hud], { opacity: 0 });
-  gsap.set(point, { opacity: 0, scale: 0, xPercent: -50, yPercent: -50 });
+  /* ghost project modules at staggered depths (skills→work only) */
+  const CHIPS = [
+    { t: 'KAVACHBENCH', x: 50, y: 30, z: -440, ice: false },
+    { t: 'MISSION KHAKI', x: 50, y: 52, z: -340, ice: false },
+    { t: 'USTAD', x: 30, y: 68, z: -190, ice: true },
+    { t: 'WICK', x: 70, y: 68, z: -160, ice: true },
+  ];
+  if (chipsBox) {
+    CHIPS.forEach((c) => {
+      const el = document.createElement('span');
+      el.className = `sp-chip${c.ice ? ' sp-chip-ice' : ''}`;
+      el.style.left = `${c.x}%`;
+      el.style.top = `${c.y}%`;
+      el.style.setProperty('--z', `${c.z}px`);
+      el.textContent = c.t;
+      chipsBox.appendChild(el);
+    });
+  }
+
+  gsap.set(world, { z: -250 });
+  gsap.set(space, { opacity: 0 });
+  gsap.set(hud, { opacity: 0 });
+  if (chipsBox) gsap.set(chipsBox, { opacity: 0 });
 
   const agentMsg = document.getElementById('agent-msg');
+  const agentHud = document.getElementById('work-agent');
   function shiftNote(on, label) {
-    if (!agentMsg) return;
-    if (on) {
-      if (agentMsg.textContent !== label) agentMsg.textContent = label;
-    } else if (agentMsg.textContent === label) {
-      agentMsg.textContent = 'OBSERVING';
+    if (agentMsg) {
+      if (on) {
+        if (agentMsg.textContent !== label) agentMsg.textContent = label;
+      } else if (agentMsg.textContent === label) {
+        agentMsg.textContent = 'OBSERVING';
+      }
     }
+    if (agentHud) agentHud.classList.toggle('agent-alert', !!on && !!label);
   }
 
+  /* Camera model: world translateZ -250 (far) → +650 (through).
+     Core sits at local z=-120: crossed at ~40% — the midpoint
+     penetration. Journey→contact runs deeper to reach the point. */
   const BOUNDS = [
-    { trigger: '#terminal', label: '[ 01 → 02 ]', mode: 'expand' },
-    { trigger: '#skills', label: '[ 02 → 03 ]', mode: 'expand' },
-    { trigger: '#work', label: '[ 03 → 04 ]', mode: 'collapse', shift: 'SHIFT → 04' },
-    { trigger: '#journey', label: '[ 04 → 05 ]', mode: 'expand', shift: 'SHIFT → 05' },
-    { trigger: '#contact', label: '[ 05 → 06 ] · LINK', mode: 'converge' },
+    { trigger: '#terminal', label: '[ 01 → 02 ]', from: -250, to: 650 },
+    { trigger: '#skills', label: '[ 02 → 03 ]', from: -250, to: 650 },
+    { trigger: '#work', label: '[ 03 → 04 ]', mode: 'modules', from: -250, to: 650, shift: 'SHIFT → 04' },
+    { trigger: '#journey', label: '[ 04 → 05 ]', from: -250, to: 650, shift: 'SHIFT → 05' },
+    { trigger: '#contact', label: '[ 05 → 06 ] · LINK', from: -100, to: 850 },
   ];
 
   BOUNDS.forEach((b) => {
     const sec = document.querySelector(b.trigger);
     if (!sec) return;
+    const range = MOBILE ? { from: -80, to: 120 } : { from: b.from, to: b.to };
     const tl = gsap.timeline({
       defaults: { ease: 'none', overwrite: 'auto' },
       scrollTrigger: {
         trigger: sec,
-        start: MOBILE ? 'top 96%' : 'top 94%',
-        end: MOBILE ? 'top 45%' : 'top 32%',
+        start: 'top 94%',
+        end: 'top 32%',
         scrub: MOBILE ? true : 0.5,
         onUpdate: (self) => {
           const active = self.progress > 0.03 && self.progress < 0.97;
@@ -1130,34 +1153,26 @@ function initDive() {
       },
     });
 
-    if (MOBILE) {
-      /* simplified: HUD pill + faint warp only */
-      tl.fromTo(warp, { opacity: 0 }, { opacity: 0.22, duration: 0.5 }, 0)
-        .to(warp, { opacity: 0, duration: 0.5 }, 0.5)
-        .fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.15 }, 0.42)
-        .to(hud, { opacity: 0, duration: 0.15 }, 0.57);
-      return;
-    }
+    /* camera push-through — the depth move everything else hangs on.
+       The space itself fades in/out so 3D lives only in transitions. */
+    tl.fromTo(world, { z: range.from }, { z: range.to, duration: 1 }, 0);
+    tl.fromTo(space, { opacity: 0 }, { opacity: MOBILE ? 0.55 : 1, duration: 0.15 }, 0)
+      .to(space, { opacity: 0, duration: 0.15 }, 0.85);
 
-    if (b.mode === 'collapse') {
-      /* nodes collapse to center, then burst outward into Work */
-      tl.fromTo(warp, { opacity: 0, scale: 1.2 }, { opacity: 0.6, scale: 0.72, duration: 0.45 }, 0)
-        .to(warp, { opacity: 0, scale: 1.22, duration: 0.55 }, 0.45);
-    } else {
-      tl.fromTo(warp, { opacity: 0, scale: 0.75 }, { opacity: 0.5, scale: 1.06, duration: 0.5 }, 0)
-        .to(warp, { opacity: 0, scale: 1.2, duration: 0.5 }, 0.5);
+    if (!MOBILE) {
+      tl.fromTo(sweep, { xPercent: -170 }, { xPercent: 340, duration: 1 }, 0);
     }
-
-    tl.fromTo(sweep, { xPercent: -170 }, { xPercent: 340, duration: 1 }, 0)
-      .fromTo(scan, { opacity: 0, scaleY: 1 }, { opacity: 0.45, scaleY: 1.6, duration: 0.5 }, 0)
-      .to(scan, { opacity: 0, scaleY: 1, duration: 0.5 }, 0.5)
-      .fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.1 }, 0.45)
+    tl.fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.1 }, 0.45)
       .to(hud, { opacity: 0, duration: 0.1 }, 0.55);
 
-    if (b.mode === 'converge') {
-      /* timeline converges to a point → contact emerges */
-      tl.fromTo(point, { opacity: 0, scale: 0 }, { opacity: 0.9, scale: 1, duration: 0.4 }, 0.3)
-        .to(point, { opacity: 0, scale: 1.6, duration: 0.3 }, 0.7);
+    if (b.mode === 'modules' && chipsBox && !MOBILE) {
+      /* nodes collapse, modules emerge at staggered depths, then pass */
+      if (nodes) {
+        tl.fromTo(nodes, { opacity: 0.4, scale: 1 }, { opacity: 0, scale: 0.35, duration: 0.35 }, 0)
+          .to(nodes, { opacity: 0.4, scale: 1, duration: 0.4 }, 0.6);
+      }
+      tl.fromTo(chipsBox, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.15)
+        .to(chipsBox, { opacity: 0, duration: 0.2 }, 0.8);
     }
   });
 }

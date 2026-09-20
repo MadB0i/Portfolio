@@ -1187,8 +1187,10 @@ body {
 }
 
 /* ============================================================
-   RT_ SYSTEM DIVE — scroll-driven section transitions
-   Fixed visual layer only; page scroll stays native.
+   RT_ SYSTEM SPACE — one continuous 3D environment (visual only).
+   #space provides real perspective; #space-world is the camera
+   rig: scrubbing its translateZ moves the camera through objects
+   at true Z depths, so near/far parallax is genuine projection.
    ============================================================ */
 #dive-layer {
   position: fixed;
@@ -1196,32 +1198,96 @@ body {
   z-index: 40;
   pointer-events: none;
   overflow: hidden;
-  opacity: 1;
 }
-#dive-warp {
-  position: absolute;
-  inset: -12%;
-  width: 124%;
-  height: 124%;
-  opacity: 0;
-  will-change: transform, opacity;
-}
-#dive-warp line,
-#dive-warp circle {
-  stroke: var(--color-sig);
-}
-#dive-scan {
+#space {
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  perspective: 750px;
+  perspective-origin: 50% 46%;
+}
+#space-world {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+/* depth particles — Z spread gives true near/fast, far/slow motion */
+.sp {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--color-sig);
+  will-change: transform;
+}
+.sp-ice {
+  background: var(--color-ice);
+}
+/* wireframe core motif */
+#space-core {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(340px, 72vw);
+  color: var(--color-sig);
+  opacity: 0.5;
+  transform: translate(-50%, -50%) translateZ(-120px);
+}
+#space-core svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 14px rgb(var(--sig-rgb) / 0.3));
+}
+/* floating node network (midground plane) */
+#space-nodes {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(430px, 88vw);
+  color: var(--color-sig);
+  opacity: 0.4;
+  transform: translate(-50%, -50%) translateZ(-320px);
+}
+#space-nodes svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+/* ghost project modules at staggered depths */
+#space-chips {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
   opacity: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.5) 0px,
-    rgba(255, 255, 255, 0.5) 1px,
-    transparent 1px,
-    transparent 4px
-  );
-  will-change: transform, opacity;
+}
+.sp-chip {
+  position: absolute;
+  transform: translate(-50%, -50%) translateZ(var(--z, -300px));
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--color-sig-soft);
+  border: 1px solid rgb(var(--sig-rgb) / 0.45);
+  background: rgba(12, 10, 9, 0.72);
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.sp-chip-ice {
+  color: var(--color-ice);
+  border-color: rgba(138, 160, 184, 0.4);
+}
+/* converge point (far Z — camera flies toward it) */
+#space-point {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-sig-soft);
+  box-shadow: 0 0 24px 6px rgb(var(--sig-rgb) / 0.55), 0 0 90px 20px rgb(var(--sig-rgb) / 0.18);
+  transform: translate(-50%, -50%) translateZ(-700px);
 }
 #dive-sweep {
   position: absolute;
@@ -1232,18 +1298,6 @@ body {
   background: linear-gradient(100deg, transparent, rgb(var(--sig-rgb) / 0.1), transparent);
   transform: translateX(-160%) skewX(-10deg);
   will-change: transform;
-}
-#dive-point {
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--color-sig-soft);
-  box-shadow: 0 0 24px 6px rgb(var(--sig-rgb) / 0.55), 0 0 90px 20px rgb(var(--sig-rgb) / 0.18);
-  opacity: 0;
-  will-change: transform, opacity;
 }
 #dive-hud {
   position: absolute;
@@ -1265,11 +1319,14 @@ body {
   white-space: nowrap;
 }
 @media (max-width: 767px) {
-  /* simplified mobile dive: HUD pill only, no sweep/scale */
+  /* simplified mobile dive: HUD pill + gentle drift only */
   #dive-sweep,
-  #dive-scan,
-  #dive-point {
+  #space-point,
+  #space-chips {
     display: none;
+  }
+  #space {
+    perspective: 900px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
