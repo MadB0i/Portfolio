@@ -1177,6 +1177,45 @@ function initDive() {
   });
 }
 
+/* ============================================================
+   SECTION DEPTH — the sections themselves move through 3D space.
+   Each major section gets one scrubbed keyframe timeline across
+   its full viewport traverse: enter from depth → dwell at identity
+   → tilt back and recede on exit. Uses per-element
+   transformPerspective (no ancestor side effects: sticky dossiers,
+   fixed nav/modal, and Lenis/anchors/keyboard all untouched).
+   ============================================================ */
+function initSectionDepth() {
+  if (REDUCED) return;
+  const MOBILE = window.matchMedia('(max-width: 767px)').matches;
+  const RX = MOBILE ? 3 : 7;
+  const Z = MOBILE ? -60 : -150;
+  const MIN_OP = MOBILE ? 0.7 : 0.45;
+  ['#top', '#terminal', '#about', '#skills', '#work', '#journey', '#contact'].forEach((sel) => {
+    const el = document.querySelector(sel);
+    if (!el) return;
+    const tl = gsap.timeline({
+      defaults: { ease: 'none', overwrite: 'auto' },
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 96%',
+        end: 'bottom 4%',
+        scrub: MOBILE ? true : 0.5,
+      },
+    });
+    tl.fromTo(
+      el,
+      { rotateX: -RX, z: Z, opacity: MIN_OP, transformPerspective: 750, transformOrigin: '50% 50%' },
+      { rotateX: 0, z: 0, opacity: 1, duration: 0.3 },
+      0,
+    ).to(
+      el,
+      { rotateX: RX, z: Z, opacity: MIN_OP, duration: 0.3 },
+      0.7,
+    );
+  });
+}
+
 /* ---------- text scramble (secure-channel line) ---------- */function initScramble() {
   const els = document.querySelectorAll('[data-scramble]');
   if (!els.length || REDUCED) return;
@@ -1680,3 +1719,4 @@ initTerminal();
 initLiveStats();
 initWorkAgent();
 initDive();
+initSectionDepth();
