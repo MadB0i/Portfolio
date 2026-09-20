@@ -1044,6 +1044,124 @@ function initWorkAgent() {
   }
 }
 
+/* ============================================================
+   RT_ SYSTEM DIVE — scroll-driven section transitions.
+   Visual layer only: fixed warp/sweep/HUD driven by scroll
+   progress (scrub). Native scroll, anchors, keyboard untouched.
+   ============================================================ */
+function initDive() {
+  const layer = document.getElementById('dive-layer');
+  if (!layer || REDUCED) return;
+  const warp = document.getElementById('dive-warp');
+  const scan = document.getElementById('dive-scan');
+  const sweep = document.getElementById('dive-sweep');
+  const point = document.getElementById('dive-point');
+  const hud = document.getElementById('dive-hud');
+  const hudText = document.getElementById('dive-hud-text');
+  if (!warp || !hud || !hudText) return;
+
+  const MOBILE = window.matchMedia('(max-width: 767px)').matches;
+
+  /* build warp tunnel: radial lines + dashed rings (static, scrub-driven) */
+  const NS = 'http://www.w3.org/2000/svg';
+  const CX = 500;
+  const CY = 500;
+  const LINES = MOBILE ? 14 : 28;
+  for (let k = 0; k < LINES; k++) {
+    const a = (k / LINES) * Math.PI * 2;
+    const l = document.createElementNS(NS, 'line');
+    l.setAttribute('x1', String(CX + Math.cos(a) * 150));
+    l.setAttribute('y1', String(CY + Math.sin(a) * 150));
+    l.setAttribute('x2', String(CX + Math.cos(a) * 560));
+    l.setAttribute('y2', String(CY + Math.sin(a) * 560));
+    l.setAttribute('stroke-width', '1.5');
+    l.setAttribute('opacity', '0.5');
+    warp.appendChild(l);
+  }
+  [210, 350].forEach((r, idx) => {
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', String(CX));
+    c.setAttribute('cy', String(CY));
+    c.setAttribute('r', String(r));
+    c.setAttribute('fill', 'none');
+    c.setAttribute('stroke-width', '1.2');
+    c.setAttribute('stroke-dasharray', '3 9');
+    c.setAttribute('opacity', idx === 0 ? '0.55' : '0.3');
+    warp.appendChild(c);
+  });
+
+  gsap.set(warp, { opacity: 0, scale: 0.75, transformOrigin: '50% 50%' });
+  gsap.set([scan, hud], { opacity: 0 });
+  gsap.set(point, { opacity: 0, scale: 0, xPercent: -50, yPercent: -50 });
+
+  const agentMsg = document.getElementById('agent-msg');
+  function shiftNote(on, label) {
+    if (!agentMsg) return;
+    if (on) {
+      if (agentMsg.textContent !== label) agentMsg.textContent = label;
+    } else if (agentMsg.textContent === label) {
+      agentMsg.textContent = 'OBSERVING';
+    }
+  }
+
+  const BOUNDS = [
+    { trigger: '#terminal', label: '[ 01 → 02 ]', mode: 'expand' },
+    { trigger: '#skills', label: '[ 02 → 03 ]', mode: 'expand' },
+    { trigger: '#work', label: '[ 03 → 04 ]', mode: 'collapse', shift: 'SHIFT → 04' },
+    { trigger: '#journey', label: '[ 04 → 05 ]', mode: 'expand', shift: 'SHIFT → 05' },
+    { trigger: '#contact', label: '[ 05 → 06 ] · LINK', mode: 'converge' },
+  ];
+
+  BOUNDS.forEach((b) => {
+    const sec = document.querySelector(b.trigger);
+    if (!sec) return;
+    const tl = gsap.timeline({
+      defaults: { ease: 'none', overwrite: 'auto' },
+      scrollTrigger: {
+        trigger: sec,
+        start: MOBILE ? 'top 96%' : 'top 94%',
+        end: MOBILE ? 'top 45%' : 'top 32%',
+        scrub: MOBILE ? true : 0.5,
+        onUpdate: (self) => {
+          const active = self.progress > 0.03 && self.progress < 0.97;
+          if (b.shift) shiftNote(active, b.shift);
+          if (active) hudText.textContent = b.label;
+        },
+      },
+    });
+
+    if (MOBILE) {
+      /* simplified: HUD pill + faint warp only */
+      tl.fromTo(warp, { opacity: 0 }, { opacity: 0.22, duration: 0.5 }, 0)
+        .to(warp, { opacity: 0, duration: 0.5 }, 0.5)
+        .fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.15 }, 0.42)
+        .to(hud, { opacity: 0, duration: 0.15 }, 0.57);
+      return;
+    }
+
+    if (b.mode === 'collapse') {
+      /* nodes collapse to center, then burst outward into Work */
+      tl.fromTo(warp, { opacity: 0, scale: 1.2 }, { opacity: 0.6, scale: 0.72, duration: 0.45 }, 0)
+        .to(warp, { opacity: 0, scale: 1.22, duration: 0.55 }, 0.45);
+    } else {
+      tl.fromTo(warp, { opacity: 0, scale: 0.75 }, { opacity: 0.5, scale: 1.06, duration: 0.5 }, 0)
+        .to(warp, { opacity: 0, scale: 1.2, duration: 0.5 }, 0.5);
+    }
+
+    tl.fromTo(sweep, { xPercent: -170 }, { xPercent: 340, duration: 1 }, 0)
+      .fromTo(scan, { opacity: 0, scaleY: 1 }, { opacity: 0.45, scaleY: 1.6, duration: 0.5 }, 0)
+      .to(scan, { opacity: 0, scaleY: 1, duration: 0.5 }, 0.5)
+      .fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.1 }, 0.45)
+      .to(hud, { opacity: 0, duration: 0.1 }, 0.55);
+
+    if (b.mode === 'converge') {
+      /* timeline converges to a point → contact emerges */
+      tl.fromTo(point, { opacity: 0, scale: 0 }, { opacity: 0.9, scale: 1, duration: 0.4 }, 0.3)
+        .to(point, { opacity: 0, scale: 1.6, duration: 0.3 }, 0.7);
+    }
+  });
+}
+
 /* ---------- text scramble (secure-channel line) ---------- */function initScramble() {
   const els = document.querySelectorAll('[data-scramble]');
   if (!els.length || REDUCED) return;
@@ -1546,3 +1664,4 @@ initProjectModal();
 initTerminal();
 initLiveStats();
 initWorkAgent();
+initDive();

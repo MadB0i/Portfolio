@@ -26,6 +26,15 @@
   <div class="film-grain" aria-hidden="true"></div>
   <div class="scanlines" aria-hidden="true"></div>
 
+  <!-- RT_ system dive layer (scroll-driven transitions) -->
+  <div id="dive-layer" aria-hidden="true">
+    <svg id="dive-warp" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice"></svg>
+    <div id="dive-scan"></div>
+    <div id="dive-sweep"></div>
+    <div id="dive-point"></div>
+    <div id="dive-hud"><span id="dive-hud-text">[ 01 → 02 ]</span></div>
+  </div>
+
   <!-- Scroll progress -->
   <div id="progress-bar" class="fixed top-0 left-0 right-0 h-[2px] z-[80] bg-gradient-to-r from-sig-soft via-sig to-sig-soft"></div>
 
