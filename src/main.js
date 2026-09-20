@@ -1191,6 +1191,7 @@ function initSectionDepth() {
   const RX = MOBILE ? 3 : 7;
   const Z = MOBILE ? -60 : -150;
   const MIN_OP = MOBILE ? 0.7 : 0.45;
+  const tls = {};
   ['#top', '#terminal', '#about', '#skills', '#work', '#journey', '#contact'].forEach((sel) => {
     const el = document.querySelector(sel);
     if (!el) return;
@@ -1213,7 +1214,124 @@ function initSectionDepth() {
       { rotateX: RX, z: Z, opacity: MIN_OP, duration: 0.3 },
       0.7,
     );
+    tls[sel] = tl;
   });
+
+  if (MOBILE) return; // mobile keeps fade + small tilt only
+  const q = (s) => document.querySelector(s);
+
+  function addOverlay(sel, cls, inner = '') {
+    const host = q(sel);
+    if (!host) return null;
+    const d = document.createElement('div');
+    d.className = `sec-overlay ${cls}`;
+    d.setAttribute('aria-hidden', 'true');
+    if (inner) d.innerHTML = inner;
+    host.appendChild(d);
+    return d;
+  }
+
+  /* top → terminal/about: handshake flicker on entry */
+  ['#terminal', '#about'].forEach((sel) => {
+    const scanEl = addOverlay(sel, 'sec-scan');
+    const tl = tls[sel];
+    if (!scanEl || !tl) return;
+    tl.to(scanEl, { opacity: 0.55, duration: 0.04 }, 0)
+      .to(scanEl, { opacity: 0.08, duration: 0.05 }, 0.04)
+      .to(scanEl, { opacity: 0.4, duration: 0.05 }, 0.09)
+      .to(scanEl, { opacity: 0, duration: 0.08 }, 0.14);
+  });
+
+  /* terminal → skills: hex wireframe draw-in (extends #space-nodes motif) */
+  {
+    const hex = (cx, cy, r) => {
+      let p = '';
+      for (let k = 0; k < 6; k++) {
+        const a = (Math.PI / 3) * k + Math.PI / 6;
+        p += `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)} `;
+      }
+      return `<polygon points="${p.trim()}" pathLength="100" />`;
+    };
+    const svg = `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">`
+      + hex(18, 30, 13) + hex(52, 52, 17) + hex(84, 28, 12) + hex(30, 76, 14) + hex(70, 78, 13)
+      + `</svg>`;
+    const hexEl = addOverlay('#skills', 'sec-hex', svg);
+    const tl = tls['#skills'];
+    if (hexEl && tl) {
+      tl.to(hexEl.querySelectorAll('polygon'), { strokeDashoffset: 0, duration: 0.22, stagger: 0.02 }, 0)
+        .to(hexEl, { opacity: 0, duration: 0.08 }, 0.26);
+    }
+  }
+
+  /* skills → work: project grid emerges from depth as the primary move */
+  {
+    const grid = q('#projects-grid');
+    const tl = tls['#work'];
+    if (grid && tl) {
+      tl.fromTo(
+        grid,
+        { z: -260, opacity: 0.3, transformPerspective: 750 },
+        { z: 0, opacity: 1, duration: 0.3 },
+        0,
+      );
+    }
+  }
+
+  /* work → journey: glowing trace sweeps down with scroll direction */
+  {
+    const journey = q('#journey');
+    const tl = tls['#journey'];
+    if (journey && tl) {
+      const traceEl = addOverlay('#journey', 'sec-trace');
+      if (traceEl) {
+        const travel = journey.clientHeight + 160;
+        tl.fromTo(traceEl, { opacity: 0, y: -80 }, { opacity: 1, y: travel * 0.4, duration: 0.12 }, 0)
+          .to(traceEl, { opacity: 1, y: travel, duration: 0.18 }, 0.12)
+          .to(traceEl, { opacity: 0, duration: 0.05 }, 0.28);
+      }
+    }
+  }
+
+  /* journey → contact: encrypted-handshake glitch on the heading as it settles */
+  {
+    const h2 = q('#contact h2.mega');
+    if (h2 && 'IntersectionObserver' in window) {
+      const GLYPHS = '$>_#%:;@&|~^!?=[]{}';
+      let played = false;
+      ScrollTrigger.create({
+        trigger: h2,
+        start: 'top 82%',
+        once: true,
+        onEnter: () => {
+          if (played) return;
+          played = true;
+          const texts = [];
+          const walker = document.createTreeWalker(h2, NodeFilter.SHOW_TEXT);
+          let n;
+          while ((n = walker.nextNode())) {
+            if (n.textContent.trim().length > 3) texts.push(n);
+          }
+          if (!texts.length) return;
+          const orig = texts.map((t) => t.textContent);
+          const start = performance.now();
+          const dur = 650;
+          (function tick(now) {
+            const t = Math.min(((now ?? start) - start) / dur, 1);
+            texts.forEach((node, idx) => {
+              const o = orig[idx];
+              const reveal = Math.floor(t * o.length);
+              let out = '';
+              for (let i = 0; i < o.length; i++) {
+                out += i < reveal || o[i] === ' ' ? o[i] : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+              }
+              node.textContent = out;
+            });
+            if (t < 1) requestAnimationFrame(tick);
+          })(start);
+        },
+      });
+    }
+  }
 }
 
 /* ---------- text scramble (secure-channel line) ---------- */function initScramble() {
