@@ -10,6 +10,7 @@ const ICE = '#8aa0b8';
 
 export function initGlobe(container, opts = {}) {
   const reduced = !!opts.reduced;
+  const MOBILE = window.matchMedia('(max-width: 767px)').matches;
 
   let renderer;
   try {
@@ -18,7 +19,7 @@ export function initGlobe(container, opts = {}) {
     console.warn('WebGL unavailable — globe disabled.', e);
     return null;
   }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, MOBILE ? 1.5 : 1.75));
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setClearColor(0x000000, 0);
   container.appendChild(renderer.domElement);
@@ -34,7 +35,7 @@ export function initGlobe(container, opts = {}) {
   camera.lookAt(0, 0, 0);
 
   /* fibonacci sphere */
-  const N = 850;
+  const N = MOBILE ? 450 : 850;
   const R = 1.7;
   const pos = new Float32Array(N * 3);
   const col = new Float32Array(N * 3);
@@ -142,6 +143,10 @@ export function initGlobe(container, opts = {}) {
   }
 
   return {
+    setVisible(v) {
+      if (v) start();
+      else stop();
+    },
     dispose() {
       stop();
       window.removeEventListener('pointermove', onPointer);

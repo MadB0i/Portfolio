@@ -114,6 +114,8 @@ function makeGridFloor() {
 
 export function initHeroScene(container, opts = {}) {
   const reduced = !!opts.reduced;
+  const MOBILE = window.matchMedia('(max-width: 767px)').matches;
+  const DENSITY = MOBILE ? 0.45 : 1;
 
   let renderer;
   try {
@@ -127,7 +129,7 @@ export function initHeroScene(container, opts = {}) {
     return null;
   }
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, MOBILE ? 1.5 : 2));
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setClearColor(0x000000, 0);
   container.appendChild(renderer.domElement);
@@ -139,19 +141,21 @@ export function initHeroScene(container, opts = {}) {
     0.1,
     100,
   );
-  camera.position.set(0, 2.1, 6.6);
+  camera.position.set(0, MOBILE ? 2.4 : 2.1, MOBILE ? 7.6 : 6.6);
   camera.lookAt(0, 0.45, 0);
+  const CAM_Z = MOBILE ? 7.6 : 6.6;
+  const CAM_Y = MOBILE ? 2.4 : 2.1;
 
   const rig = new THREE.Group();
   scene.add(rig);
 
   /* --- points: fine white dust --- */
-  const dust = makeParticles(1100, [3.4, 12], 9, 0.05, WHITE, 0.65);
+  const dust = makeParticles(Math.round(900 * DENSITY), [3.4, 12], 9, 0.05, WHITE, 0.6);
   rig.add(dust);
 
   /* --- points: sparse neon accents --- */
-  const sparks = makeParticles(260, [3.2, 11], 8, 0.09, SIG_SOFT, 0.85);
-  const embers = makeParticles(120, [3.4, 9], 7, 0.13, EMBER, 0.7);
+  const sparks = makeParticles(Math.round(220 * DENSITY), [3.2, 11], 8, 0.09, SIG_SOFT, 0.8);
+  const embers = makeParticles(Math.round(100 * DENSITY), [3.4, 9], 7, 0.13, EMBER, 0.65);
   rig.add(sparks);
   rig.add(embers);
 
@@ -179,16 +183,44 @@ export function initHeroScene(container, opts = {}) {
       map: softSprite(SIG),
       color: SIG,
       transparent: true,
-      opacity: 0.5,
+      opacity: 0.32,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     }),
   );
-  coreGlowMid.scale.setScalar(4.2);
+  coreGlowMid.scale.setScalar(3.6);
+
+  /* occasional node pulses riding the wireframe vertices */
+  function makePulseLayer(stride, offset) {
+    const src = coreOuter.geometry.attributes.position;
+    const total = src.count;
+    const pts = [];
+    for (let i = offset; i < total; i += stride) {
+      pts.push(src.getX(i), src.getY(i), src.getZ(i));
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pts), 3));
+    return new THREE.Points(
+      g,
+      new THREE.PointsMaterial({
+        size: 0.13,
+        map: softSprite(SIG_SOFT),
+        color: SIG_SOFT,
+        transparent: true,
+        opacity: 0.2,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        sizeAttenuation: true,
+      }),
+    );
+  }
+  const pulsesA = makePulseLayer(14, 0);
+  const pulsesB = makePulseLayer(14, 7);
 
   const coreRig = new THREE.Group();
   coreRig.position.set(0, 0.45, -0.4);
-  coreRig.add(coreOuter, coreInner, coreGlowMid);
+  const CORE_BASE = MOBILE ? 0.85 : 1;
+  coreRig.add(coreOuter, coreInner, coreGlowMid, pulsesA, pulsesB);
   rig.add(coreRig);
 
   /* --- neon grid floor --- */
@@ -238,12 +270,16 @@ export function initHeroScene(container, opts = {}) {
     coreOuter.rotation.y = t * 0.22;
     coreInner.rotation.x = -t * 0.34;
     coreInner.rotation.y = t * 0.4;
-    const coreScale = (1 + Math.sin(t * 1.4) * 0.05) * (1 + scrollP * 0.35);
+    const coreScale = (1 + Math.sin(t * 1.4) * 0.05) * (1 + scrollP * 0.35) * CORE_BASE;
     coreRig.scale.setScalar(coreScale);
 
+    /* slow out-of-phase node pulses — occasional, restrained */
+    pulsesA.material.opacity = 0.22 + 0.28 * (0.5 + 0.5 * Math.sin(t * 0.9));
+    pulsesB.material.opacity = 0.22 + 0.28 * (0.5 + 0.5 * Math.sin(t * 0.9 + Math.PI));
+
     /* scroll dive: camera pushes into the field */
-    camera.position.z = 6.6 - scrollP * 2.1;
-    camera.position.y = 2.1 - scrollP * 0.5;
+    camera.position.z = CAM_Z - scrollP * 2.1;
+    camera.position.y = CAM_Y - scrollP * 0.5;
 
     floor.material.uniforms.uTime.value = t;
 
@@ -286,6 +322,10 @@ export function initHeroScene(container, opts = {}) {
     renderer,
     setScroll(p) {
       scrollP = Math.max(0, Math.min(1, p || 0));
+    },
+    setVisible(v) {
+      if (v) start();
+      else stop();
     },
     dispose() {
       stop();

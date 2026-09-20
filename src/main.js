@@ -2,7 +2,7 @@ import './style.css';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { ROLES, STATS, MARQUEE, FLAGSHIP, SECONDARY, SKILLS, TIMELINE, THREAT_FEED } from './data/site.js';
+import { STATS, MARQUEE, FLAGSHIP, SECONDARY, SKILLS, TIMELINE, THREAT_FEED } from './data/site.js';
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -190,12 +190,29 @@ if (hero3d) {
 }
 
 /* ---------- contact dot-globe (lazy chunk) ---------- */
+let globeScene = null;
 const globeEl = document.getElementById('contact-globe');
 if (globeEl) {
   import('./three/globe.js').then(({ initGlobe }) => {
-    initGlobe(globeEl, { reduced: REDUCED });
+    globeScene = initGlobe(globeEl, { reduced: REDUCED });
   });
 }
+
+/* Pause WebGL loops while their sections are offscreen. */
+function watchVisible(sectionId, getScene) {
+  if (!('IntersectionObserver' in window) || REDUCED) return;
+  const sec = document.getElementById(sectionId);
+  if (!sec) return;
+  new IntersectionObserver(
+    ([entry]) => {
+      const s = getScene();
+      if (s && s.setVisible) s.setVisible(entry.isIntersecting);
+    },
+    { threshold: 0 },
+  ).observe(sec);
+}
+watchVisible('top', () => heroScene);
+watchVisible('contact', () => globeScene);
 
 let lenis = null;
 if (!REDUCED) {
@@ -653,29 +670,6 @@ document.querySelectorAll('.spot-card').forEach((card) => {
 });
 
 /* ============================================================
-   Role rotator
-   ============================================================ */
-
-function initRotator() {
-  const el = document.getElementById('role-word');
-  if (REDUCED) return;
-  let i = 0;
-  setInterval(() => {
-    gsap.to(el, {
-      y: -14,
-      opacity: 0,
-      duration: 0.32,
-      ease: 'power2.in',
-      onComplete: () => {
-        i = (i + 1) % ROLES.length;
-        el.textContent = ROLES[i];
-        gsap.fromTo(el, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' });
-      },
-    });
-  }, 2600);
-}
-
-/* ============================================================
    Menu / misc
    ============================================================ */
 
@@ -1084,7 +1078,7 @@ function initCatState() {
   }
 
   function updateTracking() {
-    if (!trackingActive || (state !== 'idle' && state !== 'curious' && state !== 'alert')) {
+    if (!heroVisible || !trackingActive || (state !== 'idle' && state !== 'curious' && state !== 'alert')) {
       requestAnimationFrame(updateTracking);
       return;
     }
@@ -1295,6 +1289,13 @@ function initCatState() {
   });
 
   // --- Init ---
+  // Skip DOM work while the hero is offscreen (loop stays cheap).
+  let heroVisible = true;
+  if ('IntersectionObserver' in window && heroSection) {
+    new IntersectionObserver(([entry]) => {
+      heroVisible = entry.isIntersecting;
+    }, { threshold: 0 }).observe(heroSection);
+  }
   scheduleIdleBlink();
   resetIdleTimer();
   requestAnimationFrame(updateTracking);
@@ -1457,7 +1458,6 @@ runPreloader();
 initScrollFX();
 initPointerFX();
 initTilt();
-initRotator();
 initScramble();
 initCatState();
 initProjectModal();

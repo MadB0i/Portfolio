@@ -1,16 +1,9 @@
 /* Central content for the portfolio — edit copy here, layout stays untouched. */
 
-export const ROLES = [
-  'zero-trust runtimes',
-  'malware forensics',
-  'LLM infrastructure',
-  'android security',
-];
-
 export const STATS = [
   { value: 10, suffix: '+', label: 'Projects shipped' },
   { value: 6, suffix: '', label: 'Languages in use', pad: true },
-  { value: 4, suffix: '', label: 'Live products', pad: true },
+  { value: 3, suffix: '', label: 'Live products', pad: true },
   { value: 1, suffix: '', label: 'Solo developer', pad: true },
 ];
 
