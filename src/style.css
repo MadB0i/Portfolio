@@ -1256,7 +1256,7 @@ body {
 #contact::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -60px;
   z-index: -1;
   pointer-events: none;
   background:
@@ -1271,8 +1271,67 @@ body {
   to { transform: translate3d(24px, 16px, 0) scale(1.06); }
 }
 @keyframes gridPan {
-  from { background-position: 0 0, 0 0; }
-  to { background-position: 92px 46px, 46px 92px; }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-46px, -46px, 0); }
+}
+
+/* --- watching eyes in section backgrounds (02 · 03 · 05) --- */
+.stare {
+  position: absolute;
+  z-index: -1;
+  display: flex;
+  gap: 24px;
+  pointer-events: none;
+  opacity: 0.75;
+  animation: stareFloat 9s ease-in-out infinite alternate;
+}
+.stare-about {
+  top: 10%;
+  right: 7%;
+}
+.stare-skills {
+  top: 44%;
+  left: 3.5%;
+}
+.stare-skills span {
+  width: 13px;
+  height: 17px;
+}
+.stare-journey {
+  top: 26%;
+  right: 4.5%;
+}
+.stare span {
+  display: block;
+  width: 11px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FBD38D 0%, #F5A524 55%, transparent 78%);
+  box-shadow: 0 0 16px 4px rgb(var(--sig-rgb) / 0.32);
+  animation: stareBlink 6.5s ease-in-out infinite;
+}
+.stare span:last-child {
+  animation-delay: 0.07s;
+}
+.stare-about span {
+  animation-delay: 1.2s;
+}
+.stare-about span:last-child {
+  animation-delay: 1.27s;
+}
+.stare-journey span {
+  animation-delay: 3.1s;
+}
+.stare-journey span:last-child {
+  animation-delay: 3.17s;
+}
+@keyframes stareBlink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  93%, 96% { transform: scaleY(0.08); }
+}
+@keyframes stareFloat {
+  from { transform: translate3d(0, -7px, 0); }
+  to { transform: translate3d(0, 7px, 0); }
 }
 @media (max-width: 767px) {
   #terminal::after,
@@ -1283,6 +1342,9 @@ body {
   #contact::after {
     animation: none;
     opacity: 0.7;
+  }
+  .stare {
+    display: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1299,6 +1361,9 @@ body {
   #journey::after,
   #contact::after {
     animation: none;
+  }
+  .stare {
+    display: none;
   }
 }
 
