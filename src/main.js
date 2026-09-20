@@ -228,7 +228,6 @@ function watchVisible(sectionId, getScene) {
     { threshold: 0 },
   ).observe(sec);
 }
-watchVisible('top', () => heroScene);
 watchVisible('contact', () => globeScene);
 
 let lenis = null;
@@ -504,22 +503,14 @@ function initScrollFX() {
       ease: 'none',
       scrollTrigger: { trigger: '#top', start: 'top top', end: 'bottom top', scrub: true },
     });
-    if (!REDUCED) {
-      gsap.to('#hero-3d', {
-        y: -140,
-        opacity: 0,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '#top',
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
-          onUpdate: (self) => {
-            if (heroScene && heroScene.setScroll) heroScene.setScroll(self.progress);
-          },
-        },
-      });
-    }
+    /* whole-page camera drive: canvas is a fixed backdrop now */
+    ScrollTrigger.create({
+      start: 0,
+      end: 'max',
+      onUpdate: (self) => {
+        if (heroScene && heroScene.setScroll) heroScene.setScroll(self.progress);
+      },
+    });
   }
 
   // Progress bar + nav hide/show + active link

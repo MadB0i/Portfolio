@@ -895,8 +895,11 @@ body {
    Futuristic 3D upgrade — hero WebGL, HUD overlays, glow type
    ============================================================ */
 
-/* --- hero WebGL canvas layer --- */
+/* --- hero WebGL canvas layer: fixed full-page backdrop --- */
 #hero-3d {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
   pointer-events: none;
   overflow: hidden;
 }
