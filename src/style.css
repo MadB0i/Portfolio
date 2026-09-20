@@ -1222,22 +1222,6 @@ body {
 .sp-ice {
   background: var(--color-ice);
 }
-/* wireframe core motif */
-#space-core {
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  width: min(340px, 72vw);
-  color: var(--color-sig);
-  opacity: 0.5;
-  transform: translate(-50%, -50%) translateZ(-120px);
-}
-#space-core svg {
-  width: 100%;
-  height: auto;
-  overflow: visible;
-  filter: drop-shadow(0 0 14px rgb(var(--sig-rgb) / 0.3));
-}
 /* floating node network (midground plane) */
 #space-nodes {
   position: absolute;
