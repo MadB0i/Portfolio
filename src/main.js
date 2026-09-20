@@ -1123,105 +1123,30 @@ function initDive() {
     if (agentHud) agentHud.classList.toggle('agent-alert', !!on && !!label);
   }
 
-  /* Camera model: world translateZ -250 (far) → +650 (through).
-     Core sits at local z=-120: crossed at ~40% — the midpoint
-     penetration. Journey→contact runs deeper to reach the point. */
+  /* One trigger per boundary drives everything: dive-layer camera,
+     outgoing section exit, incoming section enter, and extras.
+     Nothing scrubs while a section sits in dwell — these narrow
+     windows (top 94% → top 32%) are the only active math. */
+  const RX = 7;
+  const SZ = -150;
+  const SOP = 0.45;
+  const TP = { transformPerspective: 750, transformOrigin: '50% 50%' };
   const BOUNDS = [
-    { trigger: '#terminal', label: '[ 01 → 02 ]', from: -250, to: 650 },
-    { trigger: '#skills', label: '[ 02 → 03 ]', from: -250, to: 650 },
-    { trigger: '#work', label: '[ 03 → 04 ]', mode: 'modules', from: -250, to: 650, shift: 'SHIFT → 04' },
-    { trigger: '#journey', label: '[ 04 → 05 ]', from: -250, to: 650, shift: 'SHIFT → 05' },
-    { trigger: '#contact', label: '[ 05 → 06 ] · LINK', from: -100, to: 850 },
+    { trigger: '#terminal', label: '[ 01 → 02 ]', out: '#top', in: '#about', from: -250, to: 650, scan: true },
+    { trigger: '#skills', label: '[ 02 → 03 ]', out: '#about', in: '#skills', from: -250, to: 650, hex: true },
+    { trigger: '#work', label: '[ 03 → 04 ]', out: '#skills', in: '#work', from: -250, to: 650, shift: 'SHIFT → 04', modules: true },
+    { trigger: '#journey', label: '[ 04 → 05 ]', out: '#work', in: '#journey', from: -250, to: 650, shift: 'SHIFT → 05', trace: true },
+    { trigger: '#contact', label: '[ 05 → 06 ] · LINK', out: '#journey', in: '#contact', from: -100, to: 850 },
   ];
 
-  BOUNDS.forEach((b) => {
-    const sec = document.querySelector(b.trigger);
-    if (!sec) return;
-    const range = MOBILE ? { from: -80, to: 120 } : { from: b.from, to: b.to };
-    const tl = gsap.timeline({
-      defaults: { ease: 'none', overwrite: 'auto' },
-      scrollTrigger: {
-        trigger: sec,
-        start: 'top 94%',
-        end: 'top 32%',
-        scrub: MOBILE ? true : 0.5,
-        onUpdate: (self) => {
-          const active = self.progress > 0.03 && self.progress < 0.97;
-          if (b.shift) shiftNote(active, b.shift);
-          if (active) hudText.textContent = b.label;
-        },
-      },
+  function setWC(els, on) {
+    els.forEach((el) => {
+      if (el) el.style.willChange = on ? 'transform' : '';
     });
-
-    /* camera push-through — the depth move everything else hangs on.
-       The space itself fades in/out so 3D lives only in transitions. */
-    tl.fromTo(world, { z: range.from }, { z: range.to, duration: 1 }, 0);
-    tl.fromTo(space, { opacity: 0 }, { opacity: MOBILE ? 0.55 : 1, duration: 0.15 }, 0)
-      .to(space, { opacity: 0, duration: 0.15 }, 0.85);
-
-    if (!MOBILE) {
-      tl.fromTo(sweep, { xPercent: -170 }, { xPercent: 340, duration: 1 }, 0);
-    }
-    tl.fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.1 }, 0.45)
-      .to(hud, { opacity: 0, duration: 0.1 }, 0.55);
-
-    if (b.mode === 'modules' && chipsBox && !MOBILE) {
-      /* nodes collapse, modules emerge at staggered depths, then pass */
-      if (nodes) {
-        tl.fromTo(nodes, { opacity: 0.4, scale: 1 }, { opacity: 0, scale: 0.35, duration: 0.35 }, 0)
-          .to(nodes, { opacity: 0.4, scale: 1, duration: 0.4 }, 0.6);
-      }
-      tl.fromTo(chipsBox, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.15)
-        .to(chipsBox, { opacity: 0, duration: 0.2 }, 0.8);
-    }
-  });
-}
-
-/* ============================================================
-   SECTION DEPTH — the sections themselves move through 3D space.
-   Each major section gets one scrubbed keyframe timeline across
-   its full viewport traverse: enter from depth → dwell at identity
-   → tilt back and recede on exit. Uses per-element
-   transformPerspective (no ancestor side effects: sticky dossiers,
-   fixed nav/modal, and Lenis/anchors/keyboard all untouched).
-   ============================================================ */
-function initSectionDepth() {
-  if (REDUCED) return;
-  const MOBILE = window.matchMedia('(max-width: 767px)').matches;
-  const RX = MOBILE ? 3 : 7;
-  const Z = MOBILE ? -60 : -150;
-  const MIN_OP = MOBILE ? 0.7 : 0.45;
-  const tls = {};
-  ['#top', '#terminal', '#about', '#skills', '#work', '#journey', '#contact'].forEach((sel) => {
-    const el = document.querySelector(sel);
-    if (!el) return;
-    const tl = gsap.timeline({
-      defaults: { ease: 'none', overwrite: 'auto' },
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 96%',
-        end: 'bottom 4%',
-        scrub: MOBILE ? true : 0.5,
-      },
-    });
-    tl.fromTo(
-      el,
-      { rotateX: -RX, z: Z, opacity: MIN_OP, transformPerspective: 750, transformOrigin: '50% 50%' },
-      { rotateX: 0, z: 0, opacity: 1, duration: 0.3 },
-      0,
-    ).to(
-      el,
-      { rotateX: RX, z: Z, opacity: MIN_OP, duration: 0.3 },
-      0.7,
-    );
-    tls[sel] = tl;
-  });
-
-  if (MOBILE) return; // mobile keeps fade + small tilt only
-  const q = (s) => document.querySelector(s);
+  }
 
   function addOverlay(sel, cls, inner = '') {
-    const host = q(sel);
+    const host = document.querySelector(sel);
     if (!host) return null;
     const d = document.createElement('div');
     d.className = `sec-overlay ${cls}`;
@@ -1231,19 +1156,19 @@ function initSectionDepth() {
     return d;
   }
 
-  /* top → terminal/about: handshake flicker on entry */
-  ['#terminal', '#about'].forEach((sel) => {
-    const scanEl = addOverlay(sel, 'sec-scan');
-    const tl = tls[sel];
-    if (!scanEl || !tl) return;
-    tl.to(scanEl, { opacity: 0.55, duration: 0.04 }, 0)
-      .to(scanEl, { opacity: 0.08, duration: 0.05 }, 0.04)
-      .to(scanEl, { opacity: 0.4, duration: 0.05 }, 0.09)
-      .to(scanEl, { opacity: 0, duration: 0.08 }, 0.14);
-  });
-
-  /* terminal → skills: hex wireframe draw-in (extends #space-nodes motif) */
-  {
+  /* desktop extras are built once; mobile gets none (one-shots only) */
+  let hexPolys = null;
+  let traceEl = null;
+  let traceTravel = 0;
+  if (!MOBILE) {
+    const scanHost = document.querySelector('#about');
+    if (scanHost) {
+      const s = document.createElement('div');
+      s.className = 'sec-overlay sec-scan';
+      s.setAttribute('aria-hidden', 'true');
+      scanHost.appendChild(s);
+      BOUNDS[0].scanEl = s;
+    }
     const hex = (cx, cy, r) => {
       let p = '';
       for (let k = 0; k < 6; k++) {
@@ -1252,49 +1177,139 @@ function initSectionDepth() {
       }
       return `<polygon points="${p.trim()}" pathLength="100" />`;
     };
-    const svg = `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">`
-      + hex(18, 30, 13) + hex(52, 52, 17) + hex(84, 28, 12) + hex(30, 76, 14) + hex(70, 78, 13)
-      + `</svg>`;
-    const hexEl = addOverlay('#skills', 'sec-hex', svg);
-    const tl = tls['#skills'];
-    if (hexEl && tl) {
-      tl.to(hexEl.querySelectorAll('polygon'), { strokeDashoffset: 0, duration: 0.22, stagger: 0.02 }, 0)
-        .to(hexEl, { opacity: 0, duration: 0.08 }, 0.26);
+    const skillsHost = document.querySelector('#skills');
+    if (skillsHost) {
+      const h = document.createElement('div');
+      h.className = 'sec-overlay sec-hex';
+      h.setAttribute('aria-hidden', 'true');
+      h.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">`
+        + hex(18, 30, 13) + hex(52, 52, 17) + hex(84, 28, 12) + hex(30, 76, 14) + hex(70, 78, 13)
+        + `</svg>`;
+      skillsHost.appendChild(h);
+      hexPolys = h.querySelectorAll('polygon');
+      BOUNDS[1].hexEl = h;
+    }
+    const journeyHost = document.querySelector('#journey');
+    if (journeyHost) {
+      const t = document.createElement('div');
+      t.className = 'sec-overlay sec-trace';
+      t.setAttribute('aria-hidden', 'true');
+      journeyHost.appendChild(t);
+      traceEl = t;
+      traceTravel = journeyHost.clientHeight + 160;
     }
   }
 
-  /* skills → work: project grid emerges from depth as the primary move */
-  {
-    const grid = q('#projects-grid');
-    const tl = tls['#work'];
-    if (grid && tl) {
-      tl.fromTo(
-        grid,
-        { z: -260, opacity: 0.3, transformPerspective: 750 },
-        { z: 0, opacity: 1, duration: 0.3 },
-        0,
-      );
-    }
-  }
+  BOUNDS.forEach((b) => {
+    const sec = document.querySelector(b.trigger);
+    const outEl = document.querySelector(b.out);
+    const inEl = document.querySelector(b.in);
+    if (!sec || !outEl || !inEl) return;
 
-  /* work → journey: glowing trace sweeps down with scroll direction */
-  {
-    const journey = q('#journey');
-    const tl = tls['#journey'];
-    if (journey && tl) {
-      const traceEl = addOverlay('#journey', 'sec-trace');
-      if (traceEl) {
-        const travel = journey.clientHeight + 160;
-        tl.fromTo(traceEl, { opacity: 0, y: -80 }, { opacity: 1, y: travel * 0.4, duration: 0.12 }, 0)
-          .to(traceEl, { opacity: 1, y: travel, duration: 0.18 }, 0.12)
-          .to(traceEl, { opacity: 0, duration: 0.05 }, 0.28);
+    if (MOBILE) {
+      /* one-shot entry transition — zero scroll-tied recalculation */
+      ScrollTrigger.create({
+        trigger: sec,
+        start: 'top 85%',
+        once: true,
+        onEnter: () => {
+          hudText.textContent = b.label;
+          const wc = [world, inEl];
+          setWC(wc, true);
+          const tl = gsap.timeline({ onComplete: () => setWC(wc, false) });
+          tl.fromTo(
+            inEl,
+            { rotateX: -3, z: -60, opacity: 0.7, transformPerspective: 750, transformOrigin: '50% 50%' },
+            { rotateX: 0, z: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
+            0,
+          );
+          tl.fromTo(world, { z: -80 }, { z: 120, duration: 0.8, ease: 'power2.out' }, 0);
+          tl.fromTo(space, { opacity: 0 }, { opacity: 0.55, duration: 0.3 }, 0)
+            .to(space, { opacity: 0, duration: 0.4 }, 0.4);
+          tl.fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.1)
+            .to(hud, { opacity: 0, duration: 0.3 }, 0.4);
+        },
+      });
+      return;
+    }
+
+    const wcEls = [world, outEl, inEl, sweep];
+    if (b.modules && nodes) wcEls.push(nodes);
+    if (b.modules && chipsBox) wcEls.push(chipsBox);
+    if (b.trace && traceEl) wcEls.push(traceEl);
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'none', overwrite: 'auto' },
+      scrollTrigger: {
+        trigger: sec,
+        start: 'top 94%',
+        end: 'top 32%',
+        scrub: 0.5,
+        onUpdate: (self) => {
+          const active = self.progress > 0.03 && self.progress < 0.97;
+          if (b.shift) shiftNote(active, b.shift);
+          if (active) hudText.textContent = b.label;
+        },
+        onEnter: () => setWC(wcEls, true),
+        onEnterBack: () => setWC(wcEls, true),
+        onLeave: () => setWC(wcEls, false),
+        onLeaveBack: () => setWC(wcEls, false),
+      },
+    });
+
+    /* camera push-through + outgoing exit + incoming enter, all 0→0.5 */
+    tl.fromTo(world, { z: b.from }, { z: b.to, duration: 0.55 }, 0);
+    tl.fromTo(space, { opacity: 0 }, { opacity: 1, duration: 0.12 }, 0)
+      .to(space, { opacity: 0, duration: 0.15 }, 0.85);
+    tl.fromTo(
+      outEl,
+      { rotateX: 0, z: 0, opacity: 1, ...TP },
+      { rotateX: RX, z: SZ, opacity: SOP, duration: 0.5 },
+      0,
+    );
+    tl.fromTo(
+      inEl,
+      { rotateX: -RX, z: SZ, opacity: SOP, ...TP },
+      { rotateX: 0, z: 0, opacity: 1, duration: 0.5 },
+      0,
+    );
+
+    tl.fromTo(sweep, { xPercent: -170 }, { xPercent: 340, duration: 1 }, 0);
+    tl.fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.1 }, 0.45)
+      .to(hud, { opacity: 0, duration: 0.1 }, 0.55);
+
+    /* per-boundary identity extras */
+    if (b.scan && b.scanEl) {
+      tl.to(b.scanEl, { opacity: 0.55, duration: 0.04 }, 0)
+        .to(b.scanEl, { opacity: 0.08, duration: 0.05 }, 0.04)
+        .to(b.scanEl, { opacity: 0.4, duration: 0.05 }, 0.09)
+        .to(b.scanEl, { opacity: 0, duration: 0.08 }, 0.14);
+    }
+    if (b.hex && hexPolys && hexPolys.length) {
+      const hexHost = hexPolys[0].closest('.sec-hex');
+      tl.to(hexPolys, { strokeDashoffset: 0, duration: 0.22, stagger: 0.02 }, 0);
+      if (hexHost) tl.to(hexHost, { opacity: 0, duration: 0.08 }, 0.26);
+    }
+    if (b.modules && chipsBox) {
+      /* nodes collapse, modules emerge at staggered depths, then pass */
+      if (nodes) {
+        tl.fromTo(nodes, { opacity: 0.4, scale: 1 }, { opacity: 0, scale: 0.35, duration: 0.35 }, 0)
+          .to(nodes, { opacity: 0.4, scale: 1, duration: 0.4 }, 0.6);
       }
+      tl.fromTo(chipsBox, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.15)
+        .to(chipsBox, { opacity: 0, duration: 0.2 }, 0.8);
     }
-  }
+    if (b.trace && traceEl) {
+      tl.fromTo(traceEl, { opacity: 0, y: -80 }, { opacity: 1, y: traceTravel * 0.4, duration: 0.12 }, 0)
+        .to(traceEl, { opacity: 1, y: traceTravel, duration: 0.18 }, 0.12)
+        .to(traceEl, { opacity: 0, duration: 0.05 }, 0.28);
+    }
+  });
 
-  /* journey → contact: encrypted-handshake glitch on the heading as it settles */
-  {
-    const h2 = q('#contact h2.mega');
+  /* journey → contact: encrypted-handshake glitch as the heading settles.
+     One-shot (no scrub); desktop only. */
+  if (!MOBILE) {
+    const h2 = document.querySelector('#contact h2.mega');
     if (h2 && 'IntersectionObserver' in window) {
       const GLYPHS = '$>_#%:;@&|~^!?=[]{}';
       let played = false;
@@ -1837,4 +1852,3 @@ initTerminal();
 initLiveStats();
 initWorkAgent();
 initDive();
-initSectionDepth();
