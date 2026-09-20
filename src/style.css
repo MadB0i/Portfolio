@@ -846,7 +846,7 @@ body {
 .rail-dot::after {
   content: attr(data-label);
   position: absolute;
-  left: 20px;
+  left: 38px;
   top: 50%;
   transform: translateY(-50%);
   font-family: var(--font-mono);
@@ -854,6 +854,9 @@ body {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-fog);
+  background: rgba(12, 10, 9, 0.75);
+  padding: 2px 6px;
+  border-radius: 4px;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
