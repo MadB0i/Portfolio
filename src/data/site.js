@@ -33,7 +33,6 @@ export const FLAGSHIP = [
     cover: 'amber',
     glyph: 'K',
     diagram: 'kavach',
-    agent: 'POLICY CHECK',
     link: { label: 'GitHub', url: 'https://github.com/MadB0i/KAVACH' },
   },
   {
@@ -47,7 +46,6 @@ export const FLAGSHIP = [
     cover: 'ice',
     glyph: 'R',
     diagram: 'repoproof',
-    agent: 'AUDIT',
     link: { label: 'GitHub', url: 'https://github.com/MadB0i/RepoProof' },
   },
   {
@@ -61,7 +59,6 @@ export const FLAGSHIP = [
     cover: 'ember',
     glyph: 'P',
     diagram: 'pehredar',
-    agent: 'SCAN',
     link: { label: 'GitHub', url: 'https://github.com/MadB0i/Pehredar' },
   },
   {
@@ -75,7 +72,6 @@ export const FLAGSHIP = [
     cover: 'alert',
     glyph: 'C',
     diagram: 'cure',
-    agent: 'QUARANTINE',
     link: { label: 'GitHub', url: 'https://github.com/MadB0i/C.U.R.E' },
   },
   {
@@ -89,7 +85,6 @@ export const FLAGSHIP = [
     cover: 'bone',
     glyph: 'T',
     diagram: 'tokenguard',
-    agent: 'BUDGET',
     link: { label: 'GitHub', url: 'https://github.com/MadB0i/TokenGuard' },
   },
   {
@@ -103,7 +98,6 @@ export const FLAGSHIP = [
     cover: 'amber',
     glyph: 'M',
     diagram: 'khaki',
-    agent: 'LIVE ✓',
     link: {
       label: 'Play Store',
       url: 'https://play.google.com/store/apps/details?id=com.rupjyoti.missionkhaki',
@@ -117,7 +111,6 @@ export const SECONDARY = [
     desc: 'Research benchmark testing the Kavach policy engine against real prompt-injection and supply-chain attack payloads.',
     stack: 'Research',
     mini: 'bench',
-    agent: 'RESEARCH',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke-width="1.4"/></svg>',
   },
   {
@@ -125,7 +118,6 @@ export const SECONDARY = [
     desc: 'Local studio for distilling and fine-tuning LLMs — teacher via Ollama, student with LoRA/QLoRA, live training graphs, runs on a 4GB consumer GPU.',
     stack: 'Python',
     mini: 'ustad',
-    agent: 'TRAINING',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4"/><circle cx="17" cy="17" r="4"/><path d="M10.5 9.5L13.5 14.5"/><path d="M17 21c0-3-2-5-5-5" stroke-width="1.4"/></svg>',
   },
   {
@@ -133,7 +125,6 @@ export const SECONDARY = [
     desc: 'Open-source tool for fine-tuning vision-language models on low-VRAM GPUs by streaming encoder layers between CPU and GPU through the full backward pass.',
     stack: 'Python',
     mini: 'wick',
-    agent: 'STREAMING',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="7" height="12" rx="1.5"/><rect x="15" y="6" width="7" height="12" rx="1.5"/><path d="M9 9h6M15 9l-3 1.5M9 15h6M9 15l3-1.5" stroke-width="1.4"/><text x="5.5" y="13.5" text-anchor="middle" fill="currentColor" stroke="none" font-size="4" font-family="monospace">CPU</text><text x="18.5" y="13.5" text-anchor="middle" fill="currentColor" stroke="none" font-size="4" font-family="monospace">GPU</text></svg>',
   },
   {
@@ -141,7 +132,6 @@ export const SECONDARY = [
     desc: 'Open-source ops tool for small factories and print shops — job cards, downtime logs, wastage tracking, shift handoff.',
     stack: 'Open source',
     mini: 'shop',
-    agent: 'SHIFT LOG',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h4"/><path d="M9 16l1.5 1.5L14 14" stroke-width="1.6"/></svg>',
   },
 ];
@@ -164,7 +154,6 @@ export const SKILLS = [
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6z"/><path d="m9.3 12 2 2 3.6-4.2"/></svg>',
     cover: 'amber',
     media: '<svg viewBox="0 0 240 64" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="skill-accent skill-media" aria-hidden="true"><rect class="media-frame" x="1" y="1" width="238" height="62" rx="10"/><text class="media-label" x="16" y="16" fill="currentColor" stroke="none" font-size="7" font-family="monospace">request_gate</text><path class="media-line" d="M22 38h42M86 38h54M162 38h52"/><circle class="media-node" cx="22" cy="38" r="8"/><rect class="media-node" x="64" y="28" width="22" height="20" rx="5"/><circle class="media-node" cx="140" cy="38" r="8"/><circle class="media-pulse" cx="214" cy="38" r="8"/><text x="22" y="40.5" text-anchor="middle" fill="currentColor" stroke="none" font-size="5" font-family="monospace">REQ</text><text x="75" y="40.5" text-anchor="middle" fill="currentColor" stroke="none" font-size="5" font-family="monospace">POL</text><text x="140" y="40.5" text-anchor="middle" fill="currentColor" stroke="none" font-size="5" font-family="monospace">LOG</text><path class="media-packet" d="M25 38h8"/></svg>',
-    accent: '<svg viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="skill-accent"><circle cx="20" cy="20" r="8"/><circle cx="60" cy="20" r="8"/><circle cx="100" cy="20" r="8"/><path d="M28 20h24M68 20h24"/><text x="20" y="23" text-anchor="middle" fill="currentColor" stroke="none" font-size="7" font-family="monospace">REQ</text><text x="60" y="23" text-anchor="middle" fill="currentColor" stroke="none" font-size="7" font-family="monospace">POL</text><text x="100" y="23" text-anchor="middle" fill="currentColor" stroke="none" font-size="7" font-family="monospace">✓/✗</text></svg>',
     proof: 'kavach · pehredar · c.u.r.e ship this mindset',
     tags: ['Zero-trust runtimes', 'Malware forensics', 'Android hardening', 'Policy engines', 'Audit logging'],
     wide: true,
@@ -176,7 +165,6 @@ export const SKILLS = [
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>',
     cover: 'ember',
     media: '<svg viewBox="0 0 240 64" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="skill-accent skill-media" aria-hidden="true"><rect class="media-frame" x="1" y="1" width="238" height="62" rx="10"/><text class="media-label" x="16" y="16" fill="currentColor" stroke="none" font-size="7" font-family="monospace">token_route</text><path class="media-line" d="M28 38h34M92 38h48M170 38h40"/><rect class="media-node" x="10" y="29" width="18" height="18" rx="4"/><rect class="media-node" x="62" y="27" width="30" height="22" rx="5"/><rect class="media-node" x="140" y="27" width="30" height="22" rx="5"/><circle class="media-pulse" cx="210" cy="38" r="8"/><text x="19" y="40" text-anchor="middle" fill="currentColor" stroke="none" font-size="5" font-family="monospace">API</text><text x="77" y="40" text-anchor="middle" fill="currentColor" stroke="none" font-size="5" font-family="monospace">PROXY</text><text x="155" y="40" text-anchor="middle" fill="currentColor" stroke="none" font-size="5" font-family="monospace">LLM</text><path class="media-packet" d="M30 38h10"/></svg>',
-    accent: '<svg viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="skill-accent"><rect x="8" y="12" width="20" height="16" rx="3"/><path d="M28 20h16"/><rect x="44" y="12" width="32" height="16" rx="3"/><path d="M76 20h16"/><rect x="92" y="8" width="20" height="24" rx="2" stroke-dasharray="2 2"/><path d="M96 16h12M96 20h8M96 24h10" stroke-width="1"/><text x="18" y="23" text-anchor="middle" fill="currentColor" stroke="none" font-size="6" font-family="monospace">API</text><text x="60" y="23" text-anchor="middle" fill="currentColor" stroke="none" font-size="6" font-family="monospace">PROXY</text><text x="102" y="7" text-anchor="middle" fill="currentColor" stroke="none" font-size="5" font-family="monospace">$BUD</text></svg>',
     proof: 'tokenguard + ustad run on this stack',
     tags: ['LLM proxying', 'Token budgeting', 'LoRA / QLoRA', 'Ollama', 'Prompt-injection evals'],
   },
@@ -187,7 +175,6 @@ export const SKILLS = [
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/></svg>',
     cover: 'bone',
     media: '<svg viewBox="0 0 240 64" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="skill-accent skill-media" aria-hidden="true"><rect class="media-frame" x="1" y="1" width="238" height="62" rx="10"/><text class="media-label" x="16" y="16" fill="currentColor" stroke="none" font-size="7" font-family="monospace">ship_loop</text><path class="media-line" d="M30 38h36M96 38h40M166 38h38"/><circle class="media-node" cx="22" cy="38" r="8"/><rect class="media-node" x="66" y="29" width="30" height="18" rx="5"/><circle class="media-pulse" cx="146" cy="38" r="8"/><circle class="media-pulse" cx="212" cy="38" r="8"/><text x="22" y="40.5" text-anchor="middle" fill="currentColor" stroke="none" font-size="5" font-family="monospace">GIT</text><text x="81" y="40.5" text-anchor="middle" fill="currentColor" stroke="none" font-size="5" font-family="monospace">CI</text><text x="146" y="40.5" text-anchor="middle" fill="currentColor" stroke="none" font-size="5" font-family="monospace">APP</text><text x="212" y="40.5" text-anchor="middle" fill="currentColor" stroke="none" font-size="5" font-family="monospace">WEB</text><path class="media-packet" d="M25 38h10"/></svg>',
-    accent: '<svg viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="skill-accent"><rect x="8" y="10" width="20" height="20" rx="3"/><path d="M28 20h16M44 20l16-8v16z"/><path d="M60 20h16"/><circle cx="88" cy="14" r="5"/><circle cx="88" cy="26" r="5"/><circle cx="108" cy="20" r="6"/><text x="18" y="23" text-anchor="middle" fill="currentColor" stroke="none" font-size="6" font-family="monospace">GIT</text><text x="52" y="23" text-anchor="middle" fill="currentColor" stroke="none" font-size="6" font-family="monospace">CI</text><text x="88" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="4" font-family="monospace">npm</text><text x="88" y="28" text-anchor="middle" fill="currentColor" stroke="none" font-size="4" font-family="monospace">PS</text><text x="108" y="22" text-anchor="middle" fill="currentColor" stroke="none" font-size="4" font-family="monospace">ELEC</text></svg>',
     proof: 'npm + play store — end to end, solo',
     tags: ['npm', 'Play Store', 'Electron', 'GitHub Actions', 'Axum'],
   },
@@ -225,12 +212,6 @@ export const TIMELINE = [
     desc: 'Completed my MCA with a focus on systems and software engineering — the foundation everything since is built on.',
   },
 ];
-
-export const CONTACT = {
-  email: 'contact.rupjyoti26@gmail.com',
-  github: 'https://github.com/MadB0i',
-  githubLabel: 'github.com/MadB0i',
-};
 
 export const THREAT_FEED = [
   'blocked prompt-injection payload #4821',

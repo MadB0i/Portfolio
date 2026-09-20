@@ -59,7 +59,7 @@
         <a href="#contact" data-scroll class="nav-link" data-nav="contact">contact</a>
       </div>
       <div class="flex items-center gap-2">
-        <a href="#contact" data-scroll data-magnetic class="hidden sm:inline-flex font-mono text-xs bg-sig text-[#0a0b0e] font-medium rounded-full px-5 py-2.5 hover:brightness-110 transition">
+        <a href="#contact" data-scroll class="hidden sm:inline-flex font-mono text-xs bg-sig text-[#0a0b0e] font-medium rounded-full px-5 py-2.5 hover:brightness-110 transition">
           hire me ↗
         </a>
         <button id="menu-btn" class="md:hidden w-10 h-10 grid place-items-center rounded-full border hairline" aria-label="Open menu" aria-expanded="false">
@@ -131,8 +131,8 @@
           </p>
 
           <div data-hero="cta" class="mt-9 flex flex-wrap items-center gap-4">
-            <a href="#work" data-scroll data-magnetic class="btn-primary">view work <span aria-hidden="true">↓</span></a>
-            <a href="#contact" data-scroll data-magnetic class="btn-ghost">get in touch <span aria-hidden="true">→</span></a>
+            <a href="#work" data-scroll class="btn-primary">view work <span aria-hidden="true">↓</span></a>
+            <a href="#contact" data-scroll class="btn-ghost">get in touch <span aria-hidden="true">→</span></a>
           </div>
 
           <dl data-hero="stats" class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-xl">
@@ -333,30 +333,7 @@
         <p class="chapter-tag mb-4" data-reveal>[ <b>04</b> / 06 ] — THREAT FILES</p>
         <div class="flex flex-wrap items-end justify-between gap-4 mb-12">
           <h2 class="mega" data-reveal>Every case,<br />closed.</h2>
-          <div class="flex items-end gap-5" data-reveal>
-            <p class="font-mono text-xs text-fog pb-1">click a dossier to open ↓</p>
-            <div class="agent-hud" id="work-agent" aria-hidden="true">
-              <div class="agent-frame">
-                <svg viewBox="0 0 64 52" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M15 21 L19 7 L29 17" />
-                  <path d="M49 21 L45 7 L35 17" />
-                  <path d="M13 23 C13 11 51 11 51 23" />
-                  <g id="wa-eyes" fill="currentColor" stroke="none">
-                    <circle class="wa-eye" cx="25" cy="25" r="2.4" />
-                    <circle class="wa-eye" cx="39" cy="25" r="2.4" />
-                  </g>
-                  <path d="M32 30.5 L30 33 L34 33 Z" fill="currentColor" stroke="none" />
-                  <path d="M29 35.5 C30.5 37 33.5 37 35 35.5" />
-                  <path class="wa-tail" d="M51 38 C59 36 61 27 55 23" />
-                </svg>
-              </div>
-              <div class="agent-meta">
-                <p class="agent-title">SYS.AGENT</p>
-                <p class="agent-status"><span class="agent-dot"></span><span id="agent-msg">OBSERVING</span></p>
-              </div>
-            </div>
-            <span class="agent-mini font-mono text-xs text-sig sm:hidden" aria-hidden="true">RT_●</span>
-          </div>
+          <p class="font-mono text-xs text-fog" data-reveal>click a dossier to open ↓</p>
         </div>
         <div id="projects-grid" class="flex flex-col gap-6 max-w-4xl mx-auto"></div>
 
@@ -398,11 +375,11 @@
           conversation — my inbox is open.
         </p>
         <div class="mt-10 flex flex-wrap justify-center gap-4" data-reveal>
-          <button id="copy-email" data-magnetic class="btn-primary">
+          <button id="copy-email" class="btn-primary">
             <span id="copy-label">contact.rupjyoti26@gmail.com</span>
             <span aria-hidden="true">⧉</span>
           </button>
-          <a href="https://github.com/MadB0i" target="_blank" rel="noopener" data-magnetic class="btn-ghost">github ↗</a>
+          <a href="https://github.com/MadB0i" target="_blank" rel="noopener" class="btn-ghost">github ↗</a>
         </div>
         <div class="mt-14 grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left" data-reveal-group>
           <a href="mailto:contact.rupjyoti26@gmail.com" class="glass rounded-2xl p-5 contact-card block">

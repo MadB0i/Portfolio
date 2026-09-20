@@ -587,9 +587,6 @@ body {
 .t-now h3[data-tl-text] {
   color: var(--color-cream) !important;
 }
-.text-alert {
-  color: var(--color-alert);
-}
 
 /* ---------- preloader ---------- */
 #preloader {
@@ -603,60 +600,6 @@ body {
 }
 #preloader.done {
   display: none;
-}
-
-/* ---------- custom cursor: RT_ system cursor ---------- */
-#cursor-dot,
-#cursor-label {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 90;
-  pointer-events: none;
-  display: none;
-}
-@media (hover: hover) and (pointer: fine) {
-  #cursor-dot,
-  #cursor-label {
-    display: block;
-  }
-}
-#cursor-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-sig);
-  box-shadow: 0 0 8px 1px rgb(var(--sig-rgb) / 0.55);
-}
-#cursor-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: var(--color-sig);
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  text-shadow: 0 0 12px rgb(var(--sig-rgb) / 0.35);
-}
-/* RT_ fades in once the user starts interacting, rests to dot-only when idle */
-#cursor-label.is-live {
-  opacity: 0.85;
-}
-#cursor-label .cur-sub {
-  display: block;
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  color: var(--color-sig-soft);
-  opacity: 0;
-  transform: translateY(3px);
-  transition: opacity 0.18s ease, transform 0.18s ease;
-}
-#cursor-label.has-sub .cur-sub {
-  opacity: 1;
-  transform: none;
-}
-#cursor-label.flip {
-  text-align: right;
 }
 
 /* ---------- hero cat ---------- */
@@ -808,14 +751,6 @@ body {
   transform: scaleX(0);
 }
 
-.section-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-sig);
-}
-
 #mobile-menu {
   transition: opacity 0.35s ease, visibility 0.35s;
 }
@@ -939,10 +874,6 @@ body {
   .marquee-track {
     animation: none;
   }
-  #cursor-dot,
-  #cursor-label {
-    display: none;
-  }
 
   .contact-card,
   .dossier-open,
@@ -981,44 +912,6 @@ body {
   display: block;
   width: 100% !important;
   height: 100% !important;
-}
-
-/* --- cinematic film grain + scanlines --- */
-.film-grain,
-.scanlines {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 45;
-}
-.film-grain {
-  opacity: 0.05;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-.scanlines {
-  opacity: 0.07;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.55) 0px,
-    rgba(255, 255, 255, 0.55) 1px,
-    transparent 1px,
-    transparent 4px
-  );
-}
-@keyframes scanFlicker {
-  0%,
-  100% {
-    opacity: 0.055;
-  }
-  50% {
-    opacity: 0.085;
-  }
-}
-@media (hover: hover) and (pointer: fine) {
-  .scanlines {
-    animation: scanFlicker 7s steps(1) infinite;
-  }
 }
 
 /* --- HUD corner brackets (hero status card) --- */
@@ -1435,185 +1328,8 @@ body {
 }
 
 /* ============================================================
-   PERSISTENT BACKDROP — continuous felt depth (JS-free motion).
-   Fixed layer below all readable content. Chapters swap per
-   section (IO-toggled); layers drift at different rates via
-   native CSS scroll-timelines — compositor-driven, ~zero JS.
-   Only exists where animation-timeline: scroll() is supported.
-   ============================================================ */
-@supports (animation-timeline: scroll()) {
-  #backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    overflow: hidden;
-    perspective: 800px;
-    perspective-origin: 50% 40%;
-  }
-  .bd-chapter {
-    position: absolute;
-    inset: -6%;
-    opacity: 0;
-    transition: opacity 0.9s ease;
-    transform-style: preserve-3d;
-    color: #F5A524;
-  }
-  .bd-chapter.on {
-    opacity: 1;
-  }
-  .bd-layer {
-    position: absolute;
-    inset: 0;
-  }
-  .bd-layer svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-  .bd-far {
-    opacity: 0.32;
-    animation: bdFar linear both;
-    animation-timeline: scroll(root);
-  }
-  .bd-near {
-    opacity: 0.55;
-    animation: bdNear linear both;
-    animation-timeline: scroll(root);
-  }
-  @keyframes bdFar {
-    from { transform: translate3d(0, -3%, -300px); }
-    to { transform: translate3d(0, 3%, -300px); }
-  }
-  @keyframes bdNear {
-    from { transform: translate3d(0, -9%, -70px); }
-    to { transform: translate3d(0, 9%, -70px); }
-  }
-  @media (max-width: 767px) {
-    /* mobile: static faint gradient only, no animated layers */
-    .bd-layer {
-      display: none;
-    }
-    #backdrop {
-      background: radial-gradient(70% 50% at 50% 28%, rgb(var(--sig-rgb) / 0.05), transparent 70%);
-    }
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  #backdrop {
-    display: none;
-  }
-}
-
-/* ============================================================
-   RT_ SYSTEM SPACE — one continuous 3D environment (visual only).
-   #space provides real perspective; #space-world is the camera
-   rig: scrubbing its translateZ moves the camera through objects
-   at true Z depths, so near/far parallax is genuine projection.
-   ============================================================ */
-#dive-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  pointer-events: none;
-  overflow: hidden;
-}
-#space {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  perspective: 750px;
-  perspective-origin: 50% 46%;
-}
-#space-world {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-/* depth particles — Z spread gives true near/fast, far/slow motion */
-.sp {
-  position: absolute;
-  border-radius: 50%;
-  background: var(--color-sig);
-  will-change: transform;
-}
-.sp-ice {
-  background: var(--color-ice);
-}
-/* ghost project modules at staggered depths */
-#space-chips {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  opacity: 0;
-}
-.sp-chip {
-  position: absolute;
-  transform: translate(-50%, -50%) translateZ(var(--z, -300px));
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  color: var(--color-sig-soft);
-  border: 1px solid rgb(var(--sig-rgb) / 0.45);
-  background: rgba(12, 10, 9, 0.72);
-  padding: 6px 12px;
-  border-radius: 6px;
-  white-space: nowrap;
-}
-.sp-chip-ice {
-  color: var(--color-ice);
-  border-color: rgba(138, 160, 184, 0.4);
-}
-/* converge point (far Z — camera flies toward it) */
-#space-point {
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--color-sig-soft);
-  box-shadow: 0 0 24px 6px rgb(var(--sig-rgb) / 0.55), 0 0 90px 20px rgb(var(--sig-rgb) / 0.18);
-  transform: translate(-50%, -50%) translateZ(-700px);
-}
-#dive-hud {
-  position: absolute;
-  left: 50%;
-  top: 16%;
-  transform: translateX(-50%);
-  opacity: 0;
-  will-change: opacity;
-}
-#dive-hud-text {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.22em;
-  color: var(--color-sig-soft);
-  border: 1px solid rgb(var(--sig-rgb) / 0.4);
-  background: rgba(12, 10, 9, 0.72);
-  padding: 6px 14px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-@media (max-width: 767px) {
-  /* simplified mobile dive: HUD pill + gentle drift only */
-  #space-point,
-  #space-chips {
-    display: none;
-  }
-  #space {
-    perspective: 900px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  #dive-layer {
-    display: none;
-  }
-}
-
-/* ============================================================
-   SECTION-DEPTH overlays — per-boundary accents (behind content)
+   SECTION-DEPTH overlays — positioned sections for ambient
+   backgrounds, paw-pull grippers and unlock shutters
    ============================================================ */
 #top,
 #terminal,
@@ -1623,50 +1339,6 @@ body {
 #journey,
 #contact {
   position: relative;
-}
-.sec-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0;
-}
-.sec-scan {
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.6) 0px,
-    rgba(255, 255, 255, 0.6) 1px,
-    transparent 1px,
-    transparent 4px
-  );
-}
-.sec-hex svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.sec-hex polygon {
-  fill: none;
-  stroke: var(--color-sig);
-  stroke-width: 0.4;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0.55;
-}
-.sec-trace {
-  left: 0;
-  right: 0;
-  top: -12%;
-  bottom: auto;
-  height: 72px;
-  background: linear-gradient(to bottom, transparent, rgb(var(--sig-rgb) / 0.14), transparent);
-  transform: skewY(-4deg);
-  box-shadow: 0 0 32px 2px rgb(var(--sig-rgb) / 0.12);
-}
-@media (prefers-reduced-motion: reduce) {
-  .sec-overlay {
-    display: none;
-  }
 }
 .live-dot {
   display: inline-block;
@@ -1942,96 +1614,10 @@ body {
   transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease;
 }
 
-/* ============================================================
-   Work-section agent HUD
-   ============================================================ */
-.agent-hud {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  color: var(--color-sig);
-  padding: 0.55rem 0.8rem 0.55rem 0.55rem;
-  border: 1px solid var(--color-line);
-  border-radius: 0.9rem;
-  background: rgba(18, 16, 13, 0.72);
-  backdrop-filter: blur(8px);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-.agent-hud.agent-alert {
-  border-color: rgb(var(--sig-rgb) / 0.45);
-  box-shadow: 0 0 24px -6px rgb(var(--sig-rgb) / 0.35);
-}
-.agent-frame {
-  width: 52px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border: 1px dashed rgb(var(--sig-rgb) / 0.3);
-  border-radius: 0.6rem;
-  background: rgba(12, 10, 9, 0.6);
-}
-.agent-frame svg {
-  width: 44px;
-  height: auto;
-}
-.agent-meta {
-  min-width: 92px;
-}
-.agent-title {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  color: var(--color-fog);
-}
-.agent-status {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  color: var(--color-sig-soft);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 3px;
-  white-space: nowrap;
-}
-.agent-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-sig);
-  box-shadow: 0 0 8px 2px rgb(var(--sig-rgb) / 0.6);
-  animation: livePulse 1.6s ease-in-out infinite;
-}
-#wa-eyes {
-  transform-box: fill-box;
-}
-.wa-eye {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: waBlink 5.2s steps(1) infinite;
-}
-@keyframes waBlink {
-  0%, 93%, 100% { transform: scaleY(1); }
-  94%, 97% { transform: scaleY(0.08); }
-}
-.wa-tail {
-  transform-box: fill-box;
-  transform-origin: bottom left;
-  animation: waTail 6s ease-in-out infinite;
-}
-@keyframes waTail {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(7deg); }
-}
-@media (max-width: 639px) {
-  .agent-hud { display: none; }
-}
 @media (prefers-reduced-motion: reduce) {
   .dg-scan,
-  .wa-eye,
-  .wa-tail,
-  .cover-live,
-  .agent-dot {
+  .cover-live {
     animation: none !important;
   }
 }
+
