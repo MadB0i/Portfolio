@@ -26,6 +26,58 @@
   <div class="film-grain" aria-hidden="true"></div>
   <div class="scanlines" aria-hidden="true"></div>
 
+  <!-- Persistent backdrop depth (CSS scroll-driven, JS-free motion) -->
+  <div id="backdrop" aria-hidden="true">
+    <div class="bd-chapter" id="bd-top">
+      <div class="bd-layer bd-far">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="currentColor"><circle cx="120" cy="140" r="2"/><circle cx="420" cy="90" r="1.5"/><circle cx="760" cy="160" r="2"/><circle cx="240" cy="480" r="1.5"/><circle cx="640" cy="560" r="2"/><circle cx="1040" cy="620" r="2"/><circle cx="940" cy="300" r="1.5"/><circle cx="180" cy="700" r="1.5"/></svg>
+      </div>
+      <div class="bd-layer bd-near">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="880" cy="220" r="120" stroke-dasharray="2 8"/><circle cx="880" cy="220" r="4" fill="currentColor" stroke="none"/><path d="M180 560 h44 M202 538 v44" /><path d="M1010 560 h-44 M988 538 v44" /></svg>
+      </div>
+    </div>
+    <div class="bd-chapter" id="bd-about">
+      <div class="bd-layer bd-far">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" stroke="currentColor" stroke-width="1"><line x1="80" y1="180" x2="480" y2="180"/><line x1="80" y1="230" x2="360" y2="230"/><line x1="80" y1="560" x2="520" y2="560"/><line x1="80" y1="610" x2="400" y2="610"/><line x1="760" y1="200" x2="1120" y2="200"/><line x1="840" y1="620" x2="1120" y2="620"/></svg>
+      </div>
+      <div class="bd-layer bd-near">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"><text x="120" y="340" font-family="monospace" font-size="22" fill="currentColor">$ whoami</text><text x="120" y="380" font-family="monospace" font-size="22" fill="currentColor">visitor — guest</text><rect x="330" y="360" width="13" height="24" fill="currentColor"/><text x="820" y="480" font-family="monospace" font-size="22" fill="currentColor">RT_ systems</text></svg>
+      </div>
+    </div>
+    <div class="bd-chapter" id="bd-skills">
+      <div class="bd-layer bd-far">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.2"><polygon points="180,120 240,155 240,225 180,260 120,225 120,155"/><polygon points="980,540 1040,575 1040,645 980,680 920,645 920,575"/><polygon points="600,120 650,149 650,207 600,236 550,207 550,149"/></svg>
+      </div>
+      <div class="bd-layer bd-near">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="320" cy="420" r="6"/><circle cx="600" cy="340" r="6"/><circle cx="880" cy="460" r="6"/><path d="M320 420 L600 340 L880 460" stroke-dasharray="5 6"/><circle cx="600" cy="340" r="2.5" fill="currentColor" stroke="none"/></svg>
+      </div>
+    </div>
+    <div class="bd-chapter" id="bd-work">
+      <div class="bd-layer bd-far">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="6 6"><path d="M120 400 H420 M780 400 H1080 M600 140 V320 M600 480 V660"/></svg>
+      </div>
+      <div class="bd-layer bd-near">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="420" y="330" width="140" height="70" rx="8"/><rect x="640" y="400" width="140" height="70" rx="8"/><rect x="480" y="140" width="120" height="60" rx="8"/><text x="440" y="370" font-family="monospace" font-size="16" fill="currentColor" stroke="none">MOD-A</text><text x="660" y="440" font-family="monospace" font-size="16" fill="currentColor" stroke="none">MOD-B</text></svg>
+      </div>
+    </div>
+    <div class="bd-chapter" id="bd-journey">
+      <div class="bd-layer bd-far">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 7"><path d="M120 640 L420 480 L700 480 L980 240"/></svg>
+      </div>
+      <div class="bd-layer bd-near">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"><circle cx="120" cy="640" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="420" cy="480" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="700" cy="480" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="980" cy="240" r="6" fill="currentColor"/><text x="140" y="620" font-family="monospace" font-size="16" fill="currentColor">RECON</text><text x="440" y="460" font-family="monospace" font-size="16" fill="currentColor">BUILD</text><text x="720" y="460" font-family="monospace" font-size="16" fill="currentColor">SHIP</text></svg>
+      </div>
+    </div>
+    <div class="bd-chapter" id="bd-contact">
+      <div class="bd-layer bd-far">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" stroke="currentColor" stroke-width="1"><line x1="300" y1="60" x2="300" y2="740"/><line x1="600" y1="60" x2="600" y2="740"/><line x1="900" y1="60" x2="900" y2="740"/></svg>
+      </div>
+      <div class="bd-layer bd-near">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"><text x="284" y="200" font-family="monospace" font-size="20" fill="currentColor">$&gt;#%</text><text x="284" y="420" font-family="monospace" font-size="20" fill="currentColor">%#@$</text><text x="584" y="300" font-family="monospace" font-size="20" fill="currentColor">@&amp;$#</text><text x="884" y="240" font-family="monospace" font-size="20" fill="currentColor">#%$&gt;</text><text x="884" y="520" font-family="monospace" font-size="20" fill="currentColor">$#@%</text></svg>
+      </div>
+    </div>
+  </div>
+
   <!-- RT_ system space (scroll-driven 3D transitions, visual only) -->
   <div id="dive-layer" aria-hidden="true">
     <div id="space">

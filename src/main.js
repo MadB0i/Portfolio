@@ -1343,6 +1343,46 @@ function initDive() {
   }
 }
 
+/* ============================================================
+   PERSISTENT BACKDROP — per-section depth chapters.
+   Cheap IntersectionObserver toggles which chapter is visible;
+   all motion is native CSS scroll-timelines (zero JS per frame).
+   Skipped entirely where scroll() timelines are unsupported.
+   ============================================================ */
+function initBackdrop() {
+  if (REDUCED) return;
+  if (!('CSS' in window) || !CSS.supports || !CSS.supports('animation-timeline: scroll()')) return;
+  if (!('IntersectionObserver' in window)) return;
+  const pairs = [
+    ['top', 'bd-top'],
+    ['about', 'bd-about'],
+    ['skills', 'bd-skills'],
+    ['work', 'bd-work'],
+    ['journey', 'bd-journey'],
+    ['contact', 'bd-contact'],
+  ];
+  const chapters = new Map();
+  pairs.forEach(([sec, id]) => {
+    const el = document.getElementById(id);
+    if (el) chapters.set(sec, el);
+  });
+  if (!chapters.size) return;
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          chapters.forEach((el, key) => el.classList.toggle('on', key === en.target.id));
+        }
+      });
+    },
+    { rootMargin: '-40% 0px -55% 0px' },
+  );
+  pairs.forEach(([sec]) => {
+    const s = document.getElementById(sec);
+    if (s) io.observe(s);
+  });
+}
+
 /* ---------- text scramble (secure-channel line) ---------- */function initScramble() {
   const els = document.querySelectorAll('[data-scramble]');
   if (!els.length || REDUCED) return;
@@ -1846,3 +1886,4 @@ initTerminal();
 initLiveStats();
 initWorkAgent();
 initDive();
+initBackdrop();

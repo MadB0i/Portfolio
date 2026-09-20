@@ -1187,6 +1187,77 @@ body {
 }
 
 /* ============================================================
+   PERSISTENT BACKDROP — continuous felt depth (JS-free motion).
+   Fixed layer below all readable content. Chapters swap per
+   section (IO-toggled); layers drift at different rates via
+   native CSS scroll-timelines — compositor-driven, ~zero JS.
+   Only exists where animation-timeline: scroll() is supported.
+   ============================================================ */
+@supports (animation-timeline: scroll()) {
+  #backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+    perspective: 800px;
+    perspective-origin: 50% 40%;
+  }
+  .bd-chapter {
+    position: absolute;
+    inset: -6%;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+    transform-style: preserve-3d;
+    color: #F5A524;
+  }
+  .bd-chapter.on {
+    opacity: 1;
+  }
+  .bd-layer {
+    position: absolute;
+    inset: 0;
+  }
+  .bd-layer svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .bd-far {
+    opacity: 0.32;
+    animation: bdFar linear both;
+    animation-timeline: scroll(root);
+  }
+  .bd-near {
+    opacity: 0.55;
+    animation: bdNear linear both;
+    animation-timeline: scroll(root);
+  }
+  @keyframes bdFar {
+    from { transform: translate3d(0, -3%, -300px); }
+    to { transform: translate3d(0, 3%, -300px); }
+  }
+  @keyframes bdNear {
+    from { transform: translate3d(0, -9%, -70px); }
+    to { transform: translate3d(0, 9%, -70px); }
+  }
+  @media (max-width: 767px) {
+    /* mobile: static faint gradient only, no animated layers */
+    .bd-layer {
+      display: none;
+    }
+    #backdrop {
+      background: radial-gradient(70% 50% at 50% 28%, rgb(var(--sig-rgb) / 0.05), transparent 70%);
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #backdrop {
+    display: none;
+  }
+}
+
+/* ============================================================
    RT_ SYSTEM SPACE — one continuous 3D environment (visual only).
    #space provides real perspective; #space-world is the camera
    rig: scrubbing its translateZ moves the camera through objects
