@@ -605,60 +605,58 @@ body {
   display: none;
 }
 
-/* ---------- custom cursor ---------- */
+/* ---------- custom cursor: RT_ system cursor ---------- */
 #cursor-dot,
-#cursor-ring {
+#cursor-label {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 90;
   pointer-events: none;
-  border-radius: 50%;
   display: none;
 }
 @media (hover: hover) and (pointer: fine) {
   #cursor-dot,
-  #cursor-ring {
+  #cursor-label {
     display: block;
   }
 }
 #cursor-dot {
   width: 6px;
   height: 6px;
+  border-radius: 50%;
   background: var(--color-sig);
+  box-shadow: 0 0 8px 1px rgb(var(--sig-rgb) / 0.55);
 }
-#cursor-ring {
-  width: 34px;
-  height: 34px;
-  border: 1px solid rgb(var(--sig-rgb) / 0.5);
-  transition: width 0.25s, height 0.25s, border-color 0.25s, background 0.25s;
+#cursor-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--color-sig);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  text-shadow: 0 0 12px rgb(var(--sig-rgb) / 0.35);
 }
-#cursor-ring.grow {
-  width: 58px;
-  height: 58px;
-  border-color: rgb(var(--sig-rgb) / 0.9);
-  background: rgb(var(--sig-rgb) / 0.06);
+/* RT_ fades in once the user starts interacting, rests to dot-only when idle */
+#cursor-label.is-live {
+  opacity: 0.85;
 }
-/* crosshair ticks */
-#cursor-ring::before,
-#cursor-ring::after {
-  content: "";
-  position: absolute;
-  background: rgb(var(--sig-rgb) / 0.55);
+#cursor-label .cur-sub {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--color-sig-soft);
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
 }
-#cursor-ring::before {
-  left: 50%;
-  top: -8px;
-  bottom: -8px;
-  width: 1px;
-  transform: translateX(-50%);
+#cursor-label.has-sub .cur-sub {
+  opacity: 1;
+  transform: none;
 }
-#cursor-ring::after {
-  top: 50%;
-  left: -8px;
-  right: -8px;
-  height: 1px;
-  transform: translateY(-50%);
+#cursor-label.flip {
+  text-align: right;
 }
 
 /* ---------- hero cat ---------- */
@@ -939,7 +937,7 @@ body {
     animation: none;
   }
   #cursor-dot,
-  #cursor-ring {
+  #cursor-label {
     display: none;
   }
 

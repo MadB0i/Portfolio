@@ -608,29 +608,53 @@ function initScrollFX() {
 function initPointerFX() {
   if (!FINE_POINTER || REDUCED) return;
 
-  // Custom cursor
+  // RT_ system cursor — dot tracks instantly, label interpolates behind.
+  // Idle a while and the label rests away, leaving just the dot.
   const dot = document.getElementById('cursor-dot');
-  const ring = document.getElementById('cursor-ring');
+  const label = document.getElementById('cursor-label');
+  const sub = document.getElementById('cursor-sub');
   const dx = gsap.quickSetter(dot, 'x', 'px');
   const dy = gsap.quickSetter(dot, 'y', 'px');
-  const rx = gsap.quickSetter(ring, 'x', 'px');
-  const ry = gsap.quickSetter(ring, 'y', 'px');
-  const pos = { x: -100, y: -100, rx: -100, ry: -100 };
+  const lx = gsap.quickSetter(label, 'x', 'px');
+  const ly = gsap.quickSetter(label, 'y', 'px');
+  const pos = { x: -100, y: -100, lx: -100, ly: -100 };
+  let idleTimer = 0;
   window.addEventListener('pointermove', (e) => {
     pos.x = e.clientX;
     pos.y = e.clientY;
-  });
-  gsap.ticker.add(() => {
-    pos.rx += (pos.x - pos.rx) * 0.16;
-    pos.ry += (pos.y - pos.ry) * 0.16;
     dx(pos.x - 3);
     dy(pos.y - 3);
-    rx(pos.rx - 17);
-    ry(pos.ry - 17);
+    label.classList.add('is-live');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => label.classList.remove('is-live'), 2500);
+  }, { passive: true });
+  gsap.ticker.add(() => {
+    pos.lx += (pos.x - pos.lx) * 0.2;
+    pos.ly += (pos.y - pos.ly) * 0.2;
+    const flip = pos.x > window.innerWidth - 130;
+    label.classList.toggle('flip', flip);
+    lx(pos.lx + (flip ? -14 : 16));
+    ly(pos.ly + 18);
   });
-  document.querySelectorAll('a, button, .tilt').forEach((el) => {
-    el.addEventListener('pointerenter', () => ring.classList.add('grow'));
-    el.addEventListener('pointerleave', () => ring.classList.remove('grow'));
+
+  // Context sub-labels — delegated, so dynamic content (modal) works too.
+  const CONNECT_SEL = '#copy-email, a[href="#contact"]';
+  function cursorContext(t) {
+    if (!t || !t.closest) return '';
+    if (t.closest(CONNECT_SEL)) return 'CONNECT';
+    if (t.closest('a[target="_blank"], a[href^="http"]')) return 'LAUNCH ↗';
+    if (t.closest('.dossier')) return 'INSPECT';
+    if (t.closest('a, button')) return 'OPEN →';
+    return '';
+  }
+  document.addEventListener('pointerover', (e) => {
+    const ctx = cursorContext(e.target);
+    if (ctx) {
+      if (sub.textContent !== ctx) sub.textContent = ctx;
+      label.classList.add('has-sub');
+    } else {
+      label.classList.remove('has-sub');
+    }
   });
 
   // Magnetic
