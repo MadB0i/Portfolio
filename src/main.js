@@ -2,7 +2,7 @@ import './style.css';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { STATS, MARQUEE, FLAGSHIP, SECONDARY, SKILLS, TIMELINE, THREAT_FEED } from './data/site.js';
+import { STATS, FLAGSHIP, SECONDARY, SKILLS, TIMELINE, THREAT_FEED } from './data/site.js';
 import { diagramSVG, miniSVG } from './diagrams.js';
 
 
@@ -28,17 +28,6 @@ function renderStats() {
       <dd class="font-mono text-[0.7rem] text-fog mt-1">${s.label}</dd>`;
     wrap.appendChild(div);
   });
-}
-
-function renderMarquee() {
-  const track = document.getElementById('marquee-track');
-  const chunk = MARQUEE.map(
-    (m) => `<span class="flex items-center gap-8 pr-8 font-mono text-sm text-fog whitespace-nowrap">
-      <span class="hover:text-sig transition-colors">${m}</span>
-      <span class="text-sig text-xs">◆</span>
-    </span>`,
-  ).join('');
-  track.innerHTML = chunk + chunk; // seamless -50% loop
 }
 
 function renderFeed() {
@@ -117,8 +106,8 @@ ${coverInner(p, i, p.featured)}
         </div>
       </div>
       <div class="flex items-center justify-between gap-4 pt-4 border-t hairline">
-        <a href="${p.link.url}" target="_blank" rel="noopener"
-           class="font-mono text-xs text-sig hover:text-sig-soft transition-colors">${p.link.label} ↗</a>
+        <a href="${p.link.url}" target="_blank" rel="noopener" data-card-link
+           class="card-link" aria-label="Open ${p.name} ${p.link.label} in a new tab">${p.link.label} ↗</a>
         <button class="expand-btn font-mono text-xs text-fog hover:text-cream transition-colors inline-flex items-center gap-2 cursor-pointer"
                 aria-expanded="false" aria-controls="pd-${i}">
           details <span class="p-chev text-sig text-base leading-none">+</span>
@@ -126,6 +115,13 @@ ${coverInner(p, i, p.featured)}
       </div>`;
     grid.appendChild(card);
 
+    /* Card-level proof is already visible without opening the modal:
+       desc = one-line problem, chips = stack, card-link = proof URL.
+       Stop link clicks bubbling to the dossier modal handler. */
+    const proofLink = card.querySelector('[data-card-link]');
+    if (proofLink) {
+      proofLink.addEventListener('click', (e) => e.stopPropagation());
+    }
     const btn = card.querySelector('.expand-btn');
     const details = card.querySelector('.p-details');
     btn.addEventListener('click', () => {
@@ -189,7 +185,6 @@ function renderTimeline() {
    ============================================================ */
 
 renderStats();
-renderMarquee();
 renderFeed();
 renderSkills();
 renderProjects();
@@ -213,19 +208,19 @@ if (globeEl) {
     initGlobe(globeEl, { reduced: REDUCED });
   });
   if (!REDUCED) {
+    /* Single scrub tween for the whole page (motion budget: the old
+       second timeline for a vertical arc was removed so only ONE
+       scroll-driven tween touches #contact-globe per scroll action). */
     gsap.fromTo(
       globeEl,
       { x: () => window.innerWidth - 200 },
       {
         x: 30,
         ease: 'none',
+        overwrite: 'auto',
         scrollTrigger: { start: 0, end: 'max', scrub: 0.6, invalidateOnRefresh: true },
       },
     );
-    /* gentle vertical arc so it floats, not slides on rails */
-    gsap.timeline({ scrollTrigger: { start: 0, end: 'max', scrub: 0.6 } })
-      .fromTo(globeEl, { y: '6vh' }, { y: '-4vh', duration: 0.5, ease: 'none' }, 0)
-      .to(globeEl, { y: '2vh', duration: 0.5, ease: 'none' }, 0.5);
   }
 }
 
@@ -350,7 +345,10 @@ function runPreloader() {
    ============================================================ */
 
 function initScrollFX() {
-  // Section reveals
+  // Section reveals — one `once:true` trigger per element so a single
+  // scroll action never re-triggers or stacks tweens on the same node.
+  // `overwrite:'auto'` keeps pointer tilt (which also writes transforms)
+  // from fighting the entrance tween if the user hovers mid-reveal.
   gsap.utils.toArray('[data-reveal]').forEach((el) => {
     if (REDUCED) return;
     gsap.fromTo(
@@ -361,6 +359,7 @@ function initScrollFX() {
         y: 0,
         duration: 0.9,
         ease: 'power3.out',
+        overwrite: 'auto',
         scrollTrigger: { trigger: el, start: 'top 88%', once: true },
       },
     );
@@ -377,6 +376,7 @@ function initScrollFX() {
         duration: 0.7,
         stagger: 0.1,
         ease: 'power3.out',
+        overwrite: 'auto',
         scrollTrigger: { trigger: group, start: 'top 86%', once: true },
       },
     );
@@ -400,6 +400,7 @@ function initScrollFX() {
         rotateY: 0,
         duration: 1,
         ease: 'power3.out',
+        overwrite: 'auto',
         scrollTrigger: { trigger: el, start: 'top 88%', once: true },
       },
     );
@@ -421,27 +422,29 @@ function initScrollFX() {
     }
   }
 
-  // Timeline — progressive terminal-log colorization
+  // Timeline — progressive terminal-log colorization.
+  // Motion budget: ONE ScrollTrigger per item (single timeline) instead
+  // of three overlapping triggers firing on the same scroll action.
   if (!REDUCED) {
     gsap.utils.toArray('.t-item').forEach((item) => {
-      gsap.fromTo(
-        item,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.6, ease: 'power2.out',
-          scrollTrigger: { trigger: item, start: 'top 90%', once: true } }
-      );
-      gsap.fromTo(
-        item.querySelectorAll('[data-tl-text]'),
-        { opacity: 0.45, color: 'var(--color-fog)' },
-        { opacity: 1, color: 'var(--color-cream)', duration: 0.7, stagger: 0.05, ease: 'power2.out',
-          scrollTrigger: { trigger: item, start: 'top 88%', once: true } }
-      );
-      gsap.fromTo(
-        item.querySelectorAll('[data-tl-reveal]'),
-        { opacity: 0, y: 6 },
-        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out',
-          scrollTrigger: { trigger: item, start: 'top 86%', once: true } }
-      );
+      const texts = item.querySelectorAll('[data-tl-text]');
+      const reveals = item.querySelectorAll('[data-tl-reveal]');
+      const tl = gsap.timeline({
+        defaults: { ease: 'power2.out', overwrite: 'auto' },
+        scrollTrigger: { trigger: item, start: 'top 88%', once: true },
+      });
+      tl.fromTo(item, { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0);
+      if (texts.length) {
+        tl.fromTo(
+          texts,
+          { opacity: 0.45, color: 'var(--color-fog)' },
+          { opacity: 1, color: 'var(--color-cream)', duration: 0.7, stagger: 0.05 },
+          0.05,
+        );
+      }
+      if (reveals.length) {
+        tl.fromTo(reveals, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.5 }, 0.15);
+      }
     });
 
     /* scroll scanner sweeping down the kill-chain */
@@ -494,12 +497,18 @@ function initScrollFX() {
     });
   });
 
-  // Hero parallax-out
+  // Hero parallax-out + page-wide camera drive.
+  // Motion budget: these two share ONE scroll range but touch DIFFERENT
+  // targets (DOM grid vs WebGL camera) so they never stack transforms on
+  // the same node. Nav hide/show stays a cheap passive scroll listener;
+  // active-link + chapter-rail stay IntersectionObservers (no per-frame
+  // scroll work), and all `once:true` reveals can't re-fire mid-scroll.
   if (!REDUCED) {
     gsap.to('#top > .hero-grid', {
       y: -70,
       opacity: 0.25,
       ease: 'none',
+      overwrite: 'auto',
       scrollTrigger: { trigger: '#top', start: 'top top', end: 'bottom top', scrub: true },
     });
     /* whole-page camera drive: canvas is a fixed backdrop now */
@@ -597,24 +606,28 @@ function initTilt() {
           transformPerspective: 900,
           duration: 0.5,
           ease: 'power2.out',
+          overwrite: 'auto',
         });
       });
     });
     card.addEventListener('pointerleave', () => {
       cancelAnimationFrame(raf);
-      gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.8, ease: 'elastic.out(1, 0.5)' });
+      gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.8, ease: 'elastic.out(1, 0.5)', overwrite: 'auto' });
     });
   });
 }
 
-/* Spotlight vars for touch too (cheap, no tilt) */
-document.querySelectorAll('.spot-card').forEach((card) => {
-  card.addEventListener('pointermove', (e) => {
-    const r = card.getBoundingClientRect();
-    card.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
-    card.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
-  }, { passive: true });
-});
+/* Spotlight vars for touch too (cheap, no tilt) — disabled under
+   prefers-reduced-motion so no pointer-driven motion remains. */
+if (!REDUCED) {
+  document.querySelectorAll('.spot-card').forEach((card) => {
+    card.addEventListener('pointermove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+      card.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+    }, { passive: true });
+  });
+}
 
 /* ============================================================
    Menu / misc
@@ -1007,9 +1020,11 @@ function initOpenFX() {
 }
 
 /* ============================================================
-   CAT PAGE-EAT — giant cat rises, opens its mouth over the
-   viewport, then dives up carrying the page away. Scrubbed 1:1,
-   reverse-safe. Desktop only; big boundaries only.
+   CAT PAGE-EAT — hidden easter egg only (NOT a page transition).
+   Regular nav/scroll uses Lenis smooth-scroll (simple fade-free
+   motion). This overlay only plays on deliberate action:
+   double-click or long-press the "RT_" nav logo.
+   Desktop only; disabled under prefers-reduced-motion.
    ============================================================ */
 function initCatEat() {
   if (REDUCED) return;
@@ -1032,29 +1047,78 @@ function initCatEat() {
   gsap.set(overlay, { autoAlpha: 0, yPercent: 0 });
   gsap.set(cat, { xPercent: -50, y: '44vh', scale: 0.7, transformOrigin: '50% 92%' });
 
-  ['#work', '#contact'].forEach((sel) => {
-    const sec = document.querySelector(sel);
-    if (!sec) return;
+  let playing = false;
+  function playCatEat() {
+    if (playing) return;
+    playing = true;
     const tl = gsap.timeline({
-      defaults: { ease: 'none', overwrite: 'auto' },
-      scrollTrigger: { trigger: sec, start: 'top 92%', end: 'top 28%', scrub: 0.5 },
+      defaults: { ease: 'power2.out', overwrite: 'auto' },
+      onComplete: () => {
+        gsap.set(overlay, { autoAlpha: 0, yPercent: 0 });
+        gsap.set(cat, { y: '44vh', scale: 0.7 });
+        gsap.set(head, { yPercent: 0 });
+        gsap.set(jaw, { yPercent: 0 });
+        gsap.set(mouth, { scale: 0, svgOrigin: '200 252' });
+        playing = false;
+      },
     });
     /* rise */
-    tl.fromTo(overlay, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.08 }, 0);
-    tl.fromTo(cat, { y: '44vh', scale: 0.7 }, { y: '6vh', scale: 1.05, duration: 0.35 }, 0);
+    tl.set(overlay, { autoAlpha: 1, yPercent: 0 }, 0);
+    tl.fromTo(cat, { y: '44vh', scale: 0.7 }, { y: '6vh', scale: 1.05, duration: 0.5 }, 0);
     /* blink on approach */
     if (eyes.length) {
-      tl.to(eyes, { attr: { ry: 1.5 }, duration: 0.04 }, 0.28)
-        .to(eyes, { attr: { ry: 14 }, duration: 0.05 }, 0.32);
+      tl.to(eyes, { attr: { ry: 1.5 }, duration: 0.08 }, 0.4).to(
+        eyes,
+        { attr: { ry: 14 }, duration: 0.1 },
+        0.48,
+      );
     }
     /* jaw opens, mouth swallows the viewport */
-    tl.to(head, { yPercent: -5, duration: 0.28 }, 0.32);
-    tl.to(jaw, { yPercent: 9, duration: 0.28 }, 0.32);
-    tl.fromTo(mouth, { scale: 0, svgOrigin: '200 252' }, { scale: cover, duration: 0.28 }, 0.32);
-    /* dive up, carrying the page away */
-    tl.to(overlay, { yPercent: -100, duration: 0.3 }, 0.7);
-    tl.to(overlay, { autoAlpha: 0, duration: 0.05 }, 0.95);
+    tl.to(head, { yPercent: -5, duration: 0.3 }, 0.5);
+    tl.to(jaw, { yPercent: 9, duration: 0.3 }, 0.5);
+    tl.fromTo(mouth, { scale: 0, svgOrigin: '200 252' }, { scale: cover, duration: 0.35, ease: 'power2.in' }, 0.5);
+    /* dive up, carrying the page away — then reset (page stays put) */
+    tl.to(overlay, { yPercent: -100, duration: 0.55, ease: 'power4.in' }, 0.95);
+    tl.to(overlay, { autoAlpha: 0, duration: 0.1 }, 1.5);
+  }
+
+  // Expose for console/terminal easter-egg hunters; not used by navigation.
+  window.__catEat = playCatEat;
+
+  const brand = document.getElementById('brand-mark');
+  if (!brand) return;
+  /* double-click easter egg */
+  brand.addEventListener('dblclick', (e) => {
+    e.preventDefault();
+    playCatEat();
   });
+  /* long-press easter egg (≈650ms hold, touch + mouse) */
+  let pressTimer = 0;
+  let longFired = false;
+  const cancelPress = () => window.clearTimeout(pressTimer);
+  brand.addEventListener('pointerdown', () => {
+    longFired = false;
+    cancelPress();
+    pressTimer = window.setTimeout(() => {
+      longFired = true;
+      playCatEat();
+    }, 650);
+  });
+  brand.addEventListener('pointerup', cancelPress);
+  brand.addEventListener('pointerleave', cancelPress);
+  brand.addEventListener('pointercancel', cancelPress);
+  /* suppress the normal single-click scroll when a long-press just fired */
+  brand.addEventListener(
+    'click',
+    (e) => {
+      if (longFired) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        longFired = false;
+      }
+    },
+    true,
+  );
 }
 
 /* ============================================================

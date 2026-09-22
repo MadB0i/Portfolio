@@ -48,7 +48,7 @@
   <!-- ================= Nav ================= -->
   <nav id="site-nav" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70] w-[min(1060px,calc(100%-2rem))]">
     <div class="glass rounded-full pl-6 pr-3 py-2.5 flex items-center justify-between shadow-[0_16px_40px_-16px_rgba(12,25,50,0.35)]">
-      <a href="#top" data-scroll class="font-mono font-medium text-cream text-sm tracking-tight" aria-label="Back to top">
+      <a href="#top" data-scroll id="brand-mark" class="font-mono font-medium text-cream text-sm tracking-tight" aria-label="Back to top" title="psst… try double-clicking">
         RT<span class="text-sig">_</span>
       </a>
       <div class="hidden md:flex items-center gap-7">
@@ -222,11 +222,6 @@
       </div>
     </div>
 
-    <!-- ================= Marquee ================= -->
-    <div class="marquee border-b hairline py-5 bg-panel/40" aria-hidden="true">
-      <div class="marquee-track" id="marquee-track"></div>
-    </div>
-
     <!-- ================= Terminal ================= -->
     <section id="terminal" class="py-24 sm:py-28">
       <div class="w-[min(1060px,100%)] mx-auto px-6">
@@ -318,7 +313,6 @@
 
     <!-- ================= Skills ================= -->
     <section id="skills" class="py-28 sm:py-32 border-t hairline">
-      <div class="stare stare-skills" aria-hidden="true"><span></span><span></span></div>
       <div class="w-[min(1060px,100%)] mx-auto px-6">
         <p class="chapter-tag mb-4" data-reveal>[ <b>03</b> / 06 ] — ARSENAL</p>
         <div class="flex flex-wrap items-end justify-between gap-4 mb-12">
@@ -346,7 +340,6 @@
 
     <!-- ================= Journey ================= -->
     <section id="journey" class="py-28 sm:py-32 border-t hairline">
-      <div class="stare stare-journey" aria-hidden="true"><span></span><span></span></div>
       <div class="w-[min(1060px,100%)] mx-auto px-6 grid lg:grid-cols-12 gap-12">
         <div class="lg:col-span-4">
           <div class="lg:sticky lg:top-32">

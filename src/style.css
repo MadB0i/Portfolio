@@ -184,6 +184,29 @@ body {
   background: rgba(125, 156, 196, 0.08);
 }
 
+/* Collapsed dossier proof link — visible without opening the modal.
+   Uses existing void/amber tokens only; no palette change. */
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--color-sig-soft);
+  border: 1px solid rgb(var(--sig-rgb) / 0.4);
+  background: rgb(var(--sig-rgb) / 0.08);
+  padding: 6px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+.card-link:hover {
+  background: rgb(var(--sig-rgb) / 0.16);
+  border-color: rgb(var(--sig-rgb) / 0.65);
+  color: #fff;
+}
+
 /* ---------- nav ---------- */
 .nav-link {
   position: relative;
@@ -871,11 +894,13 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track {
+  .marquee-track,
+  .feed-track {
     animation: none;
   }
 
   .contact-card,
+  .card-link,
   .dossier-open,
   .nav-link::after {
     transition-duration: 0s !important;
@@ -886,8 +911,21 @@ body {
     transform: none !important;
   }
 
-  .skill-media * {
+  .skill-media *,
+  .live-dot,
+  .term-caret,
+  .cover-live,
+  .dg-scan,
+  .feed-label::before {
     animation: none !important;
+  }
+
+  /* No pointer-driven motion leftovers: spotlight + tilt + sweep */
+  .spot-card::before {
+    display: none;
+  }
+  .tilt {
+    transform: none !important;
   }
 }
 
@@ -1278,7 +1316,7 @@ body {
   to { transform: translate3d(-46px, -46px, 0); }
 }
 
-/* --- watching eyes in section backgrounds (02 · 03 · 05) --- */
+/* --- watching eyes in section background (02 · about only) --- */
 .stare {
   position: absolute;
   z-index: -1;
@@ -1291,18 +1329,6 @@ body {
 .stare-about {
   top: 10%;
   right: 7%;
-}
-.stare-skills {
-  top: 44%;
-  left: 3.5%;
-}
-.stare-skills span {
-  width: 13px;
-  height: 17px;
-}
-.stare-journey {
-  top: 26%;
-  right: 4.5%;
 }
 .stare span {
   display: block;
@@ -1321,12 +1347,6 @@ body {
 }
 .stare-about span:last-child {
   animation-delay: 1.27s;
-}
-.stare-journey span {
-  animation-delay: 3.1s;
-}
-.stare-journey span:last-child {
-  animation-delay: 3.17s;
 }
 @keyframes stareBlink {
   0%, 90%, 100% { transform: scaleY(1); }
